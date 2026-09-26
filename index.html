@@ -187,6 +187,7 @@
         </main>
     </div>
 
+    <!-- MODAL PANDUAN -->
     <div id="modal-panduan" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
         <div id="modal-panduan-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 max-h-[85vh] overflow-y-auto text-gray-300 text-xs leading-relaxed space-y-4">
             <div class="flex justify-between items-center border-b border-gray-700 pb-3">
@@ -201,6 +202,7 @@
         </div>
     </div>
 
+    <!-- MODAL RIWAYAT CATATAN -->
     <div id="modal-riwayat-catatan" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
         <div id="modal-riwayat-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[80vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
@@ -211,6 +213,7 @@
         </div>
     </div>
 
+    <!-- MODAL TEMPLATE PESAN & SURAT LAMARAN (DENGAN TOMBOL SALIN) -->
     <div id="modal-template" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
         <div id="modal-template-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
@@ -236,7 +239,10 @@
                 <div id="tab-content-interview" class="space-y-2 hidden">
                     <textarea id="text-template-interview" rows="7" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
                 </div>
-                <button onclick="simpanSemuaTemplate()" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs">Simpan Template</button>
+                <div class="flex gap-2">
+                    <button onclick="salinIsiTemplateAktif()" class="w-1/2 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold py-2.5 rounded-lg transition-colors text-xs">📋 Salin Teks</button>
+                    <button onclick="simpanSemuaTemplate()" class="w-1/2 bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs">Simpan Template</button>
+                </div>
             </div>
         </div>
     </div>
@@ -788,6 +794,24 @@
             if(activeBtn) activeBtn.className = "px-3 py-1.5 rounded text-xs font-bold bg-[#ff5ca0] text-white transition-colors";
         }
 
+        function salinIsiTemplateAktif() {
+            let activeTextarea = null;
+            ['surat', 'email', 'tanya', 'interview'].forEach(t => {
+                const elContent = document.getElementById(`tab-content-${t}`);
+                if (elContent && !elContent.classList.contains('hidden')) {
+                    activeTextarea = elContent.querySelector('textarea');
+                }
+            });
+            if (activeTextarea) {
+                activeTextarea.select();
+                navigator.clipboard.writeText(activeTextarea.value).then(() => {
+                    alert("Teks berhasil disalin!");
+                }).catch(() => {
+                    alert("Gagal menyalin teks.");
+                });
+            }
+        }
+
         function bukaModalTemplateGlobal() {
             document.getElementById('dropdown-titiktiga').classList.add('hidden');
             document.getElementById('text-template-surat').value = templateSurat;
@@ -1062,7 +1086,7 @@
                         <button onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-gray-700 bg-[#2d2d2d] hover:bg-gray-700 text-white shadow-sm transition-all flex items-center gap-1">
                             Aksi ▾
                         </button>
-                        <div id="dropdown-aksi-${lamaran.id}" class="absolute right-0 mt-1 w-52 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
+                        <div id="dropdown-aksi-${lamaran.id}" class="absolute right-0 bottom-full mb-1 w-52 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
                             ${menuAksiItems}
                         </div>
                     </div>
