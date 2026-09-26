@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta id="meta-theme-color" name="theme-color" content="#1a1a1a">
-    <title>Apply LOKER - Cloud Edition</title>
+    <title>Apply LOKER - Complete Cloud Edition</title>
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -63,11 +63,6 @@
                 <button onclick="toggleAuthMode()" id="btn-toggle-auth" class="text-xs text-[#ff5ca0] font-semibold hover:underline">
                     Belum punya akun? Daftar di sini
                 </button>
-                <div>
-                    <button onclick="loginGoogle()" class="w-full bg-white hover:bg-gray-100 text-gray-900 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors mt-2">
-                        <span>🔍 Masuk dengan Google</span>
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -101,6 +96,21 @@
         </header>
         
         <main class="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
+            <!-- CATATAN HARIAN -->
+            <div id="daily-note-box" class="bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 shadow-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="flex items-center gap-2">
+                        <button onclick="toggleCatatanHarian()" id="btn-toggle-catatan" class="text-xs font-bold text-[#ff5ca0] hover:underline focus:outline-none">▼ Sembunyikan Catatan</button>
+                        <span class="text-[11px] font-semibold text-gray-400">| Harian (<span id="label-tanggal-hari-ini">Hari Ini</span>)</span>
+                    </div>
+                    <button onclick="simpanCatatanHarian()" class="text-[11px] bg-[#ff5ca0]/20 hover:bg-[#ff5ca0]/30 text-[#ff5ca0] font-bold px-2.5 py-1 rounded-lg">Simpan</button>
+                </div>
+                <div id="content-catatan-harian">
+                    <textarea id="input-catatan-harian" rows="2" placeholder="Tulis target harianmu di sini..." class="w-full bg-[#121212] border border-gray-700/60 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] leading-relaxed mt-1"></textarea>
+                </div>
+            </div>
+
+            <!-- STATISTIK KARTU -->
             <div class="grid grid-cols-5 gap-2 md:gap-3 text-center">
                 <div onclick="setFilterStatus('Semua')" id="card-total" class="bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-gray-500 cursor-pointer hover:bg-white/5 transition-all ring-2 ring-[#ff5ca0]">
                     <p class="text-[10px] text-gray-400 font-bold mb-1">Total</p>
@@ -198,10 +208,41 @@
                         </select>
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label class="block text-[11px] font-bold text-purple-400 mb-1">KONTAK (WA / EMAIL)</label>
-                    <input type="text" id="input-kontak" placeholder="No WA / Email" class="w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-purple-300">
+
+                <div class="my-3 pt-1 border-t border-gray-800">
+                    <button type="button" onclick="toggleFormOpsional()" id="btn-toggle-opsional" class="text-xs font-bold text-[#ff5ca0] hover:underline">+ Tambah Info Detail (Deadline, Gaji, Link, Kontak)</button>
                 </div>
+
+                <div id="form-opsional-container" class="hidden space-y-3 mb-3 bg-black/20 p-3 rounded-xl border border-gray-800">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-yellow-500 mb-1">TGL FOLLOW UP</label>
+                            <input type="date" id="input-followup" class="w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-yellow-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-red-400 mb-1">DEADLINE LAMAR</label>
+                            <input type="date" id="input-deadline" class="w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-red-300">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-blue-400 mb-1">LINK LOWONGAN</label>
+                            <input type="url" id="input-link" placeholder="https://..." class="w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-blue-300">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-purple-400 mb-1">KONTAK (WA / EMAIL)</label>
+                            <input type="text" id="input-kontak" placeholder="No WA / Email" class="w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-purple-300">
+                        </div>
+                    </div>
+                    <div class="bg-black/30 p-3 rounded-xl border border-gray-700/60">
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-[11px] font-bold text-green-400">ESTIMASI GAJI</label>
+                            <span id="label-nominal-gaji" class="text-[11px] font-bold text-white bg-green-600/40 px-2 py-0.5 rounded">Rp 0</span>
+                        </div>
+                        <input type="range" id="input-gaji-slider" min="0" max="25000000" step="500000" value="0" oninput="updateGajiSlider(this.value)" class="w-full h-1.5 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                </div>
+
                 <button type="submit" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs shadow-md mt-2">Simpan Perubahan</button>
             </form>
         </div>
@@ -219,13 +260,22 @@
         </div>
     </div>
 
+    <!-- MODAL PANDUAN -->
+    <div id="modal-panduan" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
+        <div class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 text-xs text-gray-300 space-y-3">
+            <div class="flex justify-between items-center border-b border-gray-700 pb-2">
+                <h2 class="text-sm font-bold text-white">📖 Panduan Aplikasi</h2>
+                <button onclick="tutupModalPanduan()" class="text-gray-400 font-bold">&times;</button>
+            </div>
+            <p>Aplikasi ini sekarang terhubung ke <b>Firebase Cloud</b>. Data lamaranmu tersimpan otomatis dan bisa diakses dari perangkat mana pun saat kamu login menggunakan email yang sama.</p>
+            <button onclick="tutupModalPanduan()" class="w-full bg-[#ff5ca0] text-white font-bold py-2 rounded-lg">Mengerti!</button>
+        </div>
+    </div>
+
     <!-- TOMBOL TAMBAH FLOATING -->
     <button onclick="bukaModalTambah()" class="fixed bottom-6 right-6 bg-[#ff5ca0] hover:bg-[#ff4081] text-white w-14 h-14 rounded-full text-3xl font-bold shadow-lg flex items-center justify-center transition-transform hover:scale-110 z-20">+</button>
 
     <script>
-        // ==========================================
-        // KONFIGURASI FIREBASE KAMU (SUDAH DIPASANG)
-        // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyDG5qmJD0EGEaJRGNtvd8U6jTQDj3cvXRA",
             authDomain: "infol-61428.firebaseapp.com",
@@ -246,10 +296,12 @@
         let currentMode = 'card';
         let currentFilterStatus = 'Semua';
 
+        const todayKey = new Date().toISOString().split('T')[0];
+        document.getElementById('label-tanggal-hari-ini').innerText = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+
         const defaultTemplateInterview = `Yth. Bapak/Ibu HRD {perusahaan},\n\nTerima kasih banyak atas undangan serta kesempatan interview untuk posisi {posisi}. Melalui pesan ini, saya bermaksud mengonfirmasi bahwa saya akan hadir memenuhi undangan tersebut sesuai dengan jadwal yang telah ditentukan.\n\nSekali lagi terima kasih atas kesempatan yang diberikan.\n\nHormat saya,\n[Nama Anda]`;
         let templateInterview = localStorage.getItem('lokertrack_template_interview') || defaultTemplateInterview;
 
-        // Pantau Status Login Firebase
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
@@ -288,24 +340,18 @@
             }
         }
 
-        function loginGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(err => alert(err.message));
-        }
+        function logoutUser() { auth.signOut(); }
 
-        function logoutUser() {
-            auth.signOut();
-        }
-
-        // Ambil Data dari Firestore Realtime
         function muatDataCloud() {
             if (!currentUser) return;
             db.collection('users').doc(currentUser.uid).collection('lamaran').onSnapshot((snapshot) => {
                 dataLamaran = [];
-                snapshot.forEach(doc => {
-                    dataLamaran.push({ id: doc.id, ...doc.data() });
-                });
+                snapshot.forEach(doc => { dataLamaran.push({ id: doc.id, ...doc.data() }); });
                 renderTampilan();
+            });
+
+            db.collection('users').doc(currentUser.uid).collection('catatan').doc(todayKey).get().then(doc => {
+                if (doc.exists) document.getElementById('input-catatan-harian').value = doc.data().isi || '';
             });
         }
 
@@ -320,6 +366,28 @@
             db.collection('users').doc(currentUser.uid).collection('lamaran').doc(id.toString()).delete();
         }
 
+        function simpanCatatanHarian() {
+            if (!currentUser) return;
+            const isi = document.getElementById('input-catatan-harian').value;
+            db.collection('users').doc(currentUser.uid).collection('catatan').doc(todayKey).set({ isi: isi })
+            .then(() => alert("Catatan harian disimpan!"));
+        }
+
+        function toggleCatatanHarian() {
+            const content = document.getElementById('content-catatan-harian');
+            content.classList.toggle('hidden');
+        }
+
+        function toggleFormOpsional() {
+            document.getElementById('form-opsional-container').classList.toggle('hidden');
+        }
+
+        function updateGajiSlider(val) {
+            const label = document.getElementById('label-nominal-gaji');
+            if (val == 0) label.innerText = "Tidak Dicantumkan";
+            else label.innerText = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
+        }
+
         function toggleMenuTitikTiga(event) {
             event.stopPropagation();
             document.getElementById('dropdown-titiktiga').classList.toggle('hidden');
@@ -330,12 +398,38 @@
             if(drop) drop.classList.add('hidden');
         });
 
+        function bukaModalPanduan() { document.getElementById('modal-panduan').classList.remove('hidden'); }
+        function tutupModalPanduan() { document.getElementById('modal-panduan').classList.add('hidden'); }
+
         function bukaModalTambah() {
             document.getElementById('modal-judul').innerText = "Tambah Info Loker";
             document.getElementById('form-lamaran').reset();
             document.getElementById('input-id').value = "";
             document.getElementById('input-tanggal').valueAsDate = new Date();
+            document.getElementById('form-opsional-container').classList.add('hidden');
             document.getElementById('modal-form').classList.remove('hidden');
+        }
+
+        function bukaModalEdit(id) {
+            document.getElementById('modal-judul').innerText = "Edit Info Loker";
+            const item = dataLamaran.find(l => l.id == id);
+            if (item) {
+                document.getElementById('input-id').value = item.id;
+                document.getElementById('input-perusahaan').value = item.perusahaan;
+                document.getElementById('input-posisi').value = item.posisi;
+                document.getElementById('input-tanggal').value = item.tanggal || "";
+                document.getElementById('input-followup').value = item.tanggalFollowUp || "";
+                document.getElementById('input-deadline').value = item.deadline || "";
+                document.getElementById('input-link').value = item.link || "";
+                document.getElementById('input-kontak').value = item.kontak || "";
+                document.getElementById('input-status').value = item.status;
+                document.getElementById('input-gaji-slider').value = item.gajiMentah || 0;
+                updateGajiSlider(item.gajiMentah || 0);
+                if (item.tanggalFollowUp || item.deadline || item.link || item.kontak || item.gajiMentah > 0) {
+                    document.getElementById('form-opsional-container').classList.remove('hidden');
+                }
+                document.getElementById('modal-form').classList.remove('hidden');
+            }
         }
 
         function tutupModal() { document.getElementById('modal-form').classList.add('hidden'); }
@@ -343,12 +437,20 @@
         function simpanLamaran(e) {
             e.preventDefault();
             const id = document.getElementById('input-id').value || Date.now();
+            const gajiMentah = parseInt(document.getElementById('input-gaji-slider').value) || 0;
+            const gaji = gajiMentah > 0 ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(gajiMentah) : "-";
+            
             const dataBaru = {
                 id: id,
                 perusahaan: document.getElementById('input-perusahaan').value,
                 posisi: document.getElementById('input-posisi').value,
                 tanggal: document.getElementById('input-tanggal').value,
+                tanggalFollowUp: document.getElementById('input-followup').value,
+                deadline: document.getElementById('input-deadline').value,
+                link: document.getElementById('input-link').value,
                 kontak: document.getElementById('input-kontak').value,
+                gaji: gaji,
+                gajiMentah: gajiMentah,
                 status: document.getElementById('input-status').value
             };
             simpanKeCloud(dataBaru);
@@ -439,7 +541,7 @@
                             <h4 class="text-base font-bold text-white">${l.perusahaan}</h4>
                             <p class="text-xs text-[#ff5ca0] font-semibold">${l.posisi}</p>
                         </div>
-                        <div>
+                        <div class="flex items-center gap-2">
                             ${l.kontak ? `<a href="${waLink}" target="_blank" class="text-xs bg-green-600/20 text-green-400 px-2.5 py-1 rounded-lg font-bold">Konfirmasi Interview</a>` : ''}
                         </div>
                     </div>
@@ -447,7 +549,10 @@
                         <select onchange="ubahStatus('${l.id}', this.value)" class="text-xs bg-[#2d2d2d] text-gray-300 border border-gray-700 rounded p-1 font-semibold">
                             ${optionsHTML}
                         </select>
-                        <button onclick="hapusLamaran('${l.id}')" class="text-red-400 font-bold">Hapus</button>
+                        <div class="flex gap-2">
+                            <button onclick="bukaModalEdit('${l.id}')" class="text-blue-400 font-bold">Edit</button>
+                            <button onclick="hapusLamaran('${l.id}')" class="text-red-400 font-bold">Hapus</button>
+                        </div>
                     </div>
                 `;
                 containerCard.appendChild(kartu);
@@ -457,7 +562,7 @@
                 baris.innerHTML = `
                     <td class="p-3 font-bold text-white">${l.perusahaan}<br><span class="text-[#ff5ca0] text-[11px] font-semibold">${l.posisi}</span></td>
                     <td class="p-3 hidden md:table-cell text-gray-400">${l.tanggal || '-'}</td>
-                    <td class="p-3 hidden md:table-cell text-yellow-400">-</td>
+                    <td class="p-3 hidden md:table-cell text-yellow-400">${l.tanggalFollowUp || '-'}</td>
                     <td class="p-3">
                         <select onchange="ubahStatus('${l.id}', this.value)" class="text-[11px] bg-[#2d2d2d] text-gray-300 border border-gray-700 rounded p-1 font-semibold">
                             ${optionsHTML}
@@ -465,7 +570,10 @@
                     </td>
                     <td class="p-3 text-center">
                         ${l.kontak ? `<a href="${waLink}" target="_blank" class="text-[11px] bg-green-600/20 text-green-400 px-2 py-1 rounded font-bold inline-block mb-1">Konfirmasi Interview</a>` : ''}
-                        <button onclick="hapusLamaran('${l.id}')" class="text-red-400 text-[11px] block mx-auto">Hapus</button>
+                        <div class="flex justify-center gap-2 mt-1">
+                            <button onclick="bukaModalEdit('${l.id}')" class="text-blue-400 text-[11px]">Edit</button>
+                            <button onclick="hapusLamaran('${l.id}')" class="text-red-400 text-[11px]">Hapus</button>
+                        </div>
                     </td>
                 `;
                 containerTabel.appendChild(baris);
