@@ -19,7 +19,6 @@
         <h1 class="text-xl font-bold tracking-wider">Apply LOKER</h1>
       </div>
       <button class="bg-zinc-900 border border-zinc-800 p-2.5 rounded-full hover:bg-zinc-800 transition">
-        <!-- Ikon Titik Tiga / Menu -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01" />
         </svg>
@@ -54,7 +53,7 @@
     <div class="flex space-x-2 overflow-x-auto pb-2 mb-4 scrollbar-none">
       
       <!-- Kartu Total -->
-      <button onclick="setFilter('all', this)" class="filter-card flex-shrink-0 bg-zinc-900 border-2 border-pink-500 rounded-xl p-3 w-20 text-center transition-all cursor-pointer">
+      <button onclick="setFilter('total', this)" class="filter-card flex-shrink-0 bg-zinc-900 border-2 border-pink-500 rounded-xl p-3 w-20 text-center transition-all cursor-pointer">
         <div class="text-[11px] text-zinc-400 font-medium">Total</div>
         <div class="text-lg font-bold text-white mt-1">0</div>
       </button>
@@ -85,8 +84,10 @@
 
     </div>
 
+    <!-- (Tombol Filter Duplikat di Bawah Sudah Dihapus Supaya UI Lebih Longgar) -->
+
     <!-- Bagian Info Lamaran -->
-    <div class="mt-6">
+    <div class="mt-2">
       <div class="flex justify-between items-center mb-3">
         <h2 class="font-bold text-base">Info Lamaran</h2>
         <span class="text-xs text-zinc-500">0 dari 0 lamaran</span>
@@ -123,25 +124,23 @@
     </button>
   </div>
 
-  <!-- Script Sederhana untuk Efek Klik Kartu Filter -->
+  <!-- Script Interaksi Filter -->
   <script>
     function setFilter(status, element) {
-      // Hapus border aktif dari semua kartu
       const cards = document.querySelectorAll('.filter-card');
       cards.forEach(card => {
-        card.classList.remove('border-pink-500', 'border-blue-500', 'border-yellow-500', 'border-green-500', 'border-red-500');
-        card.classList.add('border-zinc-800');
+        card.classList.remove('border-pink-500', 'border-blue-500', 'border-yellow-500', 'border-green-500', 'border-red-500', 'border-2');
+        card.classList.add('border', 'border-zinc-800');
       });
 
-      // Tambahkan border aktif ke kartu yang diklik
       element.classList.remove('border-zinc-800');
-      if(status === 'all') element.classList.add('border-pink-500');
+      element.classList.add('border-2');
+      if(status === 'total') element.classList.add('border-pink-500');
       if(status === 'proses') element.classList.add('border-blue-500');
       if(status === 'interview') element.classList.add('border-yellow-500');
       if(status === 'diterima') element.classList.add('border-green-500');
       if(status === 'ditolak') element.classList.add('border-red-500');
 
-      // Di sini kamu bisa tambahkan logika untuk memuat data berdasarkan status
       console.log("Filter aktif:", status);
     }
   </script>
