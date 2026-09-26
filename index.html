@@ -32,7 +32,6 @@
             cursor: grabbing !important;
         }
 
-        /* Scrollbar horizontal mulus untuk filter chips di HP */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -265,16 +264,16 @@
         </div>
     </div>
 
-    <!-- Modal Template Pesan Follow-Up -->
+    <!-- Modal Template Pesan Follow-Up (Bisa Diedit) -->
     <div id="modal-template" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
-        <div id="modal-template-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 transition-colors duration-300">
+        <div id="modal-template-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 md:p-6 transition-colors duration-300">
             <div class="flex justify-between items-center mb-4">
-                <h2 id="modal-template-title" class="text-lg font-bold text-white">Template Pesan Follow-Up</h2>
+                <h2 id="modal-template-title" class="text-lg font-bold text-white">Template Pesan Follow-Up (Formal)</h2>
                 <button onclick="tutupModalTemplate()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold">&times;</button>
             </div>
-            <p class="text-xs text-gray-400 mb-2">Salin pesan sopan di bawah ini untuk dikirimkan ke HRD:</p>
-            <textarea id="text-template-pesan" rows="6" readonly class="w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none mb-4 select-all"></textarea>
-            <button onclick="salinTemplatePesan()" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs shadow-md">Salin Pesan ke Clipboard</button>
+            <p class="text-xs text-gray-400 mb-2">Anda dapat mengedit teks di bawah ini sesuai kebutuhan sebelum menyalinnya:</p>
+            <textarea id="text-template-pesan" rows="9" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] mb-4 leading-relaxed"></textarea>
+            <button onclick="salinTemplatePesan()" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs shadow-md">Salin Pesan yang Telah Diedit</button>
         </div>
     </div>
 
@@ -305,15 +304,11 @@
             dropdown.classList.toggle('hidden');
         }
 
-        // ==========================================
-        // FITUR DARK / LIGHT MODE OTOMATIS BERDASARKAN JAM
-        // ==========================================
         function inisialisasiTemaOtomatis() {
             const savedTheme = localStorage.getItem('lokertrack_theme');
             if (savedTheme === 'light' || savedTheme === 'dark') {
                 currentTheme = savedTheme;
             } else {
-                // Auto berdasarkan jam (Jam 06.00 s.d 18.00 = Terang, sisanya Gelap)
                 const jam = new Date().getHours();
                 currentTheme = (jam >= 6 && jam < 18) ? 'light' : 'dark';
             }
@@ -403,7 +398,7 @@
                 modalSettingDesc.className = "text-xs text-gray-500 mb-3";
                 modalSettingClose.className = "bg-gray-100 hover:bg-gray-200 rounded text-gray-600 px-3 py-1 font-bold transition-colors";
 
-                modalTemplateBox.className = "bg-white border border-gray-200 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 transition-colors duration-300";
+                modalTemplateBox.className = "bg-white border border-gray-200 rounded-xl shadow-2xl w-full max-w-lg p-5 md:p-6 transition-colors duration-300";
                 modalTemplateTitle.className = "text-lg font-bold text-gray-900";
 
                 inputPencarian.className = "search-input bg-gray-50 border border-gray-300 rounded-xl px-4 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-sm transition-colors duration-300 flex-1 md:w-44";
@@ -449,7 +444,7 @@
                 modalSettingDesc.className = "text-xs text-gray-400 mb-3";
                 modalSettingClose.className = "bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold transition-colors";
 
-                modalTemplateBox.className = "bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 transition-colors duration-300";
+                modalTemplateBox.className = "bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 md:p-6 transition-colors duration-300";
                 modalTemplateTitle.className = "text-lg font-bold text-white";
 
                 inputPencarian.className = "search-input bg-[#121212] border border-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-md transition-colors duration-300 flex-1 md:w-44";
@@ -469,9 +464,6 @@
             renderTampilan();
         }
 
-        // ==========================================
-        // FITUR FILTER STATUS CEPAT (CHIPS)
-        // ==========================================
         function setFilterStatus(status) {
             currentFilterStatus = status;
             ['Semua', 'Proses', 'Interview', 'Diterima', 'Ditolak'].forEach(s => {
@@ -487,11 +479,10 @@
             renderTampilan();
         }
 
-        // ==========================================
-        // FITUR TEMPLATE PESAN FOLLOW-UP
-        // ==========================================
         function bukaModalTemplate(perusahaan, posisi) {
-            const pesan = `Halo Tim HRD ${perusahaan},\n\nSemoga hari Anda menyenangkan.\n\nSehubungan dengan lamaran kerja saya untuk posisi ${posisi} yang telah saya kirimkan sebelumnya, melalui pesan ini saya ingin menanyakan kabar dan kelanjutan proses seleksi terkait posisi tersebut.\n\nBesar harapan saya untuk dapat bergabung dan berkontribusi di ${perusahaan}.\n\nTerima kasih atas waktu dan perhatian Anda.\n\nSalam hangat,\n[Nama Anda]`;
+            // Template formal dan profesional
+            const pesan = `Kepada Yth. Tim Rekrutmen / HRD ${perusahaan},\nDi Tempat\n\nDengan hormat,\n\nSemoga pesan ini menemukan Bapak/Ibu dalam keadaan sehat walafiat.\n\nSehubungan dengan lamaran pekerjaan yang telah saya kirimkan pada tanggal sebelumnya untuk posisi ${posisi}, melalui pesan ini saya bermaksud untuk menanyakan konfirmasi serta kelanjutan informasi terkait proses seleksi tersebut.\n\nBesar harapan saya untuk diberikan kesempatan mengikuti tahapan seleksi selanjutnya guna dapat berkontribusi secara nyata di ${perusahaan}.\n\nDemikian surat pengantar ini saya sampaikan. Atas waktu, perhatian, serta kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Lengkap Anda]`;
+            
             document.getElementById('text-template-pesan').value = pesan;
             document.getElementById('modal-template').classList.remove('hidden');
         }
@@ -504,7 +495,7 @@
             const textarea = document.getElementById('text-template-pesan');
             textarea.select();
             navigator.clipboard.writeText(textarea.value);
-            alert("Template pesan berhasil disalin ke clipboard!");
+            alert("Pesan formal berhasil disalin ke clipboard!");
             tutupModalTemplate();
         }
 
@@ -831,7 +822,6 @@
                 if (["Ditolak", "Tidak Ada Kabar"].includes(status)) statDitolak++;
             });
 
-            // Filter Berdasarkan Pencarian & Kategori Chip Filter
             const dataFiltered = dataLamaran.filter(lamaran => {
                 const matchKeyword = lamaran.perusahaan.toLowerCase().includes(keyword) || 
                                      lamaran.posisi.toLowerCase().includes(keyword) ||
