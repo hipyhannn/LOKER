@@ -80,7 +80,7 @@
     <!-- Main Content -->
     <main class="max-w-4xl mx-auto p-3 md:p-4 mt-4 md:mt-6">
         
-        <!-- CATATAN HARIAN (DAILY NOTE) DENGAN FITUR COLLAPSE / HIDE -->
+        <!-- CATATAN HARIAN (DAILY NOTE) -->
         <div id="daily-note-box" class="bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 mb-6 shadow-md transition-colors duration-300">
             <div class="flex justify-between items-center mb-2">
                 <div class="flex items-center gap-2">
@@ -172,9 +172,7 @@
                 <h2 class="text-lg font-bold text-white">Riwayat Catatan Harian</h2>
                 <button onclick="tutupModalRiwayatCatatan()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold">&times;</button>
             </div>
-            <div id="list-riwayat-catatan" class="space-y-3">
-                <!-- Data riwayat akan dimuat di sini -->
-            </div>
+            <div id="list-riwayat-catatan" class="space-y-3"></div>
         </div>
     </div>
 
@@ -240,73 +238,40 @@
         +
     </button>
 
-    <!-- Modal Form Tambah / Edit Lamaran -->
+    <!-- Modal Form Tambah / Edit Lamaran (Dibuat Ringkas / Collapse) -->
     <div id="modal-form" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
         <div id="modal-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 max-h-[90vh] overflow-y-auto transition-colors duration-300">
-            <div class="flex justify-between items-center mb-5 md:mb-6">
+            <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg md:text-xl font-bold" id="modal-judul">Tambah Info Loker</h2>
                 <button onclick="tutupModal()" id="modal-close-btn" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold transition-colors">&times;</button>
             </div>
             
             <form id="form-lamaran" onsubmit="simpanLamaran(event)">
                 <input type="hidden" id="input-id">
-                <div class="mb-4">
-                    <label id="label-perusahaan" class="block text-xs font-bold text-gray-400 mb-1.5">NAMA PERUSAHAAN *</label>
-                    <input type="text" id="input-perusahaan" required class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
+                
+                <!-- BAGIAN UTAMA (WAJIB DIISI) -->
+                <div class="mb-3">
+                    <label id="label-perusahaan" class="block text-xs font-bold text-gray-400 mb-1">NAMA PERUSAHAAN *</label>
+                    <input type="text" id="input-perusahaan" required placeholder="Contoh: PT Tokopedia..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0]">
                 </div>
                 
-                <!-- Posisi dengan Dropdown Riwayat -->
-                <div class="mb-4 relative">
-                    <label id="label-posisi" class="block text-xs font-bold text-gray-400 mb-1.5">POSISI YANG DILAMAR *</label>
+                <div class="mb-3 relative">
+                    <label id="label-posisi" class="block text-xs font-bold text-gray-400 mb-1">POSISI YANG DILAMAR *</label>
                     <div class="flex gap-2">
-                        <input type="text" id="input-posisi" autocomplete="off" required placeholder="Ketik atau pilih dari riwayat..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
-                        <button type="button" onclick="toggleDropdownPosisi(event)" class="bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0 transition-colors" title="Pilih dari Riwayat Posisi">▼</button>
+                        <input type="text" id="input-posisi" autocomplete="off" required placeholder="Contoh: Frontend Developer..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0]">
+                        <button type="button" onclick="toggleDropdownPosisi(event)" class="bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0 transition-colors" title="Pilih dari Riwayat">▼</button>
                     </div>
                     <div id="dropdown-posisi-list" class="absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                     <div>
-                        <label id="label-tgl" class="block text-xs font-bold text-gray-400 mb-1.5">TGL MELAMAR *</label>
-                        <input type="date" id="input-tanggal" required class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
+                        <label id="label-tgl" class="block text-xs font-bold text-gray-400 mb-1">TGL MELAMAR *</label>
+                        <input type="date" id="input-tanggal" required class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0]">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-yellow-500 mb-1.5">TGL FOLLOW UP</label>
-                        <input type="date" id="input-followup" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-yellow-500 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
-                    </div>
-                </div>
-
-                <!-- BATAS WAKTU (DEADLINE) -->
-                <div class="mb-4">
-                    <label class="block text-xs font-bold text-red-400 mb-1.5">BATAS WAKTU LAMAR (DEADLINE)</label>
-                    <input type="date" id="input-deadline" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-red-300 focus:outline-none focus:border-[#ff5ca0]">
-                </div>
-
-                <!-- LINK LOWONGAN & KONTAK HRD -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-xs font-bold text-blue-400 mb-1.5">LINK LOWONGAN (URL)</label>
-                        <input type="url" id="input-link" placeholder="https://..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-blue-300 focus:outline-none focus:border-[#ff5ca0]">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-purple-400 mb-1.5">KONTAK HRD / NO WA</label>
-                        <input type="text" id="input-kontak" placeholder="Nama / 0812xxxx" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-purple-300 focus:outline-none focus:border-[#ff5ca0]">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <!-- Metode dengan Dropdown Riwayat -->
-                    <div class="relative">
-                        <label id="label-metode" class="block text-xs font-bold text-gray-400 mb-1.5">METODE</label>
-                        <div class="flex gap-2">
-                            <input type="text" id="input-metode" autocomplete="off" required placeholder="Pilih atau ketik metode..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
-                            <button type="button" onclick="toggleDropdownMetode(event)" class="bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0 transition-colors" title="Pilih Metode">▼</button>
-                        </div>
-                        <div id="dropdown-metode-list" class="absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-green-500 mb-1.5">STATUS</label>
-                        <select id="input-status" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
+                        <label class="block text-xs font-bold text-green-500 mb-1">STATUS</label>
+                        <select id="input-status" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0]">
                             <option value="Rencana Daftar">Rencana Daftar</option>
                             <option value="Terkirim">Terkirim</option>
                             <option value="Screening HR">Screening HR</option>
@@ -325,29 +290,71 @@
                     </div>
                 </div>
 
-                <!-- Input Gaji Slider -->
-                <div class="mb-4 bg-black/20 p-3.5 rounded-xl border border-gray-700/60">
-                    <div class="flex justify-between items-center mb-1.5">
-                        <label class="text-xs font-bold text-green-400">ESTIMASI GAJI / EXPECTED</label>
-                        <span id="label-nominal-gaji" class="text-xs font-bold text-white bg-green-600/40 px-2 py-0.5 rounded">Rp 0</span>
+                <!-- TOMBOL TOGGLE UNTUK INFO TAMBAHAN (OPSIONAL) -->
+                <div class="my-4 pt-2 border-t border-gray-800">
+                    <button type="button" onclick="toggleFormOpsional()" id="btn-toggle-opsional" class="text-xs font-bold text-[#ff5ca0] hover:underline focus:outline-none flex items-center gap-1">
+                        + Tambah Info Detail (Deadline, Gaji, Link, Kontak, dll)
+                    </button>
+                </div>
+
+                <!-- BAGIAN TAMBAHAN (DI-HIDE SECARA DEFAULT BIAR SIMPLE) -->
+                <div id="form-opsional-container" class="hidden space-y-3 mb-4 bg-black/20 p-3 rounded-xl border border-gray-800">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-yellow-500 mb-1">TGL FOLLOW UP</label>
+                            <input type="date" id="input-followup" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-yellow-500 focus:outline-none focus:border-[#ff5ca0]">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-red-400 mb-1">DEADLINE LAMAR</label>
+                            <input type="date" id="input-deadline" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-red-300 focus:outline-none focus:border-[#ff5ca0]">
+                        </div>
                     </div>
-                    <input type="range" id="input-gaji-slider" min="0" max="25000000" step="500000" value="0" oninput="updateGajiSlider(this.value)" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer mb-2">
-                    <div class="flex justify-between items-center gap-1 overflow-x-auto no-scrollbar pt-1">
-                        <button type="button" onclick="setGajiCepat(0)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">0</button>
-                        <button type="button" onclick="setGajiCepat(4500000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">4.5jt</button>
-                        <button type="button" onclick="setGajiCepat(6000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">6jt</button>
-                        <button type="button" onclick="setGajiCepat(8000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">8jt</button>
-                        <button type="button" onclick="setGajiCepat(10000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">10jt</button>
-                        <button type="button" onclick="setGajiCepat(15000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">15jt</button>
-                        <button type="button" onclick="setGajiCepat(25000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">25jt+</button>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-blue-400 mb-1">LINK LOWONGAN (URL)</label>
+                            <input type="url" id="input-link" placeholder="https://..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-blue-300 focus:outline-none focus:border-[#ff5ca0]">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-purple-400 mb-1">KONTAK HRD / NO WA</label>
+                            <input type="text" id="input-kontak" placeholder="Nama / 0812xxxx" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-purple-300 focus:outline-none focus:border-[#ff5ca0]">
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <label id="label-metode" class="block text-xs font-bold text-gray-400 mb-1">METODE</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="input-metode" autocomplete="off" placeholder="Pilih atau ketik metode..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:border-[#ff5ca0]">
+                            <button type="button" onclick="toggleDropdownMetode(event)" class="bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0 transition-colors" title="Pilih Metode">▼</button>
+                        </div>
+                        <div id="dropdown-metode-list" class="absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
+                    </div>
+
+                    <!-- Input Gaji Slider -->
+                    <div class="bg-black/30 p-3 rounded-xl border border-gray-700/60">
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-bold text-green-400">ESTIMASI GAJI</label>
+                            <span id="label-nominal-gaji" class="text-xs font-bold text-white bg-green-600/40 px-2 py-0.5 rounded">Rp 0</span>
+                        </div>
+                        <input type="range" id="input-gaji-slider" min="0" max="25000000" step="500000" value="0" oninput="updateGajiSlider(this.value)" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer mb-2">
+                        <div class="flex justify-between items-center gap-1 overflow-x-auto no-scrollbar pt-1">
+                            <button type="button" onclick="setGajiCepat(0)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">0</button>
+                            <button type="button" onclick="setGajiCepat(4500000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">4.5jt</button>
+                            <button type="button" onclick="setGajiCepat(6000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">6jt</button>
+                            <button type="button" onclick="setGajiCepat(8000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">8jt</button>
+                            <button type="button" onclick="setGajiCepat(10000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">10jt</button>
+                            <button type="button" onclick="setGajiCepat(15000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">15jt</button>
+                            <button type="button" onclick="setGajiCepat(25000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">25jt+</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label id="label-keterangan" class="block text-xs font-bold text-gray-400 mb-1">KETERANGAN</label>
+                        <textarea id="input-keterangan" rows="2" placeholder="Catatan tambahan..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
                     </div>
                 </div>
 
-                <div class="mb-6">
-                    <label id="label-keterangan" class="block text-xs font-bold text-gray-400 mb-1.5">KETERANGAN</label>
-                    <textarea id="input-keterangan" rows="2" placeholder="Misal: Lewat referral teman..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-[#ff5ca0] text-white font-bold py-3.5 rounded-lg hover:bg-[#ff4081] transition-colors shadow-lg">
+                <button type="submit" class="w-full bg-[#ff5ca0] text-white font-bold py-3 rounded-lg hover:bg-[#ff4081] transition-colors shadow-lg mt-2">
                     Simpan Perubahan
                 </button>
             </form>
@@ -384,6 +391,18 @@
             } else {
                 content.classList.add('hidden');
                 btn.innerText = "▶ Buka Catatan";
+            }
+        }
+
+        function toggleFormOpsional() {
+            const container = document.getElementById('form-opsional-container');
+            const btn = document.getElementById('btn-toggle-opsional');
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                btn.innerText = "- Sembunyikan Info Detail";
+            } else {
+                container.classList.add('hidden');
+                btn.innerText = "+ Tambah Info Detail (Deadline, Gaji, Link, Kontak, dll)";
             }
         }
 
@@ -646,7 +665,7 @@
 
                 inputPencarian.className = "search-input bg-gray-50 border border-gray-300 rounded-xl px-4 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-sm transition-colors duration-300 flex-1 md:w-44";
                 
-                [labelPerusahaan, labelPosisi, labelTgl, labelMetode, labelKeterangan].forEach(l => l.className = "block text-xs font-bold text-gray-500 mb-1.5");
+                [labelPerusahaan, labelPosisi, labelTgl, labelMetode, labelKeterangan].forEach(l => l.className = "block text-xs font-bold text-gray-500 mb-1");
 
                 cardTotal.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-gray-400 transition-colors duration-300";
                 cardProses.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-blue-400 transition-colors duration-300";
@@ -655,7 +674,7 @@
                 cardDitolak.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-red-400 transition-colors duration-300";
 
                 document.querySelectorAll('.modal-input').forEach(inp => {
-                    inp.className = "modal-input w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-gray-900 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]";
+                    inp.className = "modal-input w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-gray-900 focus:outline-none focus:border-[#ff5ca0]";
                 });
 
             } else {
@@ -695,7 +714,7 @@
 
                 inputPencarian.className = "search-input bg-[#121212] border border-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-md transition-colors duration-300 flex-1 md:w-44";
                 
-                [labelPerusahaan, labelPosisi, labelTgl, labelMetode, labelKeterangan].forEach(l => l.className = "block text-xs font-bold text-gray-400 mb-1.5");
+                [labelPerusahaan, labelPosisi, labelTgl, labelMetode, labelKeterangan].forEach(l => l.className = "block text-xs font-bold text-gray-400 mb-1");
 
                 cardTotal.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-gray-500 transition-colors duration-300";
                 cardProses.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-blue-500 transition-colors duration-300";
@@ -704,7 +723,7 @@
                 cardDitolak.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-red-500 transition-colors duration-300";
 
                 document.querySelectorAll('.modal-input').forEach(inp => {
-                    inp.className = "modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]";
+                    inp.className = "modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0]";
                 });
             }
             renderTampilan();
@@ -938,6 +957,11 @@
             document.getElementById('input-tanggal').valueAsDate = new Date();
             document.getElementById('input-gaji-slider').value = 0;
             updateGajiSlider(0);
+            
+            // Sembunyikan bagian opsional secara default
+            document.getElementById('form-opsional-container').classList.add('hidden');
+            document.getElementById('btn-toggle-opsional').innerText = "+ Tambah Info Detail (Deadline, Gaji, Link, Kontak, dll)";
+
             modal.classList.remove('hidden'); 
         }
 
@@ -960,6 +984,15 @@
                 let nilaiGajiNum = parseInt(lamaran.gajiMentah) || 0;
                 document.getElementById('input-gaji-slider').value = nilaiGajiNum;
                 updateGajiSlider(nilaiGajiNum);
+
+                // Jika data opsional terisi, otomatis buka bagian opsionalnya
+                if (lamaran.tanggalFollowUp || lamaran.deadline || lamaran.link || lamaran.kontak || lamaran.gajiMentah > 0 || lamaran.keterangan) {
+                    document.getElementById('form-opsional-container').classList.remove('hidden');
+                    document.getElementById('btn-toggle-opsional').innerText = "- Sembunyikan Info Detail";
+                } else {
+                    document.getElementById('form-opsional-container').classList.add('hidden');
+                    document.getElementById('btn-toggle-opsional').innerText = "+ Tambah Info Detail (Deadline, Gaji, Link, Kontak, dll)";
+                }
 
                 modal.classList.remove('hidden');
             }
@@ -1166,7 +1199,6 @@
 
                 const bintangi = `<button onclick="toggleFavorit(${lamaran.id})" class="text-base text-yellow-400 hover:scale-125 transition-transform" title="Tandai Favorit">${lamaran.isFavorit ? '★' : '☆'}</button>`;
 
-                // Tombol Edit dan Hapus kembali menggunakan ikon simpel seperti request awal
                 const tombolEdit = `<button onclick="bukaModalEdit(${lamaran.id})" class="text-sm border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-amber-600' : 'border-gray-700 bg-[#2d2d2d] text-amber-400'} px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg font-semibold transition-colors" title="Edit">✏️</button>`;
                 const tombolHapus = `<button onclick="hapusLamaran(${lamaran.id})" class="text-sm border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-red-600' : 'border-gray-700 bg-[#2d2d2d] text-red-400'} px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg font-semibold transition-colors" title="Hapus">🗑️</button>`;
 
