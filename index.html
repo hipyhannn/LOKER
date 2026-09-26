@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#f5f6f8">
+    <!-- Meta theme-color yang akan diubah dinamis lewat JavaScript -->
+    <meta id="meta-theme-color" name="theme-color" content="#1a1a1a">
     <title>LOKER</title>
-    <meta name="theme-color" content="#f5f6f8">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -484,6 +484,7 @@
             const menuDivider = document.getElementById('menu-divider');
             const menuTextTema = document.getElementById('menu-text-tema');
             const iconTema = document.getElementById('icon-tema');
+            const metaThemeColor = document.getElementById('meta-theme-color');
 
             const labelInfo = document.getElementById('label-info-lamaran');
             const viewToggleBg = document.getElementById('view-toggle-bg');
@@ -515,6 +516,7 @@
             const cardDitolak = document.getElementById('card-ditolak');
 
             if (theme === 'light') {
+                metaThemeColor.setAttribute('content', '#ffffff'); // Warna status bar HP jadi putih bersih saat Light Mode
                 body.className = "bg-gray-100 text-gray-900 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden";
                 header.className = "bg-white p-4 md:p-6 shadow-md border-b border-gray-200 transition-colors duration-300";
                 headerTitle.className = "text-xl md:text-2xl text-gray-900 font-pixel leading-snug";
@@ -557,6 +559,7 @@
                 });
 
             } else {
+                metaThemeColor.setAttribute('content', '#1a1a1a'); // Warna status bar HP jadi gelap senada header saat Dark Mode
                 body.className = "bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden";
                 header.className = "bg-[#1a1a1a] p-4 md:p-6 shadow-md border-b border-gray-800 transition-colors duration-300";
                 headerTitle.className = "text-xl md:text-2xl text-white font-pixel leading-snug";
