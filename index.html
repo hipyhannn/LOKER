@@ -1101,7 +1101,7 @@
                         </button>
                         <div id="dropdown-status-${lamaran.id}" class="dropdown-status-menu absolute left-0 bottom-full mb-1 w-48 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 max-h-52 overflow-y-auto">
                             ${daftarStatus.map(s => `
-                                <button onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/10 whitespace-nowrap ${s === status ? 'text-[#ff5ca0] border-l-[3px] border-[#ff5ca0]' : ''}">
+                                <button onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/15 ${s === status ? 'text-[#ff5ca0] border-l-[3px] border-[#ff5ca0]' : ''}">
                                     ${s}
                                 </button>
                             `).join('')}
@@ -1113,21 +1113,21 @@
                 const teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-';
 
                 let menuAksiItems = '';
-                const itemClass = currentTheme === 'light' ? 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-gray-100 text-gray-800 whitespace-nowrap' : 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/10 text-gray-200 whitespace-nowrap';
-                if (lamaran.link) menuAksiItems += `<a href="${lamaran.link}" target="_blank" class="${itemClass}">Buka Link Lowongan</a>`;
+                const itemClass = currentTheme === 'light' ? 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-gray-100 text-gray-800' : 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/15 text-gray-200';
+                if (lamaran.link) menuAksiItems += `<a href="${lamaran.link}" target="_blank" class="${itemClass} block">Buka Link Lowongan</a>`;
                 
                 const emailTujuan = lamaran.kontak && lamaran.kontak.includes('@') ? lamaran.kontak : '';
-                menuAksiItems += `<a href="mailto:${emailTujuan}?subject=${encodeURIComponent('Lamaran - ' + lamaran.posisi)}&body=${encodeURIComponent(templateEmail.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}" class="${itemClass}">Kirim / Buka Email</a>`;
+                menuAksiItems += `<a href="mailto:${emailTujuan}?subject=${encodeURIComponent('Lamaran - ' + lamaran.posisi)}&body=${encodeURIComponent(templateEmail.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}" class="${itemClass} block">Kirim / Buka Email</a>`;
 
                 let noWa = lamaran.kontak ? lamaran.kontak.replace(/[^0-9]/g, '') : '';
                 if (noWa.startsWith('0')) noWa = '62' + noWa.slice(1);
                 const waUrl = noWa.length > 5 ? `https://wa.me/${noWa}?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}` : `https://wa.me/?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}`;
                 
-                menuAksiItems += `<a href="${waUrl}" target="_blank" class="${itemClass}">Konfirmasi Interview</a>`;
-                menuAksiItems += `<button onclick="salinSuratOtomatis('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass}">📋 Salin Surat Lamaran</button>`;
+                menuAksiItems += `<a href="${waUrl}" target="_blank" class="${itemClass} block">Konfirmasi Interview</a>`;
+                menuAksiItems += `<button onclick="salinSuratOtomatis('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass} block w-full text-left">📋 Salin Surat Lamaran</button>`;
                 menuAksiItems += `<hr class="${currentTheme === 'light' ? 'border-gray-200 my-1' : 'border-gray-700 my-1'}">`;
-                menuAksiItems += `<button onclick="bukaModalEdit('${lamaran.id}')" class="${itemClass}">Edit Data</button>`;
-                menuAksiItems += `<button onclick="hapusLamaran('${lamaran.id}')" class="${itemClass}">Hapus Lamaran</button>`;
+                menuAksiItems += `<button onclick="bukaModalEdit('${lamaran.id}')" class="${itemClass} block w-full text-left">Edit Data</button>`;
+                menuAksiItems += `<button onclick="hapusLamaran('${lamaran.id}')" class="${itemClass} block w-full text-left">Hapus Lamaran</button>`;
 
                 const bintangi = `<button onclick="toggleFavorit('${lamaran.id}')" class="text-base text-yellow-400 hover:scale-125 transition-transform" title="Favorit">${lamaran.isFavorit ? '★' : '☆'}</button>`;
 
