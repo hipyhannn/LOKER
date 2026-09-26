@@ -1101,7 +1101,7 @@
                         </button>
                         <div id="dropdown-status-${lamaran.id}" class="dropdown-status-menu absolute left-0 bottom-full mb-1 w-44 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 max-h-52 overflow-y-auto">
                             ${daftarStatus.map(s => `
-                                <button onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/10 ${s === status ? 'text-[#ff5ca0]' : ''}">
+                                <button onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/10 ${s === status ? 'text-[#ff5ca0] border-l-[3px] border-[#ff5ca0]' : ''}">
                                     ${s}
                                 </button>
                             `).join('')}
@@ -1136,7 +1136,7 @@
                         <button onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-gray-700 bg-[#2d2d2d] hover:bg-gray-700 text-white shadow-sm transition-all flex items-center gap-1">
                             Aksi ▾
                         </button>
-                        <div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 bottom-full mb-1 w-60 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
+                        <div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 bottom-full mb-1 w-52 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
                             ${menuAksiItems}
                         </div>
                     </div>
