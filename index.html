@@ -83,7 +83,7 @@
         <!-- CATATAN HARIAN (DAILY NOTE) -->
         <div id="daily-note-box" class="bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 mb-6 shadow-md transition-colors duration-300">
             <div class="flex justify-between items-center mb-2">
-                <span id="daily-note-title" class="text-xs font-bold text-gray-400 uppercase tracking-wider">Catatan & Target Harian</span>
+                <span id="daily-note-title" class="text-xs font-bold text-gray-400 uppercase tracking-wider">Catatan Harian (<span id="label-tanggal-hari-ini">Hari Ini</span>)</span>
                 <button onclick="simpanCatatanHarian()" class="text-[11px] bg-[#ff5ca0]/20 hover:bg-[#ff5ca0]/30 text-[#ff5ca0] font-bold px-2.5 py-1 rounded-lg transition-colors">Simpan</button>
             </div>
             <textarea id="input-catatan-harian" oninput="autoSimpanCatatan()" rows="2" placeholder="Tulis target harianmu di sini..." class="w-full bg-[#121212] border border-gray-700/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed"></textarea>
@@ -340,7 +340,10 @@
         let currentFilterStatus = 'Semua';
         let pesanTimer = null;
 
-        document.getElementById('input-catatan-harian').value = localStorage.getItem('lokertrack_catatan_harian') || '';
+        // Mendapatkan tanggal hari ini format YYYY-MM-DD untuk catatan harian otomatis
+        const todayKey = new Date().toISOString().split('T')[0];
+        document.getElementById('label-tanggal-hari-ini').innerText = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        document.getElementById('input-catatan-harian').value = localStorage.getItem('lokertrack_catatan_' + todayKey) || '';
 
         const defaultTemplate = `Kepada Yth. Tim Rekrutmen / HRD {perusahaan},\nDi Tempat\n\nDengan hormat,\n\nMelalui pesan ini, saya bermaksud untuk menyampaikan ketertarikan saya untuk melamar posisi {posisi} di {perusahaan}.\n\nBerikut saya lampirkan berkas pendukung serta portofolio untuk menjadi bahan pertimbangan Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap seleksi selanjutnya.\n\nAtas waktu dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Lengkap Anda]`;
         
@@ -437,13 +440,13 @@
 
         function simpanCatatanHarian() {
             const teks = document.getElementById('input-catatan-harian').value;
-            localStorage.setItem('lokertrack_catatan_harian', teks);
-            alert("Catatan harian berhasil disimpan!");
+            localStorage.setItem('lokertrack_catatan_' + todayKey, teks);
+            alert("Catatan harian tanggal ini berhasil disimpan!");
         }
 
         function autoSimpanCatatan() {
             const teks = document.getElementById('input-catatan-harian').value;
-            localStorage.setItem('lokertrack_catatan_harian', teks);
+            localStorage.setItem('lokertrack_catatan_' + todayKey, teks);
         }
 
         function toggleFavorit(id) {
@@ -1100,6 +1103,10 @@
 
                 const bintangi = `<button onclick="toggleFavorit(${lamaran.id})" class="text-base text-yellow-400 hover:scale-125 transition-transform" title="Tandai Favorit">${lamaran.isFavorit ? '★' : '☆'}</button>`;
 
+                // Tombol Edit dan Hapus diberi ikon khusus sesuai permintaan agar simple
+                const tombolEdit = `<button onclick="bukaModalEdit(${lamaran.id})" class="text-sm border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-amber-600' : 'border-gray-700 bg-[#2d2d2d] text-amber-400'} px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg font-semibold transition-colors" title="Edit">✏️</button>`;
+                const tombolHapus = `<button onclick="hapusLamaran(${lamaran.id})" class="text-sm border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-red-600' : 'border-gray-700 bg-[#2d2d2d] text-red-400'} px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg font-semibold transition-colors" title="Hapus">🗑️</button>`;
+
                 const kartu = document.createElement('div');
                 kartu.className = currentTheme === 'light' ? 'bg-white p-4 md:p-5 rounded-xl shadow-md border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-hover hover:border-gray-300' : 'bg-[#1e1e1e] p-4 md:p-5 rounded-xl shadow-md border border-gray-800 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-hover hover:border-gray-600';
                 kartu.innerHTML = `
@@ -1126,8 +1133,8 @@
                             ${tombolLink}
                             ${tombolKontak}
                             ${tombolTemplate}
-                            <button onclick="bukaModalEdit(${lamaran.id})" class="text-sm border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-amber-600' : 'border-gray-700 bg-[#2d2d2d] text-amber-400'} px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg font-semibold transition-colors" title="Edit">Edit</button>
-                            <button onclick="hapusLamaran(${lamaran.id})" class="text-sm border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-red-600' : 'border-gray-700 bg-[#2d2d2d] text-red-400'} px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg font-semibold transition-colors" title="Hapus">Hapus</button>
+                            ${tombolEdit}
+                            ${tombolHapus}
                         </div>
                     </div>
                 `;
@@ -1158,8 +1165,8 @@
                             ${tombolLink}
                             ${tombolKontak}
                             ${tombolTemplate}
-                            <button onclick="bukaModalEdit(${lamaran.id})" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-amber-600' : 'border-gray-700 bg-[#2d2d2d] text-amber-400'} p-1.5 rounded font-semibold transition-colors" title="Edit">Edit</button>
-                            <button onclick="hapusLamaran(${lamaran.id})" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-red-600' : 'border-gray-700 bg-[#2d2d2d] text-red-400'} p-1.5 rounded font-semibold transition-colors" title="Hapus">Hapus</button>
+                            ${tombolEdit}
+                            ${tombolHapus}
                         </div>
                     </td>
                 `;
