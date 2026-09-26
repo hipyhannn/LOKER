@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Meta theme-color yang akan diubah dinamis lewat JavaScript -->
     <meta id="meta-theme-color" name="theme-color" content="#1a1a1a">
     <title>LOKER</title>
     <meta name="mobile-web-app-capable" content="yes">
@@ -32,6 +31,10 @@
             transition: transform 0.1s ease;
             cursor: grabbing !important;
         }
+
+        /* Scrollbar horizontal mulus untuk filter chips di HP */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body id="body-app" class="bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden">
@@ -51,7 +54,7 @@
                     <button onclick="toggleMenuTitikTiga(event)" id="btn-menu-titiktiga" class="px-3.5 py-2 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-md hover:scale-105 transition-all flex items-center justify-center shrink-0" title="Menu Lainnya">
                         ⋮
                     </button>
-                    <div id="dropdown-titiktiga" class="absolute right-0 mt-2 w-52 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300">
+                    <div id="dropdown-titiktiga" class="absolute right-0 mt-2 w-56 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300">
                         <button onclick="sinkronKeGoogleSheets()" id="menu-item-sync" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
                             <span>⟳</span> Sinkron Otomatis
                         </button>
@@ -59,7 +62,7 @@
                             <span>⚙</span> Atur Link Web App
                         </button>
                         <hr id="menu-divider" class="border-gray-700 my-1">
-                        <button onclick="toggleTema()" id="menu-item-theme" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
+                        <button onclick="toggleTemaManual()" id="menu-item-theme" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
                             <span id="icon-tema">☀</span> <span id="menu-text-tema">Mode Terang</span>
                         </button>
                     </div>
@@ -71,7 +74,7 @@
     <!-- Main Content -->
     <main class="max-w-4xl mx-auto p-3 md:p-4 mt-4 md:mt-6">
         <!-- Metrik 5 Kolom -->
-        <div class="grid grid-cols-5 gap-1.5 md:gap-4 mb-8 md:mb-10 text-center">
+        <div class="grid grid-cols-5 gap-1.5 md:gap-4 mb-6 text-center">
             <div id="card-total" class="bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-gray-500 transition-colors duration-300">
                 <p class="text-[9px] md:text-xs text-gray-400 font-bold mb-0.5 md:mb-1">Total</p>
                 <p class="text-base md:text-3xl font-bold" id="stat-total">0</p>
@@ -92,6 +95,15 @@
                 <p class="text-[9px] md:text-xs text-gray-400 font-bold mb-0.5 md:mb-1">Ditolak</p>
                 <p class="text-base md:text-3xl font-bold" id="stat-ditolak">0</p>
             </div>
+        </div>
+
+        <!-- Filter Chips (Status Cepat) -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar mb-6 pb-1">
+            <button onclick="setFilterStatus('Semua')" id="chip-Semua" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#ff5ca0] text-white shrink-0 shadow transition-all">Semua</button>
+            <button onclick="setFilterStatus('Proses')" id="chip-Proses" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#2d2d2d] text-gray-300 border border-gray-700 shrink-0 shadow transition-all">Proses</button>
+            <button onclick="setFilterStatus('Interview')" id="chip-Interview" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#2d2d2d] text-gray-300 border border-gray-700 shrink-0 shadow transition-all">Interview</button>
+            <button onclick="setFilterStatus('Diterima')" id="chip-Diterima" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#2d2d2d] text-gray-300 border border-gray-700 shrink-0 shadow transition-all">Diterima</button>
+            <button onclick="setFilterStatus('Ditolak')" id="chip-Ditolak" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#2d2d2d] text-gray-300 border border-gray-700 shrink-0 shadow transition-all">Ditolak</button>
         </div>
 
         <div>
@@ -115,10 +127,11 @@
                 <table class="w-full text-left text-xs md:text-sm">
                     <thead id="table-head" class="bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors duration-300">
                         <tr>
-                            <th class="p-3 font-bold w-[35%] md:w-[25%]">Perusahaan / Posisi</th>
-                            <th class="p-3 font-bold hidden md:table-cell md:w-[15%]">Tgl Lamar</th>
-                            <th class="p-3 font-bold text-yellow-500 hidden md:table-cell md:w-[15%]">Follow Up</th>
-                            <th class="p-3 font-bold w-[45%] md:w-[27%]">Status</th>
+                            <th class="p-3 font-bold w-[35%] md:w-[22%]">Perusahaan / Posisi</th>
+                            <th class="p-3 font-bold hidden md:table-cell md:w-[13%]">Tgl Lamar</th>
+                            <th class="p-3 font-bold text-yellow-500 hidden md:table-cell md:w-[13%]">Follow Up</th>
+                            <th class="p-3 font-bold hidden md:table-cell md:w-[12%]">Gaji</th>
+                            <th class="p-3 font-bold w-[45%] md:w-[22%]">Status</th>
                             <th class="p-3 font-bold w-[20%] md:w-[18%] text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -147,42 +160,24 @@
              class="relative w-[52px] h-[52px] cursor-pointer select-none shrink-0 transition-all duration-300 animate-breathe drop-shadow-2xl" 
              onclick="handlePandaClick(event)">
             
-            <!-- Speech Bubble -->
             <div id="speech-bubble" class="absolute bottom-[120%] left-[-10px] w-[180px] bg-white text-black p-3 rounded-2xl shadow-xl opacity-0 translate-y-2 transition-all duration-300 pointer-events-none z-50">
                 <p id="panda-pesan" class="text-xs font-bold leading-tight">"Halo bos!"</p>
                 <div class="absolute top-full left-[30px] w-0 h-0 border-l-[8px] border-l-transparent border-t-[10px] border-t-white border-r-[8px] border-r-transparent"></div>
             </div>
 
-            <!-- Telinga -->
             <div class="absolute w-[14px] h-[14px] bg-[#111] rounded-full top-[4px] left-[6px] z-0"></div>
             <div class="absolute w-[14px] h-[14px] bg-[#111] rounded-full top-[4px] right-[6px] z-0"></div>
-            
-            <!-- Tangan -->
             <div class="absolute w-[12px] h-[18px] bg-[#111] rounded-full top-[22px] left-[2px] -rotate-45 z-10"></div>
             <div class="absolute w-[12px] h-[18px] bg-[#111] rounded-full top-[22px] right-[2px] rotate-45 z-10"></div>
-            
-            <!-- Badan Duduk -->
             <div class="absolute w-[44px] h-[28px] bg-white rounded-t-[20px] rounded-b-[10px] bottom-[2px] left-[4px] z-0 shadow-[inset_-2px_-2px_6px_rgba(0,0,0,0.15)]"></div>
-            
-            <!-- Kaki Duduk Mengangkang -->
             <div class="absolute w-[14px] h-[16px] bg-[#111] rounded-full bottom-[0px] left-[0px] -rotate-[60deg] z-20"></div>
             <div class="absolute w-[14px] h-[16px] bg-[#111] rounded-full bottom-[0px] right-[0px] rotate-[60deg] z-20"></div>
-            
-            <!-- Kepala -->
             <div class="absolute w-[48px] h-[34px] bg-white rounded-full top-[6px] left-[2px] z-10 shadow-[inset_-1px_-2px_4px_rgba(0,0,0,0.05)] border border-gray-100"></div>
-            
-            <!-- Belang Mata -->
             <div class="absolute w-[12px] h-[16px] bg-[#111] rounded-[45%] top-[16px] left-[10px] rotate-12 z-20"></div>
             <div class="absolute w-[12px] h-[16px] bg-[#111] rounded-[45%] top-[16px] right-[10px] -rotate-12 z-20"></div>
-            
-            <!-- Pupil Putih -->
             <div id="panda-eye-l" class="absolute w-[5px] h-[5px] bg-white rounded-full top-[19px] left-[13px] z-30 transition-all duration-300"></div>
             <div id="panda-eye-r" class="absolute w-[5px] h-[5px] bg-white rounded-full top-[19px] right-[13px] z-30 transition-all duration-300"></div>
-            
-            <!-- Hidung -->
             <div class="absolute w-[7px] h-[5px] bg-[#111] rounded-full top-[25px] left-[22.5px] z-20"></div>
-            
-            <!-- Aksesoris -->
             <div id="panda-aksesoris" class="absolute top-[4px] -right-[6px] text-[16px] z-40 transition-all duration-300 pointer-events-none"></div>
         </div>
     </div>
@@ -224,15 +219,22 @@
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <label id="label-metode" class="block text-xs font-bold text-gray-400 mb-1.5">METODE</label>
-                    <select id="input-metode" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
-                        <option value="Email">Email</option>
-                        <option value="Website Perusahaan">Website Perusahaan</option>
-                        <option value="Job Portal">Job Portal</option>
-                        <option value="LinkedIn">LinkedIn</option>
-                    </select>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label id="label-metode" class="block text-xs font-bold text-gray-400 mb-1.5">METODE</label>
+                        <select id="input-metode" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
+                            <option value="Email">Email</option>
+                            <option value="Website Perusahaan">Website Perusahaan</option>
+                            <option value="Job Portal">Job Portal</option>
+                            <option value="LinkedIn">LinkedIn</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-green-500 mb-1.5">GAJI / EXPECTED (OPSIONAL)</label>
+                        <input type="text" id="input-gaji" placeholder="Misal: Rp 7.000.000" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-green-400 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
+                    </div>
                 </div>
+
                 <div class="mb-4">
                     <label id="label-status-form" class="block text-xs font-bold text-gray-400 mb-1.5">STATUS</label>
                     <select id="input-status" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
@@ -254,7 +256,7 @@
                 </div>
                 <div class="mb-6">
                     <label id="label-keterangan" class="block text-xs font-bold text-gray-400 mb-1.5">KETERANGAN / CATATAN</label>
-                    <textarea id="input-keterangan" rows="2" placeholder="Misal: Gaji diharapkan 8jt, lewat referral teman..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]"></textarea>
+                    <textarea id="input-keterangan" rows="2" placeholder="Misal: Lewat referral teman..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]"></textarea>
                 </div>
                 <button type="submit" class="w-full bg-[#ff5ca0] text-white font-bold py-3.5 rounded-lg hover:bg-[#ff4081] transition-colors shadow-lg">
                     Simpan Perubahan
@@ -263,17 +265,30 @@
         </div>
     </div>
 
+    <!-- Modal Template Pesan Follow-Up -->
+    <div id="modal-template" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
+        <div id="modal-template-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 transition-colors duration-300">
+            <div class="flex justify-between items-center mb-4">
+                <h2 id="modal-template-title" class="text-lg font-bold text-white">Template Pesan Follow-Up</h2>
+                <button onclick="tutupModalTemplate()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold">&times;</button>
+            </div>
+            <p class="text-xs text-gray-400 mb-2">Salin pesan sopan di bawah ini untuk dikirimkan ke HRD:</p>
+            <textarea id="text-template-pesan" rows="6" readonly class="w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none mb-4 select-all"></textarea>
+            <button onclick="salinTemplatePesan()" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs shadow-md">Salin Pesan ke Clipboard</button>
+        </div>
+    </div>
+
     <script>
         let dataLamaran = JSON.parse(localStorage.getItem('lokertrack_data')) || [];
-        let currentTheme = localStorage.getItem('lokertrack_theme') || 'dark';
+        let currentTheme = localStorage.getItem('lokertrack_theme') || 'auto';
         let currentMode = localStorage.getItem('lokertrack_mode') || 'card';
-        
+        let currentFilterStatus = 'Semua';
         let pesanTimer = null;
         
         const modal = document.getElementById('modal-form');
         const form = document.getElementById('form-lamaran');
 
-        applyTheme(currentTheme);
+        inisialisasiTemaOtomatis();
         setModeTampilan(currentMode);
 
         window.addEventListener('click', function(e) {
@@ -288,6 +303,209 @@
             event.stopPropagation();
             const dropdown = document.getElementById('dropdown-titiktiga');
             dropdown.classList.toggle('hidden');
+        }
+
+        // ==========================================
+        // FITUR DARK / LIGHT MODE OTOMATIS BERDASARKAN JAM
+        // ==========================================
+        function inisialisasiTemaOtomatis() {
+            const savedTheme = localStorage.getItem('lokertrack_theme');
+            if (savedTheme === 'light' || savedTheme === 'dark') {
+                currentTheme = savedTheme;
+            } else {
+                // Auto berdasarkan jam (Jam 06.00 s.d 18.00 = Terang, sisanya Gelap)
+                const jam = new Date().getHours();
+                currentTheme = (jam >= 6 && jam < 18) ? 'light' : 'dark';
+            }
+            applyTheme(currentTheme);
+        }
+
+        function toggleTemaManual() {
+            document.getElementById('dropdown-titiktiga').classList.add('hidden');
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('lokertrack_theme', currentTheme);
+            applyTheme(currentTheme);
+            setModeTampilan(currentMode);
+        }
+
+        function applyTheme(theme) {
+            const body = document.getElementById('body-app');
+            const header = document.getElementById('header-app');
+            const headerTitle = document.getElementById('header-title');
+            const btnTitikTiga = document.getElementById('btn-menu-titiktiga');
+            const dropdownTitikTiga = document.getElementById('dropdown-titiktiga');
+            const menuItemSync = document.getElementById('menu-item-sync');
+            const menuItemSetting = document.getElementById('menu-item-setting');
+            const menuItemTheme = document.getElementById('menu-item-theme');
+            const menuDivider = document.getElementById('menu-divider');
+            const menuTextTema = document.getElementById('menu-text-tema');
+            const iconTema = document.getElementById('icon-tema');
+            const metaThemeColor = document.getElementById('meta-theme-color');
+
+            const labelInfo = document.getElementById('label-info-lamaran');
+            const viewToggleBg = document.getElementById('view-toggle-bg');
+            const viewTabelContainer = document.getElementById('view-tabel');
+            const tableHead = document.getElementById('table-head');
+            
+            const modalBox = document.getElementById('modal-box');
+            const modalJudul = document.getElementById('modal-judul');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+
+            const modalSettingBox = document.getElementById('modal-setting-box');
+            const modalSettingTitle = document.getElementById('modal-setting-title');
+            const modalSettingDesc = document.getElementById('modal-setting-desc');
+            const modalSettingClose = document.getElementById('modal-setting-close');
+
+            const modalTemplateBox = document.getElementById('modal-template-box');
+            const modalTemplateTitle = document.getElementById('modal-template-title');
+
+            const inputPencarian = document.getElementById('input-pencarian');
+            
+            const labelPerusahaan = document.getElementById('label-perusahaan');
+            const labelPosisi = document.getElementById('label-posisi');
+            const labelTgl = document.getElementById('label-tgl');
+            const labelMetode = document.getElementById('label-metode');
+            const labelStatusForm = document.getElementById('label-status-form');
+            const labelKeterangan = document.getElementById('label-keterangan');
+
+            const cardTotal = document.getElementById('card-total');
+            const cardProses = document.getElementById('card-proses');
+            const cardInterview = document.getElementById('card-interview');
+            const cardDiterima = document.getElementById('card-diterima');
+            const cardDitolak = document.getElementById('card-ditolak');
+
+            if (theme === 'light') {
+                metaThemeColor.setAttribute('content', '#ffffff');
+                body.className = "bg-gray-100 text-gray-900 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden";
+                header.className = "bg-white p-4 md:p-6 shadow-md border-b border-gray-200 transition-colors duration-300";
+                headerTitle.className = "text-xl md:text-2xl text-gray-900 font-pixel leading-snug";
+                btnTitikTiga.className = "px-3.5 py-2 rounded-xl text-sm font-bold border border-gray-300 bg-gray-100 text-gray-700 shadow-md hover:scale-105 transition-all flex items-center justify-center shrink-0";
+                
+                dropdownTitikTiga.className = "absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
+                menuItemSync.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2 text-gray-800";
+                menuItemSetting.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2 text-gray-800";
+                menuItemTheme.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2 text-gray-800";
+                menuDivider.className = "border-gray-200 my-1";
+                menuTextTema.innerText = "Mode Gelap";
+                iconTema.innerText = "☽";
+
+                labelInfo.className = "text-xl md:text-2xl font-bold text-gray-900 mb-1";
+                viewToggleBg.className = "flex gap-1 bg-gray-200 p-1.5 rounded-lg w-max border border-gray-300 transition-colors duration-300";
+                viewTabelContainer.className = "bg-white rounded-xl shadow-lg border border-gray-200 transition-colors duration-300 overflow-x-hidden pb-3";
+                tableHead.className = "bg-gray-50 text-gray-700 border-b border-gray-200 transition-colors duration-300";
+                
+                modalBox.className = "bg-white border border-gray-200 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 max-h-[90vh] overflow-y-auto transition-colors duration-300";
+                modalJudul.className = "text-lg md:text-xl font-bold text-gray-900";
+                modalCloseBtn.className = "bg-gray-100 hover:bg-gray-200 rounded text-gray-600 px-3 py-1 font-bold transition-colors";
+
+                modalSettingBox.className = "bg-white border border-gray-200 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 transition-colors duration-300";
+                modalSettingTitle.className = "text-lg font-bold text-gray-900";
+                modalSettingDesc.className = "text-xs text-gray-500 mb-3";
+                modalSettingClose.className = "bg-gray-100 hover:bg-gray-200 rounded text-gray-600 px-3 py-1 font-bold transition-colors";
+
+                modalTemplateBox.className = "bg-white border border-gray-200 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 transition-colors duration-300";
+                modalTemplateTitle.className = "text-lg font-bold text-gray-900";
+
+                inputPencarian.className = "search-input bg-gray-50 border border-gray-300 rounded-xl px-4 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-sm transition-colors duration-300 flex-1 md:w-44";
+                
+                [labelPerusahaan, labelPosisi, labelTgl, labelMetode, labelStatusForm, labelKeterangan].forEach(l => l.className = "block text-xs font-bold text-gray-500 mb-1.5");
+
+                cardTotal.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-gray-400 transition-colors duration-300";
+                cardProses.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-blue-400 transition-colors duration-300";
+                cardInterview.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-yellow-400 transition-colors duration-300";
+                cardDiterima.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-green-400 transition-colors duration-300";
+                cardDitolak.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-red-400 transition-colors duration-300";
+
+                document.querySelectorAll('.modal-input').forEach(inp => {
+                    inp.className = "modal-input w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-gray-900 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]";
+                });
+
+            } else {
+                metaThemeColor.setAttribute('content', '#1a1a1a');
+                body.className = "bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden";
+                header.className = "bg-[#1a1a1a] p-4 md:p-6 shadow-md border-b border-gray-800 transition-colors duration-300";
+                headerTitle.className = "text-xl md:text-2xl text-white font-pixel leading-snug";
+                btnTitikTiga.className = "px-3.5 py-2 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-md hover:scale-105 transition-all flex items-center justify-center shrink-0";
+                
+                dropdownTitikTiga.className = "absolute right-0 mt-2 w-56 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
+                menuItemSync.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-white/5 transition-colors flex items-center gap-2 text-gray-200";
+                menuItemSetting.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-white/5 transition-colors flex items-center gap-2 text-gray-200";
+                menuItemTheme.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-white/5 transition-colors flex items-center gap-2 text-gray-200";
+                menuDivider.className = "border-gray-700 my-1";
+                menuTextTema.innerText = "Mode Terang";
+                iconTema.innerText = "☀";
+
+                labelInfo.className = "text-xl md:text-2xl font-bold text-white mb-1";
+                viewToggleBg.className = "flex gap-1 bg-[#1a1a1a] p-1.5 rounded-lg w-max border border-gray-800 transition-colors duration-300";
+                viewTabelContainer.className = "bg-[#1e1e1e] rounded-xl shadow-lg border border-gray-800 transition-colors duration-300 overflow-x-hidden pb-3";
+                tableHead.className = "bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors duration-300";
+                
+                modalBox.className = "bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 max-h-[90vh] overflow-y-auto transition-colors duration-300";
+                modalJudul.className = "text-lg md:text-xl font-bold text-white";
+                modalCloseBtn.className = "bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold transition-colors";
+
+                modalSettingBox.className = "bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 transition-colors duration-300";
+                modalSettingTitle.className = "text-lg font-bold text-white";
+                modalSettingDesc.className = "text-xs text-gray-400 mb-3";
+                modalSettingClose.className = "bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold transition-colors";
+
+                modalTemplateBox.className = "bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 transition-colors duration-300";
+                modalTemplateTitle.className = "text-lg font-bold text-white";
+
+                inputPencarian.className = "search-input bg-[#121212] border border-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-md transition-colors duration-300 flex-1 md:w-44";
+                
+                [labelPerusahaan, labelPosisi, labelTgl, labelMetode, labelStatusForm, labelKeterangan].forEach(l => l.className = "block text-xs font-bold text-gray-400 mb-1.5");
+
+                cardTotal.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-gray-500 transition-colors duration-300";
+                cardProses.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-blue-500 transition-colors duration-300";
+                cardInterview.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-yellow-500 transition-colors duration-300";
+                cardDiterima.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-green-500 transition-colors duration-300";
+                cardDitolak.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-red-500 transition-colors duration-300";
+
+                document.querySelectorAll('.modal-input').forEach(inp => {
+                    inp.className = "modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]";
+                });
+            }
+            renderTampilan();
+        }
+
+        // ==========================================
+        // FITUR FILTER STATUS CEPAT (CHIPS)
+        // ==========================================
+        function setFilterStatus(status) {
+            currentFilterStatus = status;
+            ['Semua', 'Proses', 'Interview', 'Diterima', 'Ditolak'].forEach(s => {
+                const btn = document.getElementById(`chip-${s}`);
+                if(s === status) {
+                    btn.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#ff5ca0] text-white shrink-0 shadow transition-all";
+                } else {
+                    btn.className = currentTheme === 'light' 
+                        ? "px-3.5 py-1.5 rounded-full text-xs font-bold bg-gray-200 text-gray-700 border border-gray-300 shrink-0 shadow transition-all"
+                        : "px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#2d2d2d] text-gray-300 border border-gray-700 shrink-0 shadow transition-all";
+                }
+            });
+            renderTampilan();
+        }
+
+        // ==========================================
+        // FITUR TEMPLATE PESAN FOLLOW-UP
+        // ==========================================
+        function bukaModalTemplate(perusahaan, posisi) {
+            const pesan = `Halo Tim HRD ${perusahaan},\n\nSemoga hari Anda menyenangkan.\n\nSehubungan dengan lamaran kerja saya untuk posisi ${posisi} yang telah saya kirimkan sebelumnya, melalui pesan ini saya ingin menanyakan kabar dan kelanjutan proses seleksi terkait posisi tersebut.\n\nBesar harapan saya untuk dapat bergabung dan berkontribusi di ${perusahaan}.\n\nTerima kasih atas waktu dan perhatian Anda.\n\nSalam hangat,\n[Nama Anda]`;
+            document.getElementById('text-template-pesan').value = pesan;
+            document.getElementById('modal-template').classList.remove('hidden');
+        }
+
+        function tutupModalTemplate() {
+            document.getElementById('modal-template').classList.add('hidden');
+        }
+
+        function salinTemplatePesan() {
+            const textarea = document.getElementById('text-template-pesan');
+            textarea.select();
+            navigator.clipboard.writeText(textarea.value);
+            alert("Template pesan berhasil disalin ke clipboard!");
+            tutupModalTemplate();
         }
 
         function bukaModalSetting() {
@@ -457,146 +675,6 @@
         pandaContainer.addEventListener('mousedown', dragPandaStart);
         pandaContainer.addEventListener('touchstart', dragPandaStart, {passive: false});
 
-        function toggleTema() {
-            document.getElementById('dropdown-titiktiga').classList.add('hidden');
-            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('lokertrack_theme', currentTheme);
-            applyTheme(currentTheme);
-            setModeTampilan(currentMode);
-        }
-
-        function applyTheme(theme) {
-            const body = document.getElementById('body-app');
-            const header = document.getElementById('header-app');
-            const headerTitle = document.getElementById('header-title');
-            const btnTitikTiga = document.getElementById('btn-menu-titiktiga');
-            const dropdownTitikTiga = document.getElementById('dropdown-titiktiga');
-            const menuItemSync = document.getElementById('menu-item-sync');
-            const menuItemSetting = document.getElementById('menu-item-setting');
-            const menuItemTheme = document.getElementById('menu-item-theme');
-            const menuDivider = document.getElementById('menu-divider');
-            const menuTextTema = document.getElementById('menu-text-tema');
-            const iconTema = document.getElementById('icon-tema');
-            const metaThemeColor = document.getElementById('meta-theme-color');
-
-            const labelInfo = document.getElementById('label-info-lamaran');
-            const viewToggleBg = document.getElementById('view-toggle-bg');
-            const viewTabelContainer = document.getElementById('view-tabel');
-            const tableHead = document.getElementById('table-head');
-            
-            const modalBox = document.getElementById('modal-box');
-            const modalJudul = document.getElementById('modal-judul');
-            const modalCloseBtn = document.getElementById('modal-close-btn');
-
-            const modalSettingBox = document.getElementById('modal-setting-box');
-            const modalSettingTitle = document.getElementById('modal-setting-title');
-            const modalSettingDesc = document.getElementById('modal-setting-desc');
-            const modalSettingClose = document.getElementById('modal-setting-close');
-
-            const inputPencarian = document.getElementById('input-pencarian');
-            
-            const labelPerusahaan = document.getElementById('label-perusahaan');
-            const labelPosisi = document.getElementById('label-posisi');
-            const labelTgl = document.getElementById('label-tgl');
-            const labelMetode = document.getElementById('label-metode');
-            const labelStatusForm = document.getElementById('label-status-form');
-            const labelKeterangan = document.getElementById('label-keterangan');
-
-            const cardTotal = document.getElementById('card-total');
-            const cardProses = document.getElementById('card-proses');
-            const cardInterview = document.getElementById('card-interview');
-            const cardDiterima = document.getElementById('card-diterima');
-            const cardDitolak = document.getElementById('card-ditolak');
-
-            if (theme === 'light') {
-                metaThemeColor.setAttribute('content', '#ffffff');
-                body.className = "bg-gray-100 text-gray-900 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden";
-                header.className = "bg-white p-4 md:p-6 shadow-md border-b border-gray-200 transition-colors duration-300";
-                headerTitle.className = "text-xl md:text-2xl text-gray-900 font-pixel leading-snug";
-                btnTitikTiga.className = "px-3.5 py-2 rounded-xl text-sm font-bold border border-gray-300 bg-gray-100 text-gray-700 shadow-md hover:scale-105 transition-all flex items-center justify-center shrink-0";
-                
-                dropdownTitikTiga.className = "absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
-                menuItemSync.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2 text-gray-800";
-                menuItemSetting.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2 text-gray-800";
-                menuItemTheme.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2 text-gray-800";
-                menuDivider.className = "border-gray-200 my-1";
-                menuTextTema.innerText = "Mode Gelap";
-                iconTema.innerText = "☽";
-
-                labelInfo.className = "text-xl md:text-2xl font-bold text-gray-900 mb-1";
-                viewToggleBg.className = "flex gap-1 bg-gray-200 p-1.5 rounded-lg w-max border border-gray-300 transition-colors duration-300";
-                viewTabelContainer.className = "bg-white rounded-xl shadow-lg border border-gray-200 transition-colors duration-300 overflow-x-hidden pb-3";
-                tableHead.className = "bg-gray-50 text-gray-700 border-b border-gray-200 transition-colors duration-300";
-                
-                modalBox.className = "bg-white border border-gray-200 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 max-h-[90vh] overflow-y-auto transition-colors duration-300";
-                modalJudul.className = "text-lg md:text-xl font-bold text-gray-900";
-                modalCloseBtn.className = "bg-gray-100 hover:bg-gray-200 rounded text-gray-600 px-3 py-1 font-bold transition-colors";
-
-                modalSettingBox.className = "bg-white border border-gray-200 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 transition-colors duration-300";
-                modalSettingTitle.className = "text-lg font-bold text-gray-900";
-                modalSettingDesc.className = "text-xs text-gray-500 mb-3";
-                modalSettingClose.className = "bg-gray-100 hover:bg-gray-200 rounded text-gray-600 px-3 py-1 font-bold transition-colors";
-
-                inputPencarian.className = "search-input bg-gray-50 border border-gray-300 rounded-xl px-4 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-sm transition-colors duration-300 flex-1 md:w-44";
-                
-                [labelPerusahaan, labelPosisi, labelTgl, labelMetode, labelStatusForm, labelKeterangan].forEach(l => l.className = "block text-xs font-bold text-gray-500 mb-1.5");
-
-                cardTotal.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-gray-400 transition-colors duration-300";
-                cardProses.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-blue-400 transition-colors duration-300";
-                cardInterview.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-yellow-400 transition-colors duration-300";
-                cardDiterima.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-green-400 transition-colors duration-300";
-                cardDitolak.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-red-400 transition-colors duration-300";
-
-                document.querySelectorAll('.modal-input').forEach(inp => {
-                    inp.className = "modal-input w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-gray-900 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]";
-                });
-
-            } else {
-                metaThemeColor.setAttribute('content', '#1a1a1a');
-                body.className = "bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden";
-                header.className = "bg-[#1a1a1a] p-4 md:p-6 shadow-md border-b border-gray-800 transition-colors duration-300";
-                headerTitle.className = "text-xl md:text-2xl text-white font-pixel leading-snug";
-                btnTitikTiga.className = "px-3.5 py-2 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-md hover:scale-105 transition-all flex items-center justify-center shrink-0";
-                
-                dropdownTitikTiga.className = "absolute right-0 mt-2 w-52 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
-                menuItemSync.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-white/5 transition-colors flex items-center gap-2 text-gray-200";
-                menuItemSetting.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-white/5 transition-colors flex items-center gap-2 text-gray-200";
-                menuItemTheme.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-white/5 transition-colors flex items-center gap-2 text-gray-200";
-                menuDivider.className = "border-gray-700 my-1";
-                menuTextTema.innerText = "Mode Terang";
-                iconTema.innerText = "☀";
-
-                labelInfo.className = "text-xl md:text-2xl font-bold text-white mb-1";
-                viewToggleBg.className = "flex gap-1 bg-[#1a1a1a] p-1.5 rounded-lg w-max border border-gray-800 transition-colors duration-300";
-                viewTabelContainer.className = "bg-[#1e1e1e] rounded-xl shadow-lg border border-gray-800 transition-colors duration-300 overflow-x-hidden pb-3";
-                tableHead.className = "bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors duration-300";
-                
-                modalBox.className = "bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 max-h-[90vh] overflow-y-auto transition-colors duration-300";
-                modalJudul.className = "text-lg md:text-xl font-bold text-white";
-                modalCloseBtn.className = "bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold transition-colors";
-
-                modalSettingBox.className = "bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 transition-colors duration-300";
-                modalSettingTitle.className = "text-lg font-bold text-white";
-                modalSettingDesc.className = "text-xs text-gray-400 mb-3";
-                modalSettingClose.className = "bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold transition-colors";
-
-                inputPencarian.className = "search-input bg-[#121212] border border-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-md transition-colors duration-300 flex-1 md:w-44";
-                
-                [labelPerusahaan, labelPosisi, labelTgl, labelMetode, labelStatusForm, labelKeterangan].forEach(l => l.className = "block text-xs font-bold text-gray-400 mb-1.5");
-
-                cardTotal.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-gray-500 transition-colors duration-300";
-                cardProses.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-blue-500 transition-colors duration-300";
-                cardInterview.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-yellow-500 transition-colors duration-300";
-                cardDiterima.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-green-500 transition-colors duration-300";
-                cardDitolak.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-red-500 transition-colors duration-300";
-
-                document.querySelectorAll('.modal-input').forEach(inp => {
-                    inp.className = "modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]";
-                });
-            }
-            renderTampilan();
-        }
-
         function bukaModalTambah() { 
             document.getElementById('modal-judul').innerText = "Tambah Info Loker";
             form.reset();
@@ -615,6 +693,7 @@
                 document.getElementById('input-tanggal').value = lamaran.tanggal || "";
                 document.getElementById('input-followup').value = lamaran.tanggalFollowUp || "";
                 document.getElementById('input-metode').value = lamaran.metode;
+                document.getElementById('input-gaji').value = lamaran.gaji || "";
                 document.getElementById('input-status').value = lamaran.status;
                 document.getElementById('input-keterangan').value = lamaran.keterangan || "";
                 modal.classList.remove('hidden');
@@ -666,10 +745,11 @@
             const tanggal = document.getElementById('input-tanggal').value;
             const tanggalFollowUp = document.getElementById('input-followup').value;
             const metode = document.getElementById('input-metode').value;
+            const gaji = document.getElementById('input-gaji').value;
             const status = document.getElementById('input-status').value;
             const keterangan = document.getElementById('input-keterangan').value;
 
-            const dataBaru = { perusahaan, posisi, tanggal, tanggalFollowUp, metode, status, keterangan };
+            const dataBaru = { perusahaan, posisi, tanggal, tanggalFollowUp, metode, gaji, status, keterangan };
 
             if (idInput) {
                 const index = dataLamaran.findIndex(item => item.id == idInput);
@@ -751,17 +831,28 @@
                 if (["Ditolak", "Tidak Ada Kabar"].includes(status)) statDitolak++;
             });
 
-            const dataFiltered = dataLamaran.filter(lamaran => 
-                lamaran.perusahaan.toLowerCase().includes(keyword) || 
-                lamaran.posisi.toLowerCase().includes(keyword) ||
-                (lamaran.keterangan && lamaran.keterangan.toLowerCase().includes(keyword))
-            );
+            // Filter Berdasarkan Pencarian & Kategori Chip Filter
+            const dataFiltered = dataLamaran.filter(lamaran => {
+                const matchKeyword = lamaran.perusahaan.toLowerCase().includes(keyword) || 
+                                     lamaran.posisi.toLowerCase().includes(keyword) ||
+                                     (lamaran.keterangan && lamaran.keterangan.toLowerCase().includes(keyword)) ||
+                                     (lamaran.gaji && lamaran.gaji.toLowerCase().includes(keyword));
+                
+                if (!matchKeyword) return false;
+
+                if (currentFilterStatus === 'Semua') return true;
+                if (currentFilterStatus === 'Proses') return ["Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Medical Check Up", "Offering", "Rencana Daftar", "Terkirim"].includes(lamaran.status);
+                if (currentFilterStatus === 'Interview') return ["Interview HR", "Interview User", "Final Interview"].includes(lamaran.status);
+                if (currentFilterStatus === 'Diterima') return lamaran.status === 'Diterima';
+                if (currentFilterStatus === 'Ditolak') return ["Ditolak", "Tidak Ada Kabar"].includes(lamaran.status);
+                return true;
+            });
 
             if (dataFiltered.length === 0) {
                 const emptyTextClass = currentTheme === 'light' ? 'text-center text-gray-500 py-12 text-base md:text-lg' : 'text-center text-gray-400 py-12 text-base md:text-lg';
-                const pesanKosong = statTotal === 0 ? 'Belum ada info. Pencet + dulu.' : 'Pencarian tidak ditemukan.';
+                const pesanKosong = statTotal === 0 ? 'Belum ada info. Pencet + dulu.' : 'Pencarian / filter tidak ditemukan.';
                 containerCard.innerHTML = `<p class="${emptyTextClass}">${pesanKosong}</p>`;
-                containerTabel.innerHTML = `<tr><td colspan="5" class="${emptyTextClass}">${pesanKosong}</td></tr>`;
+                containerTabel.innerHTML = `<tr><td colspan="6" class="${emptyTextClass}">${pesanKosong}</td></tr>`;
             }
 
             const daftarStatus = [
@@ -785,7 +876,7 @@
 
                 const teksFollowUp = lamaran.tanggalFollowUp ? formatTanggal(lamaran.tanggalFollowUp) : '-';
                 const warnaFollowUp = lamaran.tanggalFollowUp ? (currentTheme === 'light' ? 'text-yellow-600 font-semibold' : 'text-yellow-400 font-semibold') : 'text-gray-400';
-                const teksKeterangan = lamaran.keterangan ? lamaran.keterangan : '-';
+                const teksGaji = lamaran.gaji ? lamaran.gaji : '-';
 
                 const iconCalendar = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 12H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>`;
                 const iconEdit = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`;
@@ -794,17 +885,20 @@
                 const iconBell = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>`;
                 const iconMail = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>`;
                 const iconChat = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>`;
+                const iconMessage = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 12H6v-2h2v2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>`;
 
                 const tombolKalender = lamaran.tanggalFollowUp 
                     ? `<button onclick="tambahkanKeGoogleCalendar('${lamaran.perusahaan}', '${lamaran.posisi}', '${lamaran.tanggalFollowUp}', '${lamaran.status}')" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-blue-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-blue-400'} p-1.5 rounded font-semibold transition-colors" title="Google Calendar">${iconCalendar}</button>`
                     : '';
+
+                const tombolTemplate = `<button onclick="bukaModalTemplate('${lamaran.perusahaan}', '${lamaran.posisi}')" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-purple-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-purple-400'} p-1.5 rounded font-semibold transition-colors" title="Template Pesan Follow-Up">${iconMessage}</button>`;
 
                 const kartu = document.createElement('div');
                 kartu.className = currentTheme === 'light' ? 'bg-white p-4 md:p-5 rounded-xl shadow-md border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-hover hover:border-gray-300' : 'bg-[#1e1e1e] p-4 md:p-5 rounded-xl shadow-md border border-gray-800 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-hover hover:border-gray-600';
                 kartu.innerHTML = `
                     <div>
                         <h4 class="text-lg md:text-xl font-bold ${currentTheme === 'light' ? 'text-gray-900' : 'text-white'} mb-1">${lamaran.perusahaan}</h4>
-                        <p class="text-xs md:text-sm text-[#ff5ca0] font-semibold">${lamaran.posisi}</p>
+                        <p class="text-xs md:text-sm text-[#ff5ca0] font-semibold">${lamaran.posisi} ${lamaran.gaji ? `<span class="text-green-500 font-bold ml-2">💰 ${lamaran.gaji}</span>` : ''}</p>
                         <div class="flex flex-wrap items-center gap-3 mt-2.5 text-xs ${currentTheme === 'light' ? 'text-gray-600' : 'text-gray-300'}">
                             <span>${iconClock} ${formatTanggal(lamaran.tanggal)}</span>
                             <span class="${warnaFollowUp}">${iconBell} ${teksFollowUp}</span>
@@ -818,6 +912,7 @@
                         </select>
                         <div class="flex items-center gap-1.5">
                             ${tombolKalender}
+                            ${tombolTemplate}
                             <button onclick="bukaModalEdit(${lamaran.id})" class="text-sm border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-amber-600' : 'border-gray-700 bg-[#2d2d2d] text-amber-400'} px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg font-semibold transition-colors" title="Edit">${iconEdit}</button>
                             <button onclick="hapusLamaran(${lamaran.id})" class="text-sm border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-red-600' : 'border-gray-700 bg-[#2d2d2d] text-red-400'} px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg font-semibold transition-colors" title="Hapus">${iconTrash}</button>
                         </div>
@@ -835,6 +930,7 @@
                     </td>
                     <td class="p-3 hidden md:table-cell truncate ${currentTheme === 'light' ? 'text-gray-600' : 'text-gray-300'}">${formatTanggal(lamaran.tanggal)}</td>
                     <td class="p-3 hidden md:table-cell truncate ${warnaFollowUp}" title="${teksFollowUp}">${teksFollowUp}</td>
+                    <td class="p-3 hidden md:table-cell truncate text-green-500 font-semibold" title="${teksGaji}">${teksGaji}</td>
                     <td class="p-3">
                         <select onchange="ubahStatus(${lamaran.id}, this.value)" class="w-full text-[11px] md:text-xs border rounded p-1.5 font-semibold outline-none truncate ${warnaStatus}">
                             ${optionsHTML}
@@ -844,6 +940,7 @@
                     <td class="p-3 text-center">
                         <div class="flex items-center justify-center gap-1">
                             ${tombolKalender}
+                            ${tombolTemplate}
                             <button onclick="bukaModalEdit(${lamaran.id})" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-amber-600' : 'border-gray-700 bg-[#2d2d2d] text-amber-400'} p-1.5 rounded font-semibold transition-colors" title="Edit">${iconEdit}</button>
                             <button onclick="hapusLamaran(${lamaran.id})" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-red-600' : 'border-gray-700 bg-[#2d2d2d] text-red-400'} p-1.5 rounded font-semibold transition-colors" title="Hapus">${iconTrash}</button>
                         </div>
