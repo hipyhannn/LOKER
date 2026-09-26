@@ -1119,13 +1119,11 @@
                 const emailTujuan = lamaran.kontak && lamaran.kontak.includes('@') ? lamaran.kontak : '';
                 menuAksiItems += `<a href="mailto:${emailTujuan}?subject=${encodeURIComponent('Lamaran - ' + lamaran.posisi)}&body=${encodeURIComponent(templateEmail.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}" class="${itemClass}">Kirim / Buka Email</a>`;
 
-                if (lamaran.kontak) {
-                    let noWa = lamaran.kontak.replace(/[^0-9]/g, '');
-                    if (noWa.startsWith('0')) noWa = '62' + noWa.slice(1);
-                    const waInterview = noWa.length > 5 ? `https://wa.me/${noWa}?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}` : `https://wa.me/?text=`;
-                    menuAksiItems += `<a href="${waInterview}" target="_blank" class="${itemClass}">Konfirmasi Interview</a>`;
-                }
-
+                let noWa = lamaran.kontak ? lamaran.kontak.replace(/[^0-9]/g, '') : '';
+                if (noWa.startsWith('0')) noWa = '62' + noWa.slice(1);
+                const waUrl = noWa.length > 5 ? `https://wa.me/${noWa}?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}` : `https://wa.me/?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}`;
+                
+                menuAksiItems += `<a href="${waUrl}" target="_blank" class="${itemClass} text-green-400 font-bold">Konfirmasi Interview</a>`;
                 menuAksiItems += `<button onclick="salinSuratOtomatis('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass}">📋 Salin Surat Lamaran</button>`;
                 menuAksiItems += `<hr class="${currentTheme === 'light' ? 'border-gray-200 my-1' : 'border-gray-700 my-1'}">`;
                 menuAksiItems += `<button onclick="bukaModalEdit('${lamaran.id}')" class="${itemClass}">Edit Data</button>`;
