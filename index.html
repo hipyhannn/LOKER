@@ -80,13 +80,21 @@
     <!-- Main Content -->
     <main class="max-w-4xl mx-auto p-3 md:p-4 mt-4 md:mt-6">
         
-        <!-- CATATAN HARIAN (DAILY NOTE) -->
+        <!-- CATATAN HARIAN (DAILY NOTE) DENGAN FITUR COLLAPSE / HIDE -->
         <div id="daily-note-box" class="bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 mb-6 shadow-md transition-colors duration-300">
             <div class="flex justify-between items-center mb-2">
-                <span id="daily-note-title" class="text-xs font-bold text-gray-400 uppercase tracking-wider">Catatan Harian (<span id="label-tanggal-hari-ini">Hari Ini</span>)</span>
-                <button onclick="simpanCatatanHarian()" class="text-[11px] bg-[#ff5ca0]/20 hover:bg-[#ff5ca0]/30 text-[#ff5ca0] font-bold px-2.5 py-1 rounded-lg transition-colors">Simpan</button>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleCatatanHarian()" id="btn-toggle-catatan" class="text-xs font-bold text-[#ff5ca0] hover:underline focus:outline-none">▼ Sembunyikan Catatan</button>
+                    <span id="daily-note-title" class="text-xs font-bold text-gray-400 uppercase tracking-wider">| Harian (<span id="label-tanggal-hari-ini">Hari Ini</span>)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="bukaModalRiwayatCatatan()" class="text-[11px] bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold px-2 py-1 rounded-lg transition-colors" title="Lihat catatan hari sebelumnya">Riwayat</button>
+                    <button onclick="simpanCatatanHarian()" class="text-[11px] bg-[#ff5ca0]/20 hover:bg-[#ff5ca0]/30 text-[#ff5ca0] font-bold px-2.5 py-1 rounded-lg transition-colors">Simpan</button>
+                </div>
             </div>
-            <textarea id="input-catatan-harian" oninput="autoSimpanCatatan()" rows="2" placeholder="Tulis target harianmu di sini..." class="w-full bg-[#121212] border border-gray-700/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed"></textarea>
+            <div id="content-catatan-harian">
+                <textarea id="input-catatan-harian" oninput="autoSimpanCatatan()" rows="2" placeholder="Tulis target harianmu di sini..." class="w-full bg-[#121212] border border-gray-700/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed mt-1"></textarea>
+            </div>
         </div>
 
         <!-- Metrik 5 Kolom -->
@@ -156,6 +164,19 @@
             </div>
         </div>
     </main>
+
+    <!-- Modal Riwayat Catatan Harian -->
+    <div id="modal-riwayat-catatan" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
+        <div id="modal-riwayat-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 md:p-6 max-h-[80vh] overflow-y-auto transition-colors duration-300">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-white">Riwayat Catatan Harian</h2>
+                <button onclick="tutupModalRiwayatCatatan()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold">&times;</button>
+            </div>
+            <div id="list-riwayat-catatan" class="space-y-3">
+                <!-- Data riwayat akan dimuat di sini -->
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Pengaturan Link Spreadsheet -->
     <div id="modal-setting" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
@@ -340,7 +361,6 @@
         let currentFilterStatus = 'Semua';
         let pesanTimer = null;
 
-        // Mendapatkan tanggal hari ini format YYYY-MM-DD untuk catatan harian otomatis
         const todayKey = new Date().toISOString().split('T')[0];
         document.getElementById('label-tanggal-hari-ini').innerText = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
         document.getElementById('input-catatan-harian').value = localStorage.getItem('lokertrack_catatan_' + todayKey) || '';
@@ -354,6 +374,49 @@
 
         inisialisasiTemaOtomatis();
         setModeTampilan(currentMode);
+
+        function toggleCatatanHarian() {
+            const content = document.getElementById('content-catatan-harian');
+            const btn = document.getElementById('btn-toggle-catatan');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                btn.innerText = "▼ Sembunyikan Catatan";
+            } else {
+                content.classList.add('hidden');
+                btn.innerText = "▶ Buka Catatan";
+            }
+        }
+
+        function bukaModalRiwayatCatatan() {
+            const listDiv = document.getElementById('list-riwayat-catatan');
+            listDiv.innerHTML = '';
+            
+            let adaRiwayat = false;
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('lokertrack_catatan_')) {
+                    const tgl = key.replace('lokertrack_catatan_', '');
+                    const isiCatatan = localStorage.getItem(key);
+                    if (isiCatatan.trim() !== '') {
+                        adaRiwayat = true;
+                        const item = document.createElement('div');
+                        item.className = currentTheme === 'light' ? 'bg-gray-50 border border-gray-200 rounded-xl p-3' : 'bg-[#121212] border border-gray-700 rounded-xl p-3';
+                        item.innerHTML = `<p class="text-xs font-bold text-[#ff5ca0] mb-1">${tgl}</p><p class="text-xs text-gray-300 leading-relaxed">${isiCatatan}</p>`;
+                        listDiv.appendChild(item);
+                    }
+                }
+            }
+
+            if (!adaRiwayat) {
+                listDiv.innerHTML = `<p class="text-xs text-gray-500 text-center py-4">Belum ada riwayat catatan sebelumnya.</p>`;
+            }
+
+            document.getElementById('modal-riwayat-catatan').classList.remove('hidden');
+        }
+
+        function tutupModalRiwayatCatatan() {
+            document.getElementById('modal-riwayat-catatan').classList.add('hidden');
+        }
 
         window.addEventListener('click', function(e) {
             const dropdown = document.getElementById('dropdown-titiktiga');
@@ -562,7 +625,7 @@
                 menuTextTema.innerText = "Mode Gelap";
 
                 dailyNoteBox.className = "bg-white border border-gray-200 rounded-2xl p-4 mb-6 shadow-md transition-colors duration-300";
-                inputCatatanHarian.className = "w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed";
+                inputCatatanHarian.className = "w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed mt-1";
 
                 labelInfo.className = "text-xl md:text-2xl font-bold text-gray-900 mb-1";
                 viewToggleBg.className = "flex gap-1 bg-gray-200 p-1.5 rounded-lg w-max border border-gray-300 transition-colors duration-300";
@@ -611,7 +674,7 @@
                 menuTextTema.innerText = "Mode Terang";
 
                 dailyNoteBox.className = "bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 mb-6 shadow-md transition-colors duration-300";
-                inputCatatanHarian.className = "w-full bg-[#121212] border border-gray-700/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed";
+                inputCatatanHarian.className = "w-full bg-[#121212] border border-gray-700/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed mt-1";
 
                 labelInfo.className = "text-xl md:text-2xl font-bold text-white mb-1";
                 viewToggleBg.className = "flex gap-1 bg-[#1a1a1a] p-1.5 rounded-lg w-max border border-gray-800 transition-colors duration-300";
@@ -1089,21 +1152,21 @@
                     }
                 }
 
-                let tombolLink = lamaran.link ? `<a href="${lamaran.link}" target="_blank" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-blue-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-blue-400'} px-2 py-1.5 rounded font-semibold transition-colors" title="Buka Link Lowongan">Link</a>` : '';
+                let tombolLink = lamaran.link ? `<a href="${lamaran.link}" target="_blank" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-blue-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-blue-400'} px-2.5 py-1.5 rounded font-semibold transition-colors" title="Buka Link Lowongan">Link</a>` : '';
 
                 let tombolKontak = '';
                 if (lamaran.kontak) {
                     let nomorBersih = lamaran.kontak.replace(/[^0-9]/g, '');
                     if (nomorBersih.startsWith('0')) nomorBersih = '62' + nomorBersih.slice(1);
                     const linkWa = nomorBersih.length > 5 ? `https://wa.me/${nomorBersih}` : `https://wa.me/?text=Halo%20${encodeURIComponent(lamaran.kontak)}`;
-                    tombolKontak = `<a href="${linkWa}" target="_blank" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-green-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-green-400'} px-2 py-1.5 rounded font-semibold transition-colors" title="Chat HRD">WA</a>`;
+                    tombolKontak = `<a href="${linkWa}" target="_blank" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-green-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-green-400'} px-2.5 py-1.5 rounded font-semibold transition-colors" title="Chat HRD">WA</a>`;
                 }
 
-                const tombolTemplate = `<button onclick="bukaModalTemplate('${lamaran.perusahaan}', '${lamaran.posisi}')" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-purple-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-purple-400'} px-2 py-1.5 rounded font-semibold transition-colors" title="Salin Surat Lamaran">Surat</button>`;
+                const tombolTemplate = `<button onclick="bukaModalTemplate('${lamaran.perusahaan}', '${lamaran.posisi}')" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-purple-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-purple-400'} px-2.5 py-1.5 rounded font-semibold transition-colors" title="Salin Surat Lamaran">Surat</button>`;
 
                 const bintangi = `<button onclick="toggleFavorit(${lamaran.id})" class="text-base text-yellow-400 hover:scale-125 transition-transform" title="Tandai Favorit">${lamaran.isFavorit ? '★' : '☆'}</button>`;
 
-                // Tombol Edit dan Hapus diberi ikon khusus sesuai permintaan agar simple
+                // Tombol Edit dan Hapus kembali menggunakan ikon simpel seperti request awal
                 const tombolEdit = `<button onclick="bukaModalEdit(${lamaran.id})" class="text-sm border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-amber-600' : 'border-gray-700 bg-[#2d2d2d] text-amber-400'} px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg font-semibold transition-colors" title="Edit">✏️</button>`;
                 const tombolHapus = `<button onclick="hapusLamaran(${lamaran.id})" class="text-sm border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-red-600' : 'border-gray-700 bg-[#2d2d2d] text-red-400'} px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg font-semibold transition-colors" title="Hapus">🗑️</button>`;
 
