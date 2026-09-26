@@ -1,4 +1,4 @@
-const CACHE_NAME = 'apply-loker-v1';
+const CACHE_NAME = 'apply-loker-v2';
 const APP_SHELL = [
   './',
   './index.html',
