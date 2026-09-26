@@ -1123,7 +1123,7 @@
                 if (noWa.startsWith('0')) noWa = '62' + noWa.slice(1);
                 const waUrl = noWa.length > 5 ? `https://wa.me/${noWa}?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}` : `https://wa.me/?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}`;
                 
-                menuAksiItems += `<a href="${waUrl}" target="_blank" class="${itemClass} text-green-400 font-bold">Konfirmasi Interview</a>`;
+                menuAksiItems += `<a href="${waUrl}" target="_blank" class="${itemClass}">Konfirmasi Interview</a>`;
                 menuAksiItems += `<button onclick="salinSuratOtomatis('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass}">📋 Salin Surat Lamaran</button>`;
                 menuAksiItems += `<hr class="${currentTheme === 'light' ? 'border-gray-200 my-1' : 'border-gray-700 my-1'}">`;
                 menuAksiItems += `<button onclick="bukaModalEdit('${lamaran.id}')" class="${itemClass}">Edit Data</button>`;
@@ -1136,7 +1136,7 @@
                         <button onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-gray-700 bg-[#2d2d2d] hover:bg-gray-700 text-white shadow-sm transition-all flex items-center gap-1">
                             Aksi ▾
                         </button>
-                        <div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 bottom-full mb-1 w-52 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
+                        <div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 bottom-full mb-1 w-60 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
                             ${menuAksiItems}
                         </div>
                     </div>
