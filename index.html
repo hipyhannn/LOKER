@@ -50,7 +50,7 @@
                 <h2 id="header-title" class="text-xl md:text-2xl text-white font-pixel leading-snug">Apply LOKER</h2>
             </div>
             <div class="flex items-center gap-2.5 w-full md:w-auto flex-wrap">
-                <input type="text" id="input-pencarian" oninput="renderTampilan()" placeholder="🔍 Cari..." class="search-input bg-[#121212] border border-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-md transition-colors duration-300 flex-1 md:w-44">
+                <input type="text" id="input-pencarian" oninput="renderTampilan()" placeholder="Cari..." class="search-input bg-[#121212] border border-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-md transition-colors duration-300 flex-1 md:w-44">
                 
                 <!-- Menu Dropdown Titik Tiga (⋮) -->
                 <div class="relative">
@@ -59,17 +59,17 @@
                     </button>
                     <div id="dropdown-titiktiga" class="absolute right-0 mt-2 w-60 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300">
                         <button onclick="bukaModalTemplateGlobal()" id="menu-item-template" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
-                            <span>📄</span> Atur Template Lamaran
+                            <span>Atur Template Lamaran</span>
                         </button>
                         <button onclick="sinkronKeGoogleSheets()" id="menu-item-sync" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
-                            <span>⟳</span> Sinkron Otomatis
+                            <span>Sinkron Otomatis</span>
                         </button>
                         <button onclick="bukaModalSetting()" id="menu-item-setting" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
-                            <span>⚙</span> Atur Link Web App
+                            <span>Atur Link Web App</span>
                         </button>
                         <hr id="menu-divider" class="border-gray-700 my-1">
                         <button onclick="toggleTemaManual()" id="menu-item-theme" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
-                            <span id="icon-tema">☀</span> <span id="menu-text-tema">Mode Terang</span>
+                            <span id="menu-text-tema">Mode Terang</span>
                         </button>
                     </div>
                 </div>
@@ -83,10 +83,10 @@
         <!-- CATATAN HARIAN (DAILY NOTE) -->
         <div id="daily-note-box" class="bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 mb-6 shadow-md transition-colors duration-300">
             <div class="flex justify-between items-center mb-2">
-                <span id="daily-note-title" class="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">📌 Catatan & Target Harian</span>
-                <button onclick="simpanCatatanHarian()" class="text-[11px] bg-[#ff5ca0]/20 hover:bg-[#ff5ca0]/30 text-[#ff5ca0] font-bold px-2.5 py-1 rounded-lg transition-colors">Simpan Catatan</button>
+                <span id="daily-note-title" class="text-xs font-bold text-gray-400 uppercase tracking-wider">Catatan & Target Harian</span>
+                <button onclick="simpanCatatanHarian()" class="text-[11px] bg-[#ff5ca0]/20 hover:bg-[#ff5ca0]/30 text-[#ff5ca0] font-bold px-2.5 py-1 rounded-lg transition-colors">Simpan</button>
             </div>
-            <textarea id="input-catatan-harian" oninput="autoSimpanCatatan()" rows="2" placeholder="Tulis target harianmu di sini (Misal: Kirim 3 CV, latihan psikotes...)" class="w-full bg-[#121212] border border-gray-700/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed"></textarea>
+            <textarea id="input-catatan-harian" oninput="autoSimpanCatatan()" rows="2" placeholder="Tulis target harianmu di sini..." class="w-full bg-[#121212] border border-gray-700/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed"></textarea>
         </div>
 
         <!-- Metrik 5 Kolom -->
@@ -113,14 +113,14 @@
             </div>
         </div>
 
-        <!-- Filter Chips (Status Cepat + Arsip & Favorit) -->
+        <!-- Filter Chips -->
         <div class="flex items-center gap-2 overflow-x-auto no-scrollbar mb-6 pb-1">
             <button onclick="setFilterStatus('Semua')" id="chip-Semua" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#ff5ca0] text-white shrink-0 shadow transition-all">Semua Aktif</button>
-            <button onclick="setFilterStatus('Favorit')" id="chip-Favorit" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#2d2d2d] text-gray-300 border border-gray-700 shrink-0 shadow transition-all">⭐ Favorit</button>
+            <button onclick="setFilterStatus('Favorit')" id="chip-Favorit" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#2d2d2d] text-gray-300 border border-gray-700 shrink-0 shadow transition-all">Favorit</button>
             <button onclick="setFilterStatus('Proses')" id="chip-Proses" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#2d2d2d] text-gray-300 border border-gray-700 shrink-0 shadow transition-all">Proses</button>
             <button onclick="setFilterStatus('Interview')" id="chip-Interview" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#2d2d2d] text-gray-300 border border-gray-700 shrink-0 shadow transition-all">Interview</button>
             <button onclick="setFilterStatus('Diterima')" id="chip-Diterima" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#2d2d2d] text-gray-300 border border-gray-700 shrink-0 shadow transition-all">Diterima</button>
-            <button onclick="setFilterStatus('Arsip')" id="chip-Arsip" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#2d2d2d] text-gray-300 border border-gray-700 shrink-0 shadow transition-all">📁 Arsip / Ditolak</button>
+            <button onclick="setFilterStatus('Arsip')" id="chip-Arsip" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#2d2d2d] text-gray-300 border border-gray-700 shrink-0 shadow transition-all">Arsip / Ditolak</button>
         </div>
 
         <div>
@@ -139,7 +139,6 @@
             
             <div id="view-card" class="space-y-4"></div>
 
-            <!-- Tabel Fit & Responsif Tanpa Scroll Samping di HP -->
             <div id="view-tabel" class="hidden bg-[#1e1e1e] rounded-xl shadow-lg border border-gray-800 transition-colors duration-300 overflow-x-hidden pb-3">
                 <table class="w-full text-left text-xs md:text-sm">
                     <thead id="table-head" class="bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors duration-300">
@@ -341,7 +340,6 @@
         let currentFilterStatus = 'Semua';
         let pesanTimer = null;
 
-        // Inisialisasi Catatan Harian
         document.getElementById('input-catatan-harian').value = localStorage.getItem('lokertrack_catatan_harian') || '';
 
         const defaultTemplate = `Kepada Yth. Tim Rekrutmen / HRD {perusahaan},\nDi Tempat\n\nDengan hormat,\n\nMelalui pesan ini, saya bermaksud untuk menyampaikan ketertarikan saya untuk melamar posisi {posisi} di {perusahaan}.\n\nBerikut saya lampirkan berkas pendukung serta portofolio untuk menjadi bahan pertimbangan Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap seleksi selanjutnya.\n\nAtas waktu dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Lengkap Anda]`;
@@ -509,7 +507,6 @@
             const menuItemTheme = document.getElementById('menu-item-theme');
             const menuDivider = document.getElementById('menu-divider');
             const menuTextTema = document.getElementById('menu-text-tema');
-            const iconTema = document.getElementById('icon-tema');
             const metaThemeColor = document.getElementById('meta-theme-color');
 
             const dailyNoteBox = document.getElementById('daily-note-box');
@@ -560,7 +557,6 @@
                 menuItemTheme.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2 text-gray-800";
                 menuDivider.className = "border-gray-200 my-1";
                 menuTextTema.innerText = "Mode Gelap";
-                iconTema.innerText = "☽";
 
                 dailyNoteBox.className = "bg-white border border-gray-200 rounded-2xl p-4 mb-6 shadow-md transition-colors duration-300";
                 inputCatatanHarian.className = "w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 text-xs text-gray-900 focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed";
@@ -610,7 +606,6 @@
                 menuItemTheme.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-white/5 transition-colors flex items-center gap-2 text-gray-200";
                 menuDivider.className = "border-gray-700 my-1";
                 menuTextTema.innerText = "Mode Terang";
-                iconTema.innerText = "☀";
 
                 dailyNoteBox.className = "bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 mb-6 shadow-md transition-colors duration-300";
                 inputCatatanHarian.className = "w-full bg-[#121212] border border-gray-700/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed";
@@ -1082,44 +1077,28 @@
                 const warnaFollowUp = lamaran.tanggalFollowUp ? (currentTheme === 'light' ? 'text-yellow-600 font-semibold' : 'text-yellow-400 font-semibold') : 'text-gray-400';
                 const teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-';
 
-                // Badge Deadline Reminder
                 let badgeDeadline = '';
                 if (lamaran.deadline) {
                     if (lamaran.deadline < hariIni && !["Diterima", "Ditolak", "Tidak Ada Kabar"].includes(lamaran.status)) {
-                        badgeDeadline = `<span class="bg-red-600/30 text-red-400 border border-red-500/40 text-[10px] px-2 py-0.5 rounded font-bold">⚠️ Deadline Terlewat (${formatTanggal(lamaran.deadline)})</span>`;
+                        badgeDeadline = `<span class="bg-red-600/30 text-red-400 border border-red-500/40 text-[10px] px-2 py-0.5 rounded font-bold">Deadline Terlewat: ${formatTanggal(lamaran.deadline)}</span>`;
                     } else if (lamaran.deadline >= hariIni) {
-                        badgeDeadline = `<span class="bg-orange-500/20 text-orange-400 border border-orange-500/30 text-[10px] px-2 py-0.5 rounded font-bold">⏳ Deadline: ${formatTanggal(lamaran.deadline)}</span>`;
+                        badgeDeadline = `<span class="bg-orange-500/20 text-orange-400 border border-orange-500/30 text-[10px] px-2 py-0.5 rounded font-bold">Deadline: ${formatTanggal(lamaran.deadline)}</span>`;
                     }
                 }
 
-                // Tombol Link Lowongan
-                let tombolLink = lamaran.link ? `<a href="${lamaran.link}" target="_blank" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-blue-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-blue-400'} p-1.5 rounded font-semibold transition-colors inline-flex items-center gap-1" title="Buka Link Lowongan">🔗 Link</a>` : '';
+                let tombolLink = lamaran.link ? `<a href="${lamaran.link}" target="_blank" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-blue-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-blue-400'} px-2 py-1.5 rounded font-semibold transition-colors" title="Buka Link Lowongan">Link</a>` : '';
 
-                // Tombol WhatsApp Kontak HRD
                 let tombolKontak = '';
                 if (lamaran.kontak) {
                     let nomorBersih = lamaran.kontak.replace(/[^0-9]/g, '');
                     if (nomorBersih.startsWith('0')) nomorBersih = '62' + nomorBersih.slice(1);
                     const linkWa = nomorBersih.length > 5 ? `https://wa.me/${nomorBersih}` : `https://wa.me/?text=Halo%20${encodeURIComponent(lamaran.kontak)}`;
-                    tombolKontak = `<a href="${linkWa}" target="_blank" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-green-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-green-400'} p-1.5 rounded font-semibold transition-colors inline-flex items-center gap-1" title="Chat HRD: ${lamaran.kontak}">💬 WA</a>`;
+                    tombolKontak = `<a href="${linkWa}" target="_blank" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-green-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-green-400'} px-2 py-1.5 rounded font-semibold transition-colors" title="Chat HRD">WA</a>`;
                 }
 
-                const iconCalendar = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 12H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>`;
-                const iconEdit = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`;
-                const iconTrash = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
-                const iconClock = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>`;
-                const iconBell = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>`;
-                const iconMail = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>`;
-                const iconChat = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>`;
-                const iconMessage = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 12H6v-2h2v2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>`;
+                const tombolTemplate = `<button onclick="bukaModalTemplate('${lamaran.perusahaan}', '${lamaran.posisi}')" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-purple-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-purple-400'} px-2 py-1.5 rounded font-semibold transition-colors" title="Salin Surat Lamaran">Surat</button>`;
 
-                const tombolKalender = lamaran.tanggalFollowUp 
-                    ? `<button onclick="tambahkanKeGoogleCalendar('${lamaran.perusahaan}', '${lamaran.posisi}', '${lamaran.tanggalFollowUp}', '${lamaran.status}')" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-blue-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-blue-400'} p-1.5 rounded font-semibold transition-colors" title="Google Calendar">${iconCalendar}</button>`
-                    : '';
-
-                const tombolTemplate = `<button onclick="bukaModalTemplate('${lamaran.perusahaan}', '${lamaran.posisi}')" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-purple-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-purple-400'} p-1.5 rounded font-semibold transition-colors" title="Salin Surat Lamaran">${iconMessage}</button>`
-
-                const bintangi = `<button onclick="toggleFavorit(${lamaran.id})" class="text-base text-yellow-400 hover:scale-125 transition-transform" title="Tandai Favorit">${lamaran.isFavorit ? '⭐' : '☆'}</button>`;
+                const bintangi = `<button onclick="toggleFavorit(${lamaran.id})" class="text-base text-yellow-400 hover:scale-125 transition-transform" title="Tandai Favorit">${lamaran.isFavorit ? '★' : '☆'}</button>`;
 
                 const kartu = document.createElement('div');
                 kartu.className = currentTheme === 'light' ? 'bg-white p-4 md:p-5 rounded-xl shadow-md border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-hover hover:border-gray-300' : 'bg-[#1e1e1e] p-4 md:p-5 rounded-xl shadow-md border border-gray-800 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-hover hover:border-gray-600';
@@ -1130,14 +1109,14 @@
                             <h4 class="text-lg md:text-xl font-bold ${currentTheme === 'light' ? 'text-gray-900' : 'text-white'}">${lamaran.perusahaan}</h4>
                             ${badgeDeadline}
                         </div>
-                        <p class="text-xs md:text-sm text-[#ff5ca0] font-semibold">${lamaran.posisi} ${teksGaji !== '-' ? `<span class="text-green-500 font-bold ml-2">💰 ${teksGaji}</span>` : ''}</p>
+                        <p class="text-xs md:text-sm text-[#ff5ca0] font-semibold">${lamaran.posisi} ${teksGaji !== '-' ? `<span class="text-green-500 font-bold ml-2">Gaji: ${teksGaji}</span>` : ''}</p>
                         <div class="flex flex-wrap items-center gap-3 mt-2.5 text-xs ${currentTheme === 'light' ? 'text-gray-600' : 'text-gray-300'}">
-                            <span>${iconClock} ${formatTanggal(lamaran.tanggal)}</span>
-                            <span class="${warnaFollowUp}">${iconBell} ${teksFollowUp}</span>
-                            <span>${iconMail} ${lamaran.metode || 'Email'}</span>
-                            ${lamaran.kontak ? `<span class="text-purple-400 font-semibold">👤 ${lamaran.kontak}</span>` : ''}
+                            <span>Lamar: ${formatTanggal(lamaran.tanggal)}</span>
+                            <span class="${warnaFollowUp}">FU: ${teksFollowUp}</span>
+                            <span>Metode: ${lamaran.metode || 'Email'}</span>
+                            ${lamaran.kontak ? `<span class="text-purple-400 font-semibold">Kontak: ${lamaran.kontak}</span>` : ''}
                         </div>
-                        ${lamaran.keterangan ? `<p class="text-xs italic mt-2 ${currentTheme === 'light' ? 'text-gray-500' : 'text-gray-400'}">${iconChat} Keterangan:${lamaran.keterangan}</p>` : ''}
+                        ${lamaran.keterangan ? `<p class="text-xs italic mt-2 ${currentTheme === 'light' ? 'text-gray-500' : 'text-gray-400'}">Keterangan: ${lamaran.keterangan}</p>` : ''}
                     </div>
                     <div class="flex flex-wrap items-center justify-between md:justify-end gap-2 w-full md:w-auto pt-2 md:pt-0 border-t md:border-t-0 border-gray-700/50">
                         <select onchange="ubahStatus(${lamaran.id}, this.value)" class="text-xs md:text-sm border rounded-lg p-2 font-semibold outline-none focus:ring-1 focus:ring-gray-400 appearance-none ${warnaStatus}">
@@ -1146,10 +1125,9 @@
                         <div class="flex items-center gap-1.5">
                             ${tombolLink}
                             ${tombolKontak}
-                            ${tombolKalender}
                             ${tombolTemplate}
-                            <button onclick="bukaModalEdit(${lamaran.id})" class="text-sm border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-amber-600' : 'border-gray-700 bg-[#2d2d2d] text-amber-400'} px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg font-semibold transition-colors" title="Edit">${iconEdit}</button>
-                            <button onclick="hapusLamaran(${lamaran.id})" class="text-sm border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-red-600' : 'border-gray-700 bg-[#2d2d2d] text-red-400'} px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg font-semibold transition-colors" title="Hapus">${iconTrash}</button>
+                            <button onclick="bukaModalEdit(${lamaran.id})" class="text-sm border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-amber-600' : 'border-gray-700 bg-[#2d2d2d] text-amber-400'} px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg font-semibold transition-colors" title="Edit">Edit</button>
+                            <button onclick="hapusLamaran(${lamaran.id})" class="text-sm border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-red-600' : 'border-gray-700 bg-[#2d2d2d] text-red-400'} px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg font-semibold transition-colors" title="Hapus">Hapus</button>
                         </div>
                     </div>
                 `;
@@ -1173,16 +1151,15 @@
                         <select onchange="ubahStatus(${lamaran.id}, this.value)" class="w-full text-[11px] md:text-xs border rounded p-1.5 font-semibold outline-none truncate ${warnaStatus}">
                             ${optionsHTML}
                         </select>
-                        ${lamaran.tanggalFollowUp ? `<div class="text-[10px] text-yellow-500 md:hidden mt-1 truncate">🔔 FU: ${formatTanggal(lamaran.tanggalFollowUp)}</div>` : ''}
+                        ${lamaran.tanggalFollowUp ? `<div class="text-[10px] text-yellow-500 md:hidden mt-1 truncate">FU: ${formatTanggal(lamaran.tanggalFollowUp)}</div>` : ''}
                     </td>
                     <td class="p-3 text-center">
                         <div class="flex items-center justify-center gap-1">
                             ${tombolLink}
                             ${tombolKontak}
-                            ${tombolKalender}
                             ${tombolTemplate}
-                            <button onclick="bukaModalEdit(${lamaran.id})" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-amber-600' : 'border-gray-700 bg-[#2d2d2d] text-amber-400'} p-1.5 rounded font-semibold transition-colors" title="Edit">${iconEdit}</button>
-                            <button onclick="hapusLamaran(${lamaran.id})" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-red-600' : 'border-gray-700 bg-[#2d2d2d] text-red-400'} p-1.5 rounded font-semibold transition-colors" title="Hapus">${iconTrash}</button>
+                            <button onclick="bukaModalEdit(${lamaran.id})" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-amber-600' : 'border-gray-700 bg-[#2d2d2d] text-amber-400'} p-1.5 rounded font-semibold transition-colors" title="Edit">Edit</button>
+                            <button onclick="hapusLamaran(${lamaran.id})" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-red-600' : 'border-gray-700 bg-[#2d2d2d] text-red-400'} p-1.5 rounded font-semibold transition-colors" title="Hapus">Hapus</button>
                         </div>
                     </td>
                 `;
