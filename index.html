@@ -40,37 +40,67 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         input[type=range] { accent-color: #ff5ca0; }
+        
+        /* Retro Pixel Shadow & Border */
+        .pixel-box {
+            box-shadow: 4px 4px 0px 0px #ff5ca0;
+        }
+        .pixel-btn {
+            box-shadow: 3px 3px 0px 0px #000000;
+            transition: all 0.1s ease;
+        }
+        .pixel-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px 0px #000000;
+        }
     </style>
 </head>
 <body id="body-app" class="bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden">
     
-    <!-- HALAMAN LOGIN / AUTH FIREBASE -->
-    <div id="auth-screen" class="fixed inset-0 bg-[#121212] z-50 flex items-center justify-center p-4">
-        <div class="bg-[#1e1e1e] border border-gray-700 rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-6">
-            <div class="text-center space-y-2">
-                <h2 class="text-xl font-pixel text-white tracking-wide">Apply LOKER</h2>
-                <p id="auth-subtitle" class="text-xs text-gray-400">Masuk untuk akses data dari perangkat apa saja.</p>
+    <!-- HALAMAN LOGIN / AUTH FIREBASE (RETRO PIXEL STYLE) -->
+    <div id="auth-screen" class="fixed inset-0 bg-[#0d0d0d] z-50 flex items-center justify-center p-4">
+        <div class="bg-[#181818] border-4 border-[#ff5ca0] rounded-none shadow-[8px_8px_0px_0px_rgba(255,92,160,0.3)] w-full max-w-sm p-6 space-y-6 relative">
+            
+            <!-- Karakter / Maskot Pixel di atas form -->
+            <div class="flex flex-col items-center justify-center space-y-2 pt-2">
+                <div class="relative w-[52px] h-[52px] animate-breathe">
+                    <div class="absolute w-[12px] h-[12px] bg-[#111] rounded-none top-[3px] left-[5px]"></div>
+                    <div class="absolute w-[12px] h-[12px] bg-[#111] rounded-none top-[3px] right-[5px]"></div>
+                    <div class="absolute w-[10px] h-[16px] bg-[#111] rounded-none top-[20px] left-[2px] -rotate-45 z-10"></div>
+                    <div class="absolute w-[10px] h-[16px] bg-[#111] rounded-none top-[20px] right-[2px] rotate-45 z-10"></div>
+                    <div class="absolute w-[40px] h-[26px] bg-white rounded-none bottom-[2px] left-[4px] z-0"></div>
+                    <div class="absolute w-[12px] h-[14px] bg-[#111] rounded-none bottom-[0px] left-[1px] z-20"></div>
+                    <div class="absolute w-[12px] h-[14px] bg-[#111] rounded-none bottom-[0px] right-[1px] z-20"></div>
+                    <div class="absolute w-[44px] h-[30px] bg-white rounded-none top-[5px] left-[2px] z-10"></div>
+                    <div class="absolute w-[10px] h-[14px] bg-[#111] top-[14px] left-[9px] z-20"></div>
+                    <div class="absolute w-[10px] h-[14px] bg-[#111] top-[14px] right-[9px] z-20"></div>
+                    <div class="absolute w-[4px] h-[4px] bg-white rounded-none top-[17px] left-[12px] z-30"></div>
+                    <div class="absolute w-[4px] h-[4px] bg-white rounded-none top-[17px] right-[12px] z-30"></div>
+                    <div class="absolute w-[6px] h-[4px] bg-[#111] rounded-none top-[22px] left-[23px] z-20"></div>
+                </div>
+                <h2 class="text-sm font-pixel text-white tracking-wider text-center">APPLY LOKER</h2>
+                <p id="auth-subtitle" class="text-[10px] text-gray-400 font-pixel text-center leading-relaxed">INSERT COIN TO START</p>
             </div>
             
-            <div id="auth-error" class="bg-red-500/20 border border-red-500 text-red-300 text-xs p-3 rounded-xl hidden"></div>
+            <div id="auth-error" class="bg-red-500/20 border-2 border-red-500 text-red-300 text-[11px] p-2.5 rounded-none hidden"></div>
 
             <form id="form-auth" onsubmit="handleAuthSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 mb-1">EMAIL</label>
-                    <input type="email" id="auth-email" required placeholder="nama@email.com" class="w-full bg-[#121212] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                    <label class="block text-[10px] font-pixel text-[#ff5ca0] mb-1">EMAIL:</label>
+                    <input type="email" id="auth-email" required placeholder="player@email.com" class="w-full bg-[#121212] border-2 border-gray-600 rounded-none p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 mb-1">PASSWORD</label>
-                    <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-[#121212] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                    <label class="block text-[10px] font-pixel text-[#ff5ca0] mb-1">PASSWORD:</label>
+                    <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-[#121212] border-2 border-gray-600 rounded-none p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors">
                 </div>
-                <button type="submit" id="btn-auth-submit" class="w-full bg-[#ff5ca0] hover:bg-[#ff4081] text-white font-bold py-3 rounded-xl transition-colors text-xs shadow-lg">
-                    Masuk
+                <button type="submit" id="btn-auth-submit" class="w-full bg-[#ff5ca0] hover:bg-[#ff4081] text-white font-pixel text-[11px] py-3.5 rounded-none transition-colors pixel-btn uppercase tracking-widest">
+                    START GAME
                 </button>
             </form>
 
             <div class="text-center pt-2 border-t border-gray-800">
-                <button onclick="toggleAuthMode()" id="btn-toggle-auth" class="text-xs text-[#ff5ca0] font-semibold hover:underline">
-                    Belum punya akun? Daftar di sini
+                <button onclick="toggleAuthMode()" id="btn-toggle-auth" class="text-[10px] font-pixel text-[#ff5ca0] hover:underline">
+                    &gt; BELUM PUNYA AKUN? DAFTAR
                 </button>
             </div>
         </div>
@@ -455,8 +485,9 @@
 
         function toggleAuthMode() {
             isSignUpMode = !isSignUpMode;
-            document.getElementById('btn-auth-submit').innerText = isSignUpMode ? "Daftar Akun Baru" : "Masuk";
-            document.getElementById('btn-toggle-auth').innerText = isSignUpMode ? "Sudah punya akun? Masuk di sini" : "Belum punya akun? Daftar di sini";
+            document.getElementById('btn-auth-submit').innerText = isSignUpMode ? "REGISTER ACCOUNT" : "START GAME";
+            document.getElementById('auth-subtitle').innerText = isSignUpMode ? "CREATE NEW PLAYER PROFILE" : "INSERT COIN TO START";
+            document.getElementById('btn-toggle-auth').innerText = isSignUpMode ? "< SUDAH PUNYA AKUN? MASUK" : "> BELUM PUNYA AKUN? DAFTAR";
         }
 
         function handleAuthSubmit(e) {
