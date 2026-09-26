@@ -479,13 +479,9 @@
 
         function logoutUser() { auth.signOut(); }
 
-        function getSafeUserId() {
-            return currentUser.email.replace(/[.#$[\]]/g, "_");
-        }
-
         function muatDataRealtimeDB() {
             if (!currentUser) return;
-            const uid = getSafeUserId();
+            const uid = currentUser.uid;
             
             rtdb.ref('users/' + uid + '/lamaran').on('value', (snapshot) => {
                 dataLamaran = [];
@@ -506,20 +502,20 @@
 
         function simpanKeRealtimeDB(lamaranBaru) {
             if (!currentUser) return;
-            const uid = getSafeUserId();
+            const uid = currentUser.uid;
             const idDoc = lamaranBaru.id ? lamaranBaru.id.toString() : Date.now().toString();
             rtdb.ref('users/' + uid + '/lamaran/' + idDoc).set(lamaranBaru);
         }
 
         function hapusDariRealtimeDB(id) {
             if (!currentUser) return;
-            const uid = getSafeUserId();
+            const uid = currentUser.uid;
             rtdb.ref('users/' + uid + '/lamaran/' + id.toString()).remove();
         }
 
         function simpanCatatanHarian() {
             if (!currentUser) return;
-            const uid = getSafeUserId();
+            const uid = currentUser.uid;
             const isi = document.getElementById('input-catatan-harian').value;
             rtdb.ref('users/' + uid + '/catatan/' + todayKey).set({ isi: isi })
             .then(() => alert("Catatan harian berhasil disimpan ke cloud!"));
@@ -527,7 +523,7 @@
 
         function autoSimpanCatatan() {
             if (!currentUser) return;
-            const uid = getSafeUserId();
+            const uid = currentUser.uid;
             const isi = document.getElementById('input-catatan-harian').value;
             rtdb.ref('users/' + uid + '/catatan/' + todayKey).set({ isi: isi });
         }
@@ -567,7 +563,7 @@
 
         function bukaModalRiwayatCatatan() {
             if (!currentUser) return;
-            const uid = getSafeUserId();
+            const uid = currentUser.uid;
             rtdb.ref('users/' + uid + '/catatan').once('value').then(snapshot => {
                 const listDiv = document.getElementById('list-riwayat-catatan');
                 listDiv.innerHTML = '';
