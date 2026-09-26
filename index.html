@@ -34,6 +34,11 @@
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Styling Slider Gaji */
+        input[type=range] {
+            accent-color: #ff5ca0;
+        }
     </style>
 </head>
 <body id="body-app" class="bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden">
@@ -53,7 +58,10 @@
                     <button onclick="toggleMenuTitikTiga(event)" id="btn-menu-titiktiga" class="px-3.5 py-2 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-md hover:scale-105 transition-all flex items-center justify-center shrink-0" title="Menu Lainnya">
                         ⋮
                     </button>
-                    <div id="dropdown-titiktiga" class="absolute right-0 mt-2 w-56 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300">
+                    <div id="dropdown-titiktiga" class="absolute right-0 mt-2 w-60 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300">
+                        <button onclick="bukaModalTemplateGlobal()" id="menu-item-template" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
+                            <span>📄</span> Atur Template Lamaran
+                        </button>
                         <button onclick="sinkronKeGoogleSheets()" id="menu-item-sync" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
                             <span>⟳</span> Sinkron Otomatis
                         </button>
@@ -153,6 +161,22 @@
         </div>
     </div>
 
+    <!-- Modal Atur Template Surat Lamaran -->
+    <div id="modal-template" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
+        <div id="modal-template-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 md:p-6 transition-colors duration-300">
+            <div class="flex justify-between items-center mb-4">
+                <h2 id="modal-template-title" class="text-lg font-bold text-white">Atur Template Surat Lamaran</h2>
+                <button onclick="tutupModalTemplate()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold">&times;</button>
+            </div>
+            <p class="text-xs text-gray-400 mb-2">Edit template surat lamaran Anda. Gunakan <code class="text-[#ff5ca0]">{perusahaan}</code> dan <code class="text-[#ff5ca0]">{posisi}</code> agar terisi otomatis:</p>
+            <textarea id="text-template-pesan" rows="10" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] mb-4 leading-relaxed"></textarea>
+            <div class="flex gap-2">
+                <button onclick="simpanTemplateBaru()" class="flex-1 bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs shadow-md">Simpan Template</button>
+                <button onclick="salinTemplatePesan()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2.5 rounded-lg transition-colors text-xs shadow-md">Salin Saat Ini</button>
+            </div>
+        </div>
+    </div>
+
     <!-- PANDA FLOATING -->
     <div id="panda-container" class="fixed bottom-6 left-6 z-30 flex items-end gap-3 pb-2 select-none touch-none cursor-grab" title="Tahan & geser panda ke mana saja!">
         <div id="panda-avatar" 
@@ -229,30 +253,44 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-green-500 mb-1.5">GAJI / EXPECTED (OPSIONAL)</label>
-                        <input type="text" id="input-gaji" placeholder="Misal: Rp 7.000.000" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-green-400 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
+                        <label class="block text-xs font-bold text-green-500 mb-1.5">STATUS</label>
+                        <select id="input-status" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
+                            <option value="Rencana Daftar">Rencana Daftar</option>
+                            <option value="Terkirim">Terkirim</option>
+                            <option value="Screening HR">Screening HR</option>
+                            <option value="Psikotes">Psikotes</option>
+                            <option value="Tes Online">Tes Online</option>
+                            <option value="Tes Teknis">Tes Teknis</option>
+                            <option value="Interview HR">Interview HR</option>
+                            <option value="Interview User">Interview User</option>
+                            <option value="Final Interview">Final Interview</option>
+                            <option value="Medical Check Up">Medical Check Up</option>
+                            <option value="Offering">Offering</option>
+                            <option value="Diterima">Diterima</option>
+                            <option value="Ditolak">Ditolak</option>
+                            <option value="Tidak Ada Kabar">Tidak Ada Kabar</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <label id="label-status-form" class="block text-xs font-bold text-gray-400 mb-1.5">STATUS</label>
-                    <select id="input-status" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
-                        <option value="Rencana Daftar">Rencana Daftar</option>
-                        <option value="Terkirim">Terkirim</option>
-                        <option value="Screening HR">Screening HR</option>
-                        <option value="Psikotes">Psikotes</option>
-                        <option value="Tes Online">Tes Online</option>
-                        <option value="Tes Teknis">Tes Teknis</option>
-                        <option value="Interview HR">Interview HR</option>
-                        <option value="Interview User">Interview User</option>
-                        <option value="Final Interview">Final Interview</option>
-                        <option value="Medical Check Up">Medical Check Up</option>
-                        <option value="Offering">Offering</option>
-                        <option value="Diterima">Diterima</option>
-                        <option value="Ditolak">Ditolak</option>
-                        <option value="Tidak Ada Kabar">Tidak Ada Kabar</option>
-                    </select>
+                <!-- Input Gaji Menggunakan Slider / Geser -->
+                <div class="mb-4 bg-black/20 p-3.5 rounded-xl border border-gray-700/60">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <label class="text-xs font-bold text-green-400">ESTIMASI GAJI / EXPECTED</label>
+                        <span id="label-nominal-gaji" class="text-xs font-bold text-white bg-green-600/40 px-2 py-0.5 rounded">Rp 0</span>
+                    </div>
+                    <input type="range" id="input-gaji-slider" min="0" max="25000000" step="500000" value="0" oninput="updateGajiSlider(this.value)" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer mb-2">
+                    <div class="flex justify-between items-center gap-1 overflow-x-auto no-scrollbar pt-1">
+                        <button type="button" onclick="setGajiCepat(0)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">0</button>
+                        <button type="button" onclick="setGajiCepat(4500000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">4.5jt</button>
+                        <button type="button" onclick="setGajiCepat(6000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">6jt</button>
+                        <button type="button" onclick="setGajiCepat(8000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">8jt</button>
+                        <button type="button" onclick="setGajiCepat(10000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">10jt</button>
+                        <button type="button" onclick="setGajiCepat(15000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">15jt</button>
+                        <button type="button" onclick="setGajiCepat(25000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded border border-gray-700">25jt+</button>
+                    </div>
                 </div>
+
                 <div class="mb-6">
                     <label id="label-keterangan" class="block text-xs font-bold text-gray-400 mb-1.5">KETERANGAN / CATATAN</label>
                     <textarea id="input-keterangan" rows="2" placeholder="Misal: Lewat referral teman..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]"></textarea>
@@ -264,25 +302,16 @@
         </div>
     </div>
 
-    <!-- Modal Template Pesan Follow-Up (Bisa Diedit) -->
-    <div id="modal-template" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
-        <div id="modal-template-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 md:p-6 transition-colors duration-300">
-            <div class="flex justify-between items-center mb-4">
-                <h2 id="modal-template-title" class="text-lg font-bold text-white">Template Pesan Follow-Up (Formal)</h2>
-                <button onclick="tutupModalTemplate()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold">&times;</button>
-            </div>
-            <p class="text-xs text-gray-400 mb-2">Anda dapat mengedit teks di bawah ini sesuai kebutuhan sebelum menyalinnya:</p>
-            <textarea id="text-template-pesan" rows="9" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] mb-4 leading-relaxed"></textarea>
-            <button onclick="salinTemplatePesan()" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs shadow-md">Salin Pesan yang Telah Diedit</button>
-        </div>
-    </div>
-
     <script>
         let dataLamaran = JSON.parse(localStorage.getItem('lokertrack_data')) || [];
         let currentTheme = localStorage.getItem('lokertrack_theme') || 'auto';
         let currentMode = localStorage.getItem('lokertrack_mode') || 'card';
         let currentFilterStatus = 'Semua';
         let pesanTimer = null;
+
+        const defaultTemplate = `Kepada Yth. Tim Rekrutmen / HRD {perusahaan},\nDi Tempat\n\nDengan hormat,\n\nMelalui pesan ini, saya bermaksud untuk menyampaikan ketertarikan saya untuk melamar posisi {posisi} di {perusahaan}.\n\nBerikut saya lampirkan berkas pendukung serta portofolio untuk menjadi bahan pertimbangan Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap seleksi selanjutnya.\n\nAtas waktu dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Lengkap Anda]`;
+        
+        let templateSurat = localStorage.getItem('lokertrack_template_surat') || defaultTemplate;
         
         const modal = document.getElementById('modal-form');
         const form = document.getElementById('form-lamaran');
@@ -323,12 +352,34 @@
             setModeTampilan(currentMode);
         }
 
+        function formatRupiah(angka) {
+            if (!angka || angka == 0) return "-";
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
+        }
+
+        function updateGajiSlider(nilai) {
+            const label = document.getElementById('label-nominal-gaji');
+            if (nilai == 0) {
+                label.innerText = "Tidak Dicantumkan";
+            } else if (nilai >= 25000000) {
+                label.innerText = "Rp 25.000.000+";
+            } else {
+                label.innerText = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(nilai);
+            }
+        }
+
+        function setGajiCepat(nilai) {
+            document.getElementById('input-gaji-slider').value = nilai;
+            updateGajiSlider(nilai);
+        }
+
         function applyTheme(theme) {
             const body = document.getElementById('body-app');
             const header = document.getElementById('header-app');
             const headerTitle = document.getElementById('header-title');
             const btnTitikTiga = document.getElementById('btn-menu-titiktiga');
             const dropdownTitikTiga = document.getElementById('dropdown-titiktiga');
+            const menuItemTemplate = document.getElementById('menu-item-template');
             const menuItemSync = document.getElementById('menu-item-sync');
             const menuItemSetting = document.getElementById('menu-item-setting');
             const menuItemTheme = document.getElementById('menu-item-theme');
@@ -360,7 +411,6 @@
             const labelPosisi = document.getElementById('label-posisi');
             const labelTgl = document.getElementById('label-tgl');
             const labelMetode = document.getElementById('label-metode');
-            const labelStatusForm = document.getElementById('label-status-form');
             const labelKeterangan = document.getElementById('label-keterangan');
 
             const cardTotal = document.getElementById('card-total');
@@ -376,7 +426,8 @@
                 headerTitle.className = "text-xl md:text-2xl text-gray-900 font-pixel leading-snug";
                 btnTitikTiga.className = "px-3.5 py-2 rounded-xl text-sm font-bold border border-gray-300 bg-gray-100 text-gray-700 shadow-md hover:scale-105 transition-all flex items-center justify-center shrink-0";
                 
-                dropdownTitikTiga.className = "absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
+                dropdownTitikTiga.className = "absolute right-0 mt-2 w-60 bg-white border border-gray-200 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
+                menuItemTemplate.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2 text-gray-800";
                 menuItemSync.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2 text-gray-800";
                 menuItemSetting.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2 text-gray-800";
                 menuItemTheme.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2 text-gray-800";
@@ -403,7 +454,7 @@
 
                 inputPencarian.className = "search-input bg-gray-50 border border-gray-300 rounded-xl px-4 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-sm transition-colors duration-300 flex-1 md:w-44";
                 
-                [labelPerusahaan, labelPosisi, labelTgl, labelMetode, labelStatusForm, labelKeterangan].forEach(l => l.className = "block text-xs font-bold text-gray-500 mb-1.5");
+                [labelPerusahaan, labelPosisi, labelTgl, labelMetode, labelKeterangan].forEach(l => l.className = "block text-xs font-bold text-gray-500 mb-1.5");
 
                 cardTotal.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-gray-400 transition-colors duration-300";
                 cardProses.className = "bg-white py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-blue-400 transition-colors duration-300";
@@ -422,7 +473,8 @@
                 headerTitle.className = "text-xl md:text-2xl text-white font-pixel leading-snug";
                 btnTitikTiga.className = "px-3.5 py-2 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-md hover:scale-105 transition-all flex items-center justify-center shrink-0";
                 
-                dropdownTitikTiga.className = "absolute right-0 mt-2 w-56 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
+                dropdownTitikTiga.className = "absolute right-0 mt-2 w-60 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
+                menuItemTemplate.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-white/5 transition-colors flex items-center gap-2 text-gray-200";
                 menuItemSync.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-white/5 transition-colors flex items-center gap-2 text-gray-200";
                 menuItemSetting.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-white/5 transition-colors flex items-center gap-2 text-gray-200";
                 menuItemTheme.className = "w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-white/5 transition-colors flex items-center gap-2 text-gray-200";
@@ -449,7 +501,7 @@
 
                 inputPencarian.className = "search-input bg-[#121212] border border-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-md transition-colors duration-300 flex-1 md:w-44";
                 
-                [labelPerusahaan, labelPosisi, labelTgl, labelMetode, labelStatusForm, labelKeterangan].forEach(l => l.className = "block text-xs font-bold text-gray-400 mb-1.5");
+                [labelPerusahaan, labelPosisi, labelTgl, labelMetode, labelKeterangan].forEach(l => l.className = "block text-xs font-bold text-gray-400 mb-1.5");
 
                 cardTotal.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-gray-500 transition-colors duration-300";
                 cardProses.className = "bg-[#1e1e1e] py-3 px-1 md:px-3 rounded-xl shadow-lg border-t-[4px] md:border-t-[5px] border-blue-500 transition-colors duration-300";
@@ -479,11 +531,17 @@
             renderTampilan();
         }
 
+        function bukaModalTemplateGlobal() {
+            document.getElementById('dropdown-titiktiga').classList.add('hidden');
+            document.getElementById('text-template-pesan').value = templateSurat;
+            document.getElementById('modal-template').classList.remove('hidden');
+        }
+
         function bukaModalTemplate(perusahaan, posisi) {
-            // Template formal dan profesional
-            const pesan = `Kepada Yth. Tim Rekrutmen / HRD ${perusahaan},\nDi Tempat\n\nDengan hormat,\n\nSemoga pesan ini menemukan Bapak/Ibu dalam keadaan sehat walafiat.\n\nSehubungan dengan lamaran pekerjaan yang telah saya kirimkan pada tanggal sebelumnya untuk posisi ${posisi}, melalui pesan ini saya bermaksud untuk menanyakan konfirmasi serta kelanjutan informasi terkait proses seleksi tersebut.\n\nBesar harapan saya untuk diberikan kesempatan mengikuti tahapan seleksi selanjutnya guna dapat berkontribusi secara nyata di ${perusahaan}.\n\nDemikian surat pengantar ini saya sampaikan. Atas waktu, perhatian, serta kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Lengkap Anda]`;
-            
-            document.getElementById('text-template-pesan').value = pesan;
+            let pesanFinal = templateSurat
+                .replace(/{perusahaan}/g, perusahaan)
+                .replace(/{posisi}/g, posisi);
+            document.getElementById('text-template-pesan').value = pesanFinal;
             document.getElementById('modal-template').classList.remove('hidden');
         }
 
@@ -491,11 +549,23 @@
             document.getElementById('modal-template').classList.add('hidden');
         }
 
+        function simpanTemplateBaru() {
+            const isiBaru = document.getElementById('text-template-pesan').value.trim();
+            if(!isiBaru) {
+                alert("Template tidak boleh kosong!");
+                return;
+            }
+            templateSurat = isiBaru;
+            localStorage.setItem('lokertrack_template_surat', templateSurat);
+            alert("Template surat lamaran berhasil disimpan!");
+            tutupModalTemplate();
+        }
+
         function salinTemplatePesan() {
             const textarea = document.getElementById('text-template-pesan');
             textarea.select();
             navigator.clipboard.writeText(textarea.value);
-            alert("Pesan formal berhasil disalin ke clipboard!");
+            alert("Surat lamaran berhasil disalin ke clipboard!");
             tutupModalTemplate();
         }
 
@@ -671,6 +741,8 @@
             form.reset();
             document.getElementById('input-id').value = "";
             document.getElementById('input-tanggal').valueAsDate = new Date();
+            document.getElementById('input-gaji-slider').value = 0;
+            updateGajiSlider(0);
             modal.classList.remove('hidden'); 
         }
 
@@ -684,9 +756,14 @@
                 document.getElementById('input-tanggal').value = lamaran.tanggal || "";
                 document.getElementById('input-followup').value = lamaran.tanggalFollowUp || "";
                 document.getElementById('input-metode').value = lamaran.metode;
-                document.getElementById('input-gaji').value = lamaran.gaji || "";
                 document.getElementById('input-status').value = lamaran.status;
                 document.getElementById('input-keterangan').value = lamaran.keterangan || "";
+                
+                // Set nilai gaji slider dari data tersimpan (atau 0 jika format teks lama)
+                let nilaiGajiNum = parseInt(lamaran.gajiMentah) || 0;
+                document.getElementById('input-gaji-slider').value = nilaiGajiNum;
+                updateGajiSlider(nilaiGajiNum);
+
                 modal.classList.remove('hidden');
             }
         }
@@ -736,11 +813,13 @@
             const tanggal = document.getElementById('input-tanggal').value;
             const tanggalFollowUp = document.getElementById('input-followup').value;
             const metode = document.getElementById('input-metode').value;
-            const gaji = document.getElementById('input-gaji').value;
             const status = document.getElementById('input-status').value;
             const keterangan = document.getElementById('input-keterangan').value;
+            
+            const gajiMentah = parseInt(document.getElementById('input-gaji-slider').value) || 0;
+            const gaji = formatRupiah(gajiMentah);
 
-            const dataBaru = { perusahaan, posisi, tanggal, tanggalFollowUp, metode, gaji, status, keterangan };
+            const dataBaru = { perusahaan, posisi, tanggal, tanggalFollowUp, metode, gaji, gajiMentah, status, keterangan };
 
             if (idInput) {
                 const index = dataLamaran.findIndex(item => item.id == idInput);
@@ -866,7 +945,7 @@
 
                 const teksFollowUp = lamaran.tanggalFollowUp ? formatTanggal(lamaran.tanggalFollowUp) : '-';
                 const warnaFollowUp = lamaran.tanggalFollowUp ? (currentTheme === 'light' ? 'text-yellow-600 font-semibold' : 'text-yellow-400 font-semibold') : 'text-gray-400';
-                const teksGaji = lamaran.gaji ? lamaran.gaji : '-';
+                const teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-';
 
                 const iconCalendar = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 12H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>`;
                 const iconEdit = `<svg class="w-3.5 h-3.5 inline-block" fill="currentColor" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`;
@@ -881,14 +960,14 @@
                     ? `<button onclick="tambahkanKeGoogleCalendar('${lamaran.perusahaan}', '${lamaran.posisi}', '${lamaran.tanggalFollowUp}', '${lamaran.status}')" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-blue-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-blue-400'} p-1.5 rounded font-semibold transition-colors" title="Google Calendar">${iconCalendar}</button>`
                     : '';
 
-                const tombolTemplate = `<button onclick="bukaModalTemplate('${lamaran.perusahaan}', '${lamaran.posisi}')" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-purple-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-purple-400'} p-1.5 rounded font-semibold transition-colors" title="Template Pesan Follow-Up">${iconMessage}</button>`;
+                const tombolTemplate = `<button onclick="bukaModalTemplate('${lamaran.perusahaan}', '${lamaran.posisi}')" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-purple-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-purple-400'} p-1.5 rounded font-semibold transition-colors" title="Salin Surat Lamaran">${iconMessage}</button>`;
 
                 const kartu = document.createElement('div');
                 kartu.className = currentTheme === 'light' ? 'bg-white p-4 md:p-5 rounded-xl shadow-md border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-hover hover:border-gray-300' : 'bg-[#1e1e1e] p-4 md:p-5 rounded-xl shadow-md border border-gray-800 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-hover hover:border-gray-600';
                 kartu.innerHTML = `
                     <div>
                         <h4 class="text-lg md:text-xl font-bold ${currentTheme === 'light' ? 'text-gray-900' : 'text-white'} mb-1">${lamaran.perusahaan}</h4>
-                        <p class="text-xs md:text-sm text-[#ff5ca0] font-semibold">${lamaran.posisi} ${lamaran.gaji ? `<span class="text-green-500 font-bold ml-2">💰 ${lamaran.gaji}</span>` : ''}</p>
+                        <p class="text-xs md:text-sm text-[#ff5ca0] font-semibold">${lamaran.posisi} ${teksGaji !== '-' ? `<span class="text-green-500 font-bold ml-2">💰 ${teksGaji}</span>` : ''}</p>
                         <div class="flex flex-wrap items-center gap-3 mt-2.5 text-xs ${currentTheme === 'light' ? 'text-gray-600' : 'text-gray-300'}">
                             <span>${iconClock} ${formatTanggal(lamaran.tanggal)}</span>
                             <span class="${warnaFollowUp}">${iconBell} ${teksFollowUp}</span>
