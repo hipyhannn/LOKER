@@ -224,14 +224,13 @@
                     <input type="text" id="input-perusahaan" required class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
                 </div>
                 
-                <!-- Posisi dengan Dropdown Riwayat Mirip Email -->
+                <!-- Posisi dengan Dropdown Riwayat -->
                 <div class="mb-4 relative">
                     <label id="label-posisi" class="block text-xs font-bold text-gray-400 mb-1.5">POSISI YANG DILAMAR *</label>
                     <div class="flex gap-2">
                         <input type="text" id="input-posisi" autocomplete="off" required placeholder="Ketik atau pilih dari riwayat..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
                         <button type="button" onclick="toggleDropdownPosisi(event)" class="bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0 transition-colors" title="Pilih dari Riwayat Posisi">▼</button>
                     </div>
-                    <!-- Dropdown List Riwayat Posisi -->
                     <div id="dropdown-posisi-list" class="absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
                 </div>
 
@@ -247,14 +246,14 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
+                    <!-- Metode dengan Dropdown Riwayat Dinamis -->
+                    <div class="relative">
                         <label id="label-metode" class="block text-xs font-bold text-gray-400 mb-1.5">METODE</label>
-                        <select id="input-metode" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
-                            <option value="Email">Email</option>
-                            <option value="Website Perusahaan">Website Perusahaan</option>
-                            <option value="Job Portal">Job Portal</option>
-                            <option value="LinkedIn">LinkedIn</option>
-                        </select>
+                        <div class="flex gap-2">
+                            <input type="text" id="input-metode" autocomplete="off" required placeholder="Pilih atau ketik metode..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
+                            <button type="button" onclick="toggleDropdownMetode(event)" class="bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0 transition-colors" title="Pilih Metode">▼</button>
+                        </div>
+                        <div id="dropdown-metode-list" class="absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-green-500 mb-1.5">STATUS</label>
@@ -296,7 +295,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label id="label-keterangan" class="block text-xs font-bold text-gray-400 mb-1.5">KETERANGAN / CATATAN</label>
+                    <label id="label-keterangan" class="block text-xs font-bold text-gray-400 mb-1.5">KETERANGAN</label>
                     <textarea id="input-keterangan" rows="2" placeholder="Misal: Lewat referral teman..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]"></textarea>
                 </div>
                 <button type="submit" class="w-full bg-[#ff5ca0] text-white font-bold py-3.5 rounded-lg hover:bg-[#ff4081] transition-colors shadow-lg">
@@ -327,12 +326,16 @@
             const dropdown = document.getElementById('dropdown-titiktiga');
             const btnTitikTiga = document.getElementById('btn-menu-titiktiga');
             const dropdownPosisi = document.getElementById('dropdown-posisi-list');
+            const dropdownMetode = document.getElementById('dropdown-metode-list');
             
             if (!btnTitikTiga.contains(e.target) && !dropdown.contains(e.target)) {
                 dropdown.classList.add('hidden');
             }
             if (!e.target.closest('#input-posisi') && !e.target.closest('button[onclick*="toggleDropdownPosisi"]')) {
                 dropdownPosisi.classList.add('hidden');
+            }
+            if (!e.target.closest('#input-metode') && !e.target.closest('button[onclick*="toggleDropdownMetode"]')) {
+                dropdownMetode.classList.add('hidden');
             }
         });
 
@@ -345,8 +348,17 @@
         function toggleDropdownPosisi(event) {
             event.stopPropagation();
             const dropdownPosisi = document.getElementById('dropdown-posisi-list');
+            document.getElementById('dropdown-metode-list').classList.add('hidden');
             perbaruiListPosisi();
             dropdownPosisi.classList.toggle('hidden');
+        }
+
+        function toggleDropdownMetode(event) {
+            event.stopPropagation();
+            const dropdownMetode = document.getElementById('dropdown-metode-list');
+            document.getElementById('dropdown-posisi-list').classList.add('hidden');
+            perbaruiListMetode();
+            dropdownMetode.classList.toggle('hidden');
         }
 
         function perbaruiListPosisi() {
@@ -370,6 +382,26 @@
                     dropdownPosisi.classList.add('hidden');
                 };
                 dropdownPosisi.appendChild(item);
+            });
+        }
+
+        function perbaruiListMetode() {
+            const dropdownMetode = document.getElementById('dropdown-metode-list');
+            dropdownMetode.innerHTML = '';
+            
+            const metodeBawaan = ["Email", "Website Perusahaan", "Job Portal", "LinkedIn"];
+            const semuaMetode = [...metodeBawaan, ...dataLamaran.map(item => item.metode).filter(Boolean)];
+            const metodeUnik = [...new Set(semuaMetode)];
+
+            metodeUnik.forEach(met => {
+                const item = document.createElement('div');
+                item.className = currentTheme === 'light' ? 'p-2.5 text-xs text-gray-800 hover:bg-gray-100 cursor-pointer font-semibold border-b border-gray-100 last:border-b-0' : 'p-2.5 text-xs text-gray-200 hover:bg-white/10 cursor-pointer font-semibold border-b border-gray-800 last:border-b-0';
+                item.innerText = met;
+                item.onclick = function() {
+                    document.getElementById('input-metode').value = met;
+                    dropdownMetode.classList.add('hidden');
+                };
+                dropdownMetode.appendChild(item);
             });
         }
 
@@ -795,7 +827,7 @@
                 document.getElementById('input-posisi').value = lamaran.posisi;
                 document.getElementById('input-tanggal').value = lamaran.tanggal || "";
                 document.getElementById('input-followup').value = lamaran.tanggalFollowUp || "";
-                document.getElementById('input-metode').value = lamaran.metode;
+                document.getElementById('input-metode').value = lamaran.metode || "Email";
                 document.getElementById('input-status').value = lamaran.status;
                 document.getElementById('input-keterangan').value = lamaran.keterangan || "";
                 
@@ -811,6 +843,7 @@
             modal.classList.add('hidden'); 
             form.reset(); 
             document.getElementById('dropdown-posisi-list').classList.add('hidden');
+            document.getElementById('dropdown-metode-list').classList.add('hidden');
         }
         
         function formatTanggal(tanggalString) {
@@ -931,7 +964,8 @@
                 const matchKeyword = lamaran.perusahaan.toLowerCase().includes(keyword) || 
                                      lamaran.posisi.toLowerCase().includes(keyword) ||
                                      (lamaran.keterangan && lamaran.keterangan.toLowerCase().includes(keyword)) ||
-                                     (lamaran.gaji && lamaran.gaji.toLowerCase().includes(keyword));
+                                     (lamaran.gaji && lamaran.gaji.toLowerCase().includes(keyword)) ||
+                                     (lamaran.metode && lamaran.metode.toLowerCase().includes(keyword));
                 
                 if (!matchKeyword) return false;
 
@@ -997,9 +1031,9 @@
                         <div class="flex flex-wrap items-center gap-3 mt-2.5 text-xs ${currentTheme === 'light' ? 'text-gray-600' : 'text-gray-300'}">
                             <span>${iconClock} ${formatTanggal(lamaran.tanggal)}</span>
                             <span class="${warnaFollowUp}">${iconBell} ${teksFollowUp}</span>
-                            <span>${iconMail} ${lamaran.metode}</span>
+                            <span>${iconMail} ${lamaran.metode || 'Email'}</span>
                         </div>
-                        ${lamaran.keterangan ? `<p class="text-xs italic mt-2 ${currentTheme === 'light' ? 'text-gray-500' : 'text-gray-400'}">${iconChat} Catatan:${lamaran.keterangan}</p>` : ''}
+                        ${lamaran.keterangan ? `<p class="text-xs italic mt-2 ${currentTheme === 'light' ? 'text-gray-500' : 'text-gray-400'}">${iconChat} Keterangan:${lamaran.keterangan}</p>` : ''}
                     </div>
                     <div class="flex flex-wrap items-center justify-between md:justify-end gap-2 w-full md:w-auto pt-2 md:pt-0 border-t md:border-t-0 border-gray-700/50">
                         <select onchange="ubahStatus(${lamaran.id}, this.value)" class="text-xs md:text-sm border rounded-lg p-2 font-semibold outline-none focus:ring-1 focus:ring-gray-400 appearance-none ${warnaStatus}">
