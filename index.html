@@ -255,4 +255,947 @@
             </div>
             <div class="absolute w-[12px] h-[12px] bg-[#111] rounded-full top-[3px] left-[5px]"></div>
             <div class="absolute w-[12px] h-[12px] bg-[#111] rounded-full top-[3px] right-[5px]"></div>
-            <div class="absolute w-[10px
+            <div class="absolute w-[10px] h-[16px] bg-[#111] rounded-full top-[20px] left-[2px] -rotate-45 z-10"></div>
+            <div class="absolute w-[10px] h-[16px] bg-[#111] rounded-full top-[20px] right-[2px] rotate-45 z-10"></div>
+            <div class="absolute w-[40px] h-[26px] bg-white rounded-t-[18px] rounded-b-[8px] bottom-[2px] left-[4px] z-0"></div>
+            <div class="absolute w-[12px] h-[14px] bg-[#111] rounded-full bottom-[0px] left-[1px] -rotate-[60deg] z-20"></div>
+            <div class="absolute w-[12px] h-[14px] bg-[#111] rounded-full bottom-[0px] right-[1px] rotate-[60deg] z-20"></div>
+            <div class="absolute w-[44px] h-[30px] bg-white rounded-full top-[5px] left-[2px] z-10 border border-gray-100"></div>
+            <div class="absolute w-[10px] h-[14px] bg-[#111] rounded-[45%] top-[14px] left-[9px] rotate-12 z-20"></div>
+            <div class="absolute w-[10px] h-[14px] bg-[#111] rounded-[45%] top-[14px] right-[9px] -rotate-12 z-20"></div>
+            <div id="panda-eye-l" class="absolute w-[4px] h-[4px] bg-white rounded-full top-[17px] left-[12px] z-30"></div>
+            <div id="panda-eye-r" class="absolute w-[4px] h-[4px] bg-white rounded-full top-[17px] right-[12px] z-30"></div>
+            <div class="absolute w-[6px] h-[4px] bg-[#111] rounded-full top-[22px] left-[21px] z-20"></div>
+            <div id="panda-aksesoris" class="absolute top-[4px] -right-[6px] text-[14px] z-40"></div>
+        </div>
+    </div>
+
+    <button onclick="bukaModalTambah()" class="fixed bottom-6 right-6 bg-[#ff5ca0] hover:bg-[#ff4081] text-white w-14 h-14 rounded-full text-3xl font-bold shadow-lg flex items-center justify-center transition-transform hover:scale-110 z-20">
+        +
+    </button>
+
+    <!-- MODAL FORM TAMBAH/EDIT -->
+    <div id="modal-form" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
+        <div id="modal-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-base font-bold text-white" id="modal-judul">Tambah Info Loker</h2>
+                <button onclick="tutupModal()" id="modal-close-btn" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold">&times;</button>
+            </div>
+            
+            <form id="form-lamaran" onsubmit="simpanLamaran(event)">
+                <input type="hidden" id="input-id">
+                
+                <div class="mb-3">
+                    <label id="label-perusahaan" class="block text-xs font-bold text-gray-400 mb-1">NAMA PERUSAHAAN *</label>
+                    <input type="text" id="input-perusahaan" required placeholder="Contoh: PT Tokopedia..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                </div>
+                
+                <div class="mb-3 relative">
+                    <label id="label-posisi" class="block text-xs font-bold text-gray-400 mb-1">POSISI YANG DILAMAR *</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="input-posisi" autocomplete="off" required placeholder="Contoh: Frontend Developer..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                        <button type="button" onclick="toggleDropdownPosisi(event)" class="bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0">▼</button>
+                    </div>
+                    <div id="dropdown-posisi-list" class="absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                    <div>
+                        <label id="label-tgl" class="block text-xs font-bold text-gray-400 mb-1">TGL MELAMAR *</label>
+                        <input type="date" id="input-tanggal" required class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-green-500 mb-1">STATUS</label>
+                        <select id="input-status" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                            <option value="Rencana Daftar">Rencana Daftar</option>
+                            <option value="Terkirim">Terkirim</option>
+                            <option value="Screening HR">Screening HR</option>
+                            <option value="Psikotes">Psikotes</option>
+                            <option value="Tes Online">Tes Online</option>
+                            <option value="Tes Teknis">Tes Teknis</option>
+                            <option value="Interview HR">Interview HR</option>
+                            <option value="Interview User">Interview User</option>
+                            <option value="Final Interview">Final Interview</option>
+                            <option value="Medical Check Up">Medical Check Up</option>
+                            <option value="Offering">Offering</option>
+                            <option value="Diterima">Diterima</option>
+                            <option value="Ditolak">Ditolak</option>
+                            <option value="Tidak Ada Kabar">Tidak Ada Kabar</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="my-3 pt-1 border-t border-gray-800">
+                    <button type="button" onclick="toggleFormOpsional()" id="btn-toggle-opsional" class="text-xs font-bold text-[#ff5ca0] hover:underline focus:outline-none">
+                        + Tambah Info Detail (Deadline, Gaji, Link, Kontak)
+                    </button>
+                </div>
+
+                <div id="form-opsional-container" class="hidden space-y-3 mb-3 bg-black/20 p-3 rounded-xl border border-gray-800">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-yellow-500 mb-1">TGL FOLLOW UP</label>
+                            <input type="date" id="input-followup" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-yellow-500 focus:outline-none focus:border-[#ff5ca0]">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-red-400 mb-1">DEADLINE LAMAR</label>
+                            <input type="date" id="input-deadline" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-red-300 focus:outline-none focus:border-[#ff5ca0]">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-blue-400 mb-1">LINK LOWONGAN (URL)</label>
+                            <input type="url" id="input-link" placeholder="https://..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-blue-300 focus:outline-none focus:border-[#ff5ca0]">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-purple-400 mb-1">KONTAK (WA / EMAIL)</label>
+                            <input type="text" id="input-kontak" placeholder="Nama / No WA / Email" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-purple-300 focus:outline-none focus:border-[#ff5ca0]">
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <label id="label-metode" class="block text-[11px] font-bold text-gray-400 mb-1">METODE</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="input-metode" autocomplete="off" placeholder="Pilih atau ketik metode..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                            <button type="button" onclick="toggleDropdownMetode(event)" class="bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0">▼</button>
+                        </div>
+                        <div id="dropdown-metode-list" class="absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
+                    </div>
+
+                    <div class="bg-black/30 p-3 rounded-xl border border-gray-700/60">
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-[11px] font-bold text-green-400">ESTIMASI GAJI</label>
+                            <span id="label-nominal-gaji" class="text-[11px] font-bold text-white bg-green-600/40 px-2 py-0.5 rounded">Rp 0</span>
+                        </div>
+                        <input type="range" id="input-gaji-slider" min="0" max="25000000" step="500000" value="0" oninput="updateGajiSlider(this.value)" class="w-full h-1.5 bg-gray-700 rounded-lg appearance-none cursor-pointer mb-2">
+                        <div class="flex justify-between items-center gap-1 overflow-x-auto no-scrollbar pt-1">
+                            <button type="button" onclick="setGajiCepat(0)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded border border-gray-700">0</button>
+                            <button type="button" onclick="setGajiCepat(4500000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded border border-gray-700">4.5jt</button>
+                            <button type="button" onclick="setGajiCepat(6000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded border border-gray-700">6jt</button>
+                            <button type="button" onclick="setGajiCepat(8000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded border border-gray-700">8jt</button>
+                            <button type="button" onclick="setGajiCepat(10000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded border border-gray-700">10jt</button>
+                            <button type="button" onclick="setGajiCepat(15000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded border border-gray-700">15jt</button>
+                            <button type="button" onclick="setGajiCepat(25000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded border border-gray-700">25jt+</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label id="label-keterangan" class="block text-[11px] font-bold text-gray-400 mb-1">KETERANGAN</label>
+                        <textarea id="input-keterangan" rows="2" placeholder="Catatan tambahan..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs shadow-md mt-2">
+                    Simpan Perubahan
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDG5qmJD0EGEaJRGNtvd8U6jTQDj3cvXRA",
+            authDomain: "infol-61428.firebaseapp.com",
+            databaseURL: "https://infol-61428-default-rtdb.firebaseio.com",
+            projectId: "infol-61428",
+            storageBucket: "infol-61428.firebasestorage.app",
+            messagingSenderId: "139934994775",
+            appId: "1:139934994775:web:7ddf166a0e962c5c286e12",
+            measurementId: "G-F04YS5MX1T"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const rtdb = firebase.database();
+
+        let currentUser = null;
+        let dataLamaran = [];
+        let isSignUpMode = false;
+        let currentTheme = localStorage.getItem('lokertrack_theme') || 'auto';
+        let currentMode = localStorage.getItem('lokertrack_mode') || 'card';
+        let currentFilterStatus = 'Semua';
+        let pesanTimer = null;
+
+        const todayKey = new Date().toISOString().split('T')[0];
+        document.getElementById('label-tanggal-hari-ini').innerText = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+
+        const defaultTemplateSurat = `Kepada Yth. Tim Rekrutmen / HRD {perusahaan},\nDi Tempat\n\nDengan hormat,\n\nMelalui pesan ini, saya bermaksud untuk menyampaikan ketertarikan saya untuk melamar posisi {posisi} di {perusahaan}.\n\nBerikut saya lampirkan berkas pendukung serta portofolio untuk menjadi bahan pertimbangan Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap seleksi selanjutnya.\n\nAtas waktu dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Lengkap Anda]`;
+
+        const defaultTemplateEmail = `Yth. Tim Rekrutmen / HRD {perusahaan},\n\nMelalui email ini, saya bermaksud mengajukan diri untuk melamar posisi {posisi} di {perusahaan}.\n\nBersama email ini, saya telah melampirkan berkas lamaran serta CV terbaru untuk dapat ditinjau oleh Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap wawancara.\n\nDemikian permohonan ini saya sampaikan. Terima kasih atas perhatian dan kesempatan yang diberikan.\n\nHormat saya,\n[Nama Lengkap Anda]`;
+
+        const defaultTemplateTanya = `Yth. Bapak/Ibu HRD {perusahaan},\n\nSelamat pagi/siang. Mohon maaf mengganggu waktunya sebentar. Saya ingin menanyakan perkembangan atau status dari lamaran saya untuk posisi {posisi} yang telah saya kirimkan sebelumnya.\n\nBesar harapan saya untuk mendapatkan informasi lebih lanjut. Atas perhatian dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Anda]`;
+
+        const defaultTemplateInterview = `Yth. Bapak/Ibu HRD {perusahaan},\n\nTerima kasih banyak atas undangan serta kesempatan interview untuk posisi {posisi}. Melalui pesan ini, saya bermaksud mengonfirmasi bahwa saya akan hadir memenuhi undangan tersebut sesuai dengan jadwal yang telah ditentukan.\n\nSekali lagi terima kasih atas kesempatan yang diberikan.\n\nHormat saya,\n[Nama Anda]`;
+        
+        let templateSurat = localStorage.getItem('lokertrack_template_surat') || defaultTemplateSurat;
+        let templateEmail = localStorage.getItem('lokertrack_template_email') || defaultTemplateEmail;
+        let templateTanya = localStorage.getItem('lokertrack_template_tanya') || defaultTemplateTanya;
+        let templateInterview = localStorage.getItem('lokertrack_template_interview') || defaultTemplateInterview;
+        
+        const modal = document.getElementById('modal-form');
+        const form = document.getElementById('form-lamaran');
+
+        inisialisasiTemaOtomatis();
+        setModeTampilan(currentMode);
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('app-content').classList.remove('hidden');
+                document.getElementById('user-email-label').innerText = user.email;
+                muatDataRealtimeDB();
+            } else {
+                currentUser = null;
+                document.getElementById('app-content').classList.add('hidden');
+                document.getElementById('auth-screen').classList.remove('hidden');
+            }
+        });
+
+        function toggleAuthMode() {
+            isSignUpMode = !isSignUpMode;
+            document.getElementById('btn-auth-submit').innerText = isSignUpMode ? "Daftar Akun Baru" : "Masuk";
+            document.getElementById('btn-toggle-auth').innerText = isSignUpMode ? "Sudah punya akun? Masuk di sini" : "Belum punya akun? Daftar di sini";
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-password').value;
+            const errBox = document.getElementById('auth-error');
+            errBox.classList.add('hidden');
+
+            if (isSignUpMode) {
+                auth.createUserWithEmailAndPassword(email, pass).catch(err => {
+                    errBox.innerText = err.message; errBox.classList.remove('hidden');
+                });
+            } else {
+                auth.signInWithEmailAndPassword(email, pass).catch(err => {
+                    errBox.innerText = err.message; errBox.classList.remove('hidden');
+                });
+            }
+        }
+
+        function logoutUser() { auth.signOut(); }
+
+        function muatDataRealtimeDB() {
+            if (!currentUser) return;
+            const uid = currentUser.uid;
+            
+            rtdb.ref('users/' + uid + '/lamaran').on('value', (snapshot) => {
+                dataLamaran = [];
+                const val = snapshot.val();
+                if (val) {
+                    Object.keys(val).forEach(key => {
+                        dataLamaran.push({ id: key, ...val[key] });
+                    });
+                }
+                renderTampilan();
+            });
+
+            rtdb.ref('users/' + uid + '/catatan/' + todayKey).on('value', (snapshot) => {
+                const val = snapshot.val();
+                if (val) document.getElementById('input-catatan-harian').value = val.isi || '';
+            });
+        }
+
+        function simpanKeRealtimeDB(lamaranBaru) {
+            if (!currentUser) return;
+            const uid = currentUser.uid;
+            const idDoc = lamaranBaru.id ? lamaranBaru.id.toString() : Date.now().toString();
+            rtdb.ref('users/' + uid + '/lamaran/' + idDoc).set(lamaranBaru);
+        }
+
+        function hapusDariRealtimeDB(id) {
+            if (!currentUser) return;
+            const uid = currentUser.uid;
+            rtdb.ref('users/' + uid + '/lamaran/' + id.toString()).remove();
+        }
+
+        function simpanCatatanHarian() {
+            if (!currentUser) return;
+            const uid = currentUser.uid;
+            const isi = document.getElementById('input-catatan-harian').value;
+            rtdb.ref('users/' + uid + '/catatan/' + todayKey).set({ isi: isi })
+            .then(() => alert("Catatan harian berhasil disimpan ke cloud!"));
+        }
+
+        function autoSimpanCatatan() {
+            if (!currentUser) return;
+            const uid = currentUser.uid;
+            const isi = document.getElementById('input-catatan-harian').value;
+            rtdb.ref('users/' + uid + '/catatan/' + todayKey).set({ isi: isi });
+        }
+
+        function toggleCatatanHarian() {
+            const content = document.getElementById('content-catatan-harian');
+            const btn = document.getElementById('btn-toggle-catatan');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                btn.innerText = "▼ Sembunyikan Catatan";
+            } else {
+                content.classList.add('hidden');
+                btn.innerText = "▶ Buka Catatan";
+            }
+        }
+
+        function toggleFormOpsional() {
+            const container = document.getElementById('form-opsional-container');
+            const btn = document.getElementById('btn-toggle-opsional');
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                btn.innerText = "- Sembunyikan Info Detail";
+            } else {
+                container.classList.add('hidden');
+                btn.innerText = "+ Tambah Info Detail (Deadline, Gaji, Link, Kontak)";
+            }
+        }
+
+        function bukaModalPanduan() {
+            document.getElementById('dropdown-titiktiga').classList.add('hidden');
+            document.getElementById('modal-panduan').classList.remove('hidden');
+        }
+
+        function tutupModalPanduan() {
+            document.getElementById('modal-panduan').classList.add('hidden');
+        }
+
+        function bukaModalRiwayatCatatan() {
+            if (!currentUser) return;
+            const uid = currentUser.uid;
+            rtdb.ref('users/' + uid + '/catatan').once('value').then(snapshot => {
+                const listDiv = document.getElementById('list-riwayat-catatan');
+                listDiv.innerHTML = '';
+                let adaRiwayat = false;
+                const val = snapshot.val();
+                if (val) {
+                    Object.keys(val).forEach(tgl => {
+                        const isiCatatan = val[tgl].isi || '';
+                        if (isiCatatan.trim() !== '') {
+                            adaRiwayat = true;
+                            const item = document.createElement('div');
+                            item.className = 'bg-[#121212] border border-gray-700 rounded-xl p-3';
+                            item.innerHTML = `<p class="text-xs font-bold text-[#ff5ca0] mb-1">${tgl}</p><p class="text-xs text-gray-300 leading-relaxed">${isiCatatan}</p>`;
+                            listDiv.appendChild(item);
+                        }
+                    });
+                }
+                if (!adaRiwayat) {
+                    listDiv.innerHTML = `<p class="text-xs text-gray-500 text-center py-4">Belum ada riwayat catatan.</p>`;
+                }
+                document.getElementById('modal-riwayat-catatan').classList.remove('hidden');
+            });
+        }
+
+        function tutupModalRiwayatCatatan() {
+            document.getElementById('modal-riwayat-catatan').classList.add('hidden');
+        }
+
+        window.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('dropdown-titiktiga');
+            const btnTitikTiga = document.getElementById('btn-menu-titiktiga');
+            const dropdownPosisi = document.getElementById('dropdown-posisi-list');
+            const dropdownMetode = document.getElementById('dropdown-metode-list');
+            
+            if (btnTitikTiga && !btnTitikTiga.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+            if (!e.target.closest('#input-posisi') && !e.target.closest('button[onclick*="toggleDropdownPosisi"]')) {
+                dropdownPosisi.classList.add('hidden');
+            }
+            if (!e.target.closest('#input-metode') && !e.target.closest('button[onclick*="toggleDropdownMetode"]')) {
+                dropdownMetode.classList.add('hidden');
+            }
+            if (!e.target.closest('.dropdown-aksi-container')) {
+                document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden'));
+            }
+            if (!e.target.closest('.dropdown-status-container')) {
+                document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
+            }
+        });
+
+        function toggleMenuTitikTiga(event) {
+            event.stopPropagation();
+            document.getElementById('dropdown-titiktiga').classList.toggle('hidden');
+        }
+
+        function toggleDropdownAksi(event, id) {
+            event.stopPropagation();
+            document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
+            document.querySelectorAll('.dropdown-aksi-menu').forEach(m => {
+                if (m.id !== `dropdown-aksi-${id}`) m.classList.add('hidden');
+            });
+            const menu = document.getElementById(`dropdown-aksi-${id}`);
+            if (menu) menu.classList.toggle('hidden');
+        }
+
+        function toggleDropdownStatus(event, id) {
+            event.stopPropagation();
+            document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden'));
+            document.querySelectorAll('.dropdown-status-menu').forEach(m => {
+                if (m.id !== `dropdown-status-${id}`) m.classList.add('hidden');
+            });
+            const menu = document.getElementById(`dropdown-status-${id}`);
+            if (menu) menu.classList.toggle('hidden');
+        }
+
+        function pilihStatus(id, statusBaru) {
+            document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
+            ubahStatus(id, statusBaru);
+        }
+
+        function toggleDropdownPosisi(event) {
+            event.stopPropagation();
+            const dropdownPosisi = document.getElementById('dropdown-posisi-list');
+            document.getElementById('dropdown-metode-list').classList.add('hidden');
+            perbaruiListPosisi();
+            dropdownPosisi.classList.toggle('hidden');
+        }
+
+        function toggleDropdownMetode(event) {
+            event.stopPropagation();
+            const dropdownMetode = document.getElementById('dropdown-metode-list');
+            document.getElementById('dropdown-posisi-list').classList.add('hidden');
+            perbaruiListMetode();
+            dropdownMetode.classList.toggle('hidden');
+        }
+
+        function perbaruiListPosisi() {
+            const dropdownPosisi = document.getElementById('dropdown-posisi-list');
+            dropdownPosisi.innerHTML = '';
+            const posisiUnik = [...new Set(dataLamaran.map(item => item.posisi).filter(Boolean))];
+            if (posisiUnik.length === 0) {
+                dropdownPosisi.innerHTML = `<div class="p-2 text-xs text-gray-500 text-center">Belum ada riwayat</div>`;
+                return;
+            }
+            posisiUnik.forEach(pos => {
+                const item = document.createElement('div');
+                item.className = 'p-2.5 text-xs text-gray-200 hover:bg-white/10 cursor-pointer font-semibold border-b border-gray-800 last:border-b-0';
+                item.innerText = pos;
+                item.onclick = function() {
+                    document.getElementById('input-posisi').value = pos;
+                    dropdownPosisi.classList.add('hidden');
+                };
+                dropdownPosisi.appendChild(item);
+            });
+        }
+
+        function perbaruiListMetode() {
+            const dropdownMetode = document.getElementById('dropdown-metode-list');
+            dropdownMetode.innerHTML = '';
+            const metodeUnik = [...new Set(["Email", "Website Perusahaan", "Job Portal", "LinkedIn", ...dataLamaran.map(item => item.metode).filter(Boolean)])];
+            metodeUnik.forEach(met => {
+                const item = document.createElement('div');
+                item.className = 'p-2.5 text-xs text-gray-200 hover:bg-white/10 cursor-pointer font-semibold border-b border-gray-800 last:border-b-0';
+                item.innerText = met;
+                item.onclick = function() {
+                    document.getElementById('input-metode').value = met;
+                    dropdownMetode.classList.add('hidden');
+                };
+                dropdownMetode.appendChild(item);
+            });
+        }
+
+        function toggleFavorit(id) {
+            const index = dataLamaran.findIndex(item => item.id == id);
+            if (index !== -1) {
+                dataLamaran[index].isFavorit = !dataLamaran[index].isFavorit;
+                simpanKeRealtimeDB(dataLamaran[index]);
+            }
+        }
+
+        function inisialisasiTemaOtomatis() {
+            const savedTheme = localStorage.getItem('lokertrack_theme');
+            if (savedTheme === 'light' || savedTheme === 'dark') {
+                currentTheme = savedTheme;
+            } else {
+                const jam = new Date().getHours();
+                currentTheme = (jam >= 6 && jam < 18) ? 'light' : 'dark';
+            }
+            applyTheme(currentTheme);
+        }
+
+        function toggleTemaManual() {
+            document.getElementById('dropdown-titiktiga').classList.add('hidden');
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('lokertrack_theme', currentTheme);
+            applyTheme(currentTheme);
+        }
+
+        function formatRupiah(angka) {
+            if (!angka || angka == 0) return "-";
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
+        }
+
+        function updateGajiSlider(nilai) {
+            const label = document.getElementById('label-nominal-gaji');
+            if (nilai == 0) label.innerText = "Tidak Dicantumkan";
+            else if (nilai >= 25000000) label.innerText = "Rp 25.000.000+";
+            else label.innerText = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(nilai);
+        }
+
+        function setGajiCepat(nilai) {
+            document.getElementById('input-gaji-slider').value = nilai;
+            updateGajiSlider(nilai);
+        }
+
+        function applyTheme(theme) {
+            const body = document.getElementById('body-app');
+            const header = document.getElementById('header-app');
+            const headerTitle = document.getElementById('header-title');
+            const btnTitikTiga = document.getElementById('btn-menu-titiktiga');
+            const dropdownTitikTiga = document.getElementById('dropdown-titiktiga');
+            const dailyNoteBox = document.getElementById('daily-note-box');
+            const inputCatatanHarian = document.getElementById('input-catatan-harian');
+            const labelInfo = document.getElementById('label-info-lamaran');
+            const viewToggleBg = document.getElementById('view-toggle-bg');
+            const viewTabelContainer = document.getElementById('view-tabel');
+            const tableHead = document.getElementById('table-head');
+            const modalBox = document.getElementById('modal-box');
+            const modalJudul = document.getElementById('modal-judul');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const inputPencarian = document.getElementById('input-pencarian');
+            const metaThemeColor = document.getElementById('meta-theme-color');
+
+            if (theme === 'light') {
+                metaThemeColor.setAttribute('content', '#ffffff');
+                body.className = "bg-gray-100 text-gray-900 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden";
+                header.className = "bg-white px-4 py-5 md:px-6 shadow-md border-b border-gray-200 transition-colors duration-300";
+                headerTitle.className = "text-lg md:text-2xl text-gray-900 font-pixel tracking-wide leading-none";
+                btnTitikTiga.className = "w-9 h-9 rounded-xl text-sm font-bold border border-gray-300 bg-gray-100 text-gray-700 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0";
+                dropdownTitikTiga.className = "absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
+                dailyNoteBox.className = "bg-white border border-gray-200 rounded-2xl p-4 shadow-sm transition-colors duration-300";
+                inputCatatanHarian.className = "w-full bg-gray-50 border border-gray-300 rounded-xl p-3 text-xs text-gray-900 focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed mt-1";
+                labelInfo.className = "text-lg md:text-xl font-bold text-gray-900";
+                viewToggleBg.className = "flex gap-1 bg-gray-200 p-1 rounded-lg border border-gray-300 transition-colors";
+                viewTabelContainer.className = "bg-white rounded-xl shadow-sm border border-gray-200 transition-colors overflow-x-hidden pb-3";
+                tableHead.className = "bg-gray-50 text-gray-700 border-b border-gray-200 transition-colors";
+                modalBox.className = "bg-white border border-gray-200 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto";
+                modalJudul.className = "text-base font-bold text-gray-900";
+                modalCloseBtn.className = "bg-gray-100 hover:bg-gray-200 rounded text-gray-600 px-3 py-1 font-bold";
+                inputPencarian.className = "search-input w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-inner transition-colors duration-300";
+            } else {
+                metaThemeColor.setAttribute('content', '#1a1a1a');
+                body.className = "bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden";
+                header.className = "bg-[#1a1a1a] px-4 py-5 md:px-6 shadow-md border-b border-gray-800 transition-colors duration-300";
+                headerTitle.className = "text-lg md:text-2xl text-white font-pixel tracking-wide leading-none";
+                btnTitikTiga.className = "w-9 h-9 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0";
+                dropdownTitikTiga.className = "absolute right-0 mt-2 w-64 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
+                dailyNoteBox.className = "bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 shadow-sm transition-colors duration-300";
+                inputCatatanHarian.className = "w-full bg-[#121212] border border-gray-700/60 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed mt-1";
+                labelInfo.className = "text-lg md:text-xl font-bold text-white";
+                viewToggleBg.className = "flex gap-1 bg-[#1a1a1a] p-1 rounded-lg border border-gray-800 transition-colors";
+                viewTabelContainer.className = "bg-[#1e1e1e] rounded-xl shadow-sm border border-gray-800 transition-colors overflow-x-hidden pb-3";
+                tableHead.className = "bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors";
+                modalBox.className = "bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto";
+                modalJudul.className = "text-base font-bold text-white";
+                modalCloseBtn.className = "bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold";
+                inputPencarian.className = "search-input w-full bg-[#121212] border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-inner transition-colors duration-300";
+            }
+            renderTampilan();
+        }
+
+        function setFilterStatus(status) {
+            currentFilterStatus = status;
+            ['Semua', 'Proses', 'Interview', 'Diterima', 'Arsip'].forEach(s => {
+                const card = document.getElementById(s === 'Semua' ? 'card-total' : (s === 'Arsip' ? 'card-ditolak' : `card-${s.toLowerCase()}`));
+                if (!card) return;
+                if(s === status) {
+                    card.classList.add('ring-2', 'ring-[#ff5ca0]');
+                } else {
+                    card.classList.remove('ring-2', 'ring-[#ff5ca0]');
+                }
+            });
+            renderTampilan();
+        }
+
+        function gantiTabTemplate(tab) {
+            ['surat', 'email', 'tanya', 'interview'].forEach(t => {
+                const elContent = document.getElementById(`tab-content-${t}`);
+                const elBtn = document.getElementById(`tab-btn-${t}`);
+                if(elContent) elContent.classList.add('hidden');
+                if(elBtn) elBtn.className = "px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors";
+            });
+            const activeContent = document.getElementById(`tab-content-${tab}`);
+            const activeBtn = document.getElementById(`tab-btn-${tab}`);
+            if(activeContent) activeContent.classList.remove('hidden');
+            if(activeBtn) activeBtn.className = "px-3 py-1.5 rounded text-xs font-bold bg-[#ff5ca0] text-white transition-colors";
+        }
+
+        function salinIsiTemplateAktif() {
+            let activeTextarea = null;
+            ['surat', 'email', 'tanya', 'interview'].forEach(t => {
+                const elContent = document.getElementById(`tab-content-${t}`);
+                if (elContent && !elContent.classList.contains('hidden')) {
+                    activeTextarea = elContent.querySelector('textarea');
+                }
+            });
+            if (activeTextarea) {
+                activeTextarea.select();
+                navigator.clipboard.writeText(activeTextarea.value).then(() => {
+                    alert("Teks berhasil disalin!");
+                }).catch(() => {
+                    alert("Gagal menyalin teks.");
+                });
+            }
+        }
+
+        function salinSuratOtomatis(perusahaan, posisi) {
+            const teks = templateSurat.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi);
+            navigator.clipboard.writeText(teks).then(() => {
+                alert(`Surat Lamaran untuk ${perusahaan} berhasil disalin!`);
+            }).catch(() => {
+                bukaModalTemplate(perusahaan, posisi);
+            });
+        }
+
+        function bukaModalTemplateGlobal() {
+            document.getElementById('dropdown-titiktiga').classList.add('hidden');
+            document.getElementById('text-template-surat').value = templateSurat;
+            document.getElementById('text-template-email').value = templateEmail;
+            document.getElementById('text-template-tanya').value = templateTanya;
+            document.getElementById('text-template-interview').value = templateInterview;
+            gantiTabTemplate('surat');
+            document.getElementById('modal-template').classList.remove('hidden');
+        }
+
+        function bukaModalTemplate(perusahaan, posisi) {
+            document.getElementById('text-template-surat').value = templateSurat.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi);
+            document.getElementById('text-template-email').value = templateEmail;
+            document.getElementById('text-template-tanya').value = templateTanya;
+            document.getElementById('text-template-interview').value = templateInterview;
+            gantiTabTemplate('surat');
+            document.getElementById('modal-template').classList.remove('hidden');
+        }
+
+        function tutupModalTemplate() { document.getElementById('modal-template').classList.add('hidden'); }
+
+        function simpanSemuaTemplate() {
+            templateSurat = document.getElementById('text-template-surat').value.trim();
+            templateEmail = document.getElementById('text-template-email').value.trim();
+            templateTanya = document.getElementById('text-template-tanya').value.trim();
+            templateInterview = document.getElementById('text-template-interview').value.trim();
+            localStorage.setItem('lokertrack_template_surat', templateSurat);
+            localStorage.setItem('lokertrack_template_email', templateEmail);
+            localStorage.setItem('lokertrack_template_tanya', templateTanya);
+            localStorage.setItem('lokertrack_template_interview', templateInterview);
+            alert("Template berhasil disimpan!");
+            tutupModalTemplate();
+        }
+
+        function showBubble(teks) {
+            const bubble = document.getElementById('speech-bubble');
+            document.getElementById('panda-pesan').innerHTML = teks;
+            bubble.classList.remove('opacity-0', 'translate-y-2');
+            bubble.classList.add('opacity-100', 'translate-y-0');
+            clearTimeout(pesanTimer);
+            pesanTimer = setTimeout(() => {
+                bubble.classList.remove('opacity-100', 'translate-y-0');
+                bubble.classList.add('opacity-0', 'translate-y-2');
+            }, 3000);
+        }
+
+        let isDraggingPanda = false, hasMoved = false;
+        function handlePandaClick() {
+            if (!hasMoved) {
+                const sapaan = ["Semangat terus ngelamarnya ya!", "Info loker hari ini aman bos?", "Jangan lupa rapiin CV nya!", "Tetap semangat pantang menyerah!"];
+                showBubble(sapaan[Math.floor(Math.random() * sapaan.length)]);
+            }
+        }
+
+        const pandaContainer = document.getElementById('panda-container');
+        let startX = 0, startY = 0, initialX = 0, initialY = 0;
+
+        function dragPandaStart(e) {
+            isDraggingPanda = true;
+            hasMoved = false;
+            pandaContainer.classList.add('is-moving');
+            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            startX = clientX; startY = clientY;
+            const rect = pandaContainer.getBoundingClientRect();
+            initialX = rect.left; initialY = rect.top;
+            pandaContainer.style.bottom = 'auto'; pandaContainer.style.left = initialX + 'px'; pandaContainer.style.top = initialY + 'px';
+            if (e.type.includes('touch')) {
+                window.addEventListener('touchmove', dragPandaMove, {passive: false});
+                window.addEventListener('touchend', dragPandaEnd);
+            } else {
+                window.addEventListener('mousemove', dragPandaMove);
+                window.addEventListener('mouseup', dragPandaEnd);
+            }
+        }
+
+        function dragPandaMove(e) {
+            if (!isDraggingPanda) return;
+            if (e.type.includes('touch')) e.preventDefault();
+            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            const dx = clientX - startX, dy = clientY - startY;
+            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) hasMoved = true;
+            pandaContainer.style.top = (initialY + dy) + 'px';
+            pandaContainer.style.left = (initialX + dx) + 'px';
+        }
+
+        function dragPandaEnd() {
+            isDraggingPanda = false;
+            pandaContainer.classList.remove('is-moving');
+            window.removeEventListener('mousemove', dragPandaMove);
+            window.removeEventListener('mouseup', dragPandaEnd);
+            window.removeEventListener('touchmove', dragPandaMove);
+            window.removeEventListener('touchend', dragPandaEnd);
+        }
+
+        pandaContainer.addEventListener('mousedown', dragPandaStart);
+        pandaContainer.addEventListener('touchstart', dragPandaStart, {passive: false});
+
+        function bukaModalTambah() { 
+            document.getElementById('modal-judul').innerText = "Tambah Info Loker";
+            form.reset();
+            document.getElementById('input-id').value = "";
+            document.getElementById('input-tanggal').valueAsDate = new Date();
+            document.getElementById('input-gaji-slider').value = 0;
+            updateGajiSlider(0);
+            document.getElementById('form-opsional-container').classList.add('hidden');
+            document.getElementById('btn-toggle-opsional').innerText = "+ Tambah Info Detail (Deadline, Gaji, Link, Kontak)";
+            modal.classList.remove('hidden'); 
+        }
+
+        function bukaModalEdit(id) {
+            document.getElementById('modal-judul').innerText = "Edit Info Loker";
+            const lamaran = dataLamaran.find(item => item.id == id);
+            if (lamaran) {
+                document.getElementById('input-id').value = lamaran.id;
+                document.getElementById('input-perusahaan').value = lamaran.perusahaan;
+                document.getElementById('input-posisi').value = lamaran.posisi;
+                document.getElementById('input-tanggal').value = lamaran.tanggal || "";
+                document.getElementById('input-followup').value = lamaran.tanggalFollowUp || "";
+                document.getElementById('input-deadline').value = lamaran.deadline || "";
+                document.getElementById('input-link').value = lamaran.link || "";
+                document.getElementById('input-kontak').value = lamaran.kontak || "";
+                document.getElementById('input-metode').value = lamaran.metode || "Email";
+                document.getElementById('input-status').value = lamaran.status;
+                document.getElementById('input-keterangan').value = lamaran.keterangan || "";
+                let nilaiGajiNum = parseInt(lamaran.gajiMentah) || 0;
+                document.getElementById('input-gaji-slider').value = nilaiGajiNum;
+                updateGajiSlider(nilaiGajiNum);
+                if (lamaran.tanggalFollowUp || lamaran.deadline || lamaran.link || lamaran.kontak || lamaran.gajiMentah > 0 || lamaran.keterangan) {
+                    document.getElementById('form-opsional-container').classList.remove('hidden');
+                    document.getElementById('btn-toggle-opsional').innerText = "- Sembunyikan Info Detail";
+                }
+                modal.classList.remove('hidden');
+            }
+        }
+        
+        function tutupModal() { modal.classList.add('hidden'); form.reset(); }
+        
+        function formatTanggal(tgl) {
+            if(!tgl) return "-";
+            return new Date(tgl).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function setModeTampilan(mode) {
+            currentMode = mode;
+            localStorage.setItem('lokertrack_mode', mode);
+            const btnCard = document.getElementById('btn-view-card');
+            const btnTabel = document.getElementById('btn-view-tabel');
+            if(mode === 'card') {
+                btnCard.className = "px-3.5 py-1.5 rounded bg-[#2d2d2d] font-bold text-xs text-white transition-all";
+                btnTabel.className = "px-3.5 py-1.5 rounded text-gray-400 font-bold text-xs hover:text-white transition-all";
+                document.getElementById('view-card').classList.remove('hidden');
+                document.getElementById('view-tabel').classList.add('hidden');
+            } else {
+                btnTabel.className = "px-3.5 py-1.5 rounded bg-[#2d2d2d] font-bold text-xs text-white transition-all";
+                btnCard.className = "px-3.5 py-1.5 rounded text-gray-400 font-bold text-xs hover:text-white transition-all";
+                document.getElementById('view-tabel').classList.remove('hidden');
+                document.getElementById('view-card').classList.add('hidden');
+            }
+        }
+
+        function simpanLamaran(event) {
+            event.preventDefault();
+            const idInput = document.getElementById('input-id').value;
+            const perusahaan = document.getElementById('input-perusahaan').value;
+            const posisi = document.getElementById('input-posisi').value;
+            const tanggal = document.getElementById('input-tanggal').value;
+            const tanggalFollowUp = document.getElementById('input-followup').value;
+            const deadline = document.getElementById('input-deadline').value;
+            const link = document.getElementById('input-link').value;
+            const kontak = document.getElementById('input-kontak').value;
+            const metode = document.getElementById('input-metode').value;
+            const status = document.getElementById('input-status').value;
+            const keterangan = document.getElementById('input-keterangan').value;
+            const gajiMentah = parseInt(document.getElementById('input-gaji-slider').value) || 0;
+            const gaji = formatRupiah(gajiMentah);
+            
+            const existingItem = dataLamaran.find(item => item.id == idInput);
+            const isFavorit = existingItem ? !!existingItem.isFavorit : false;
+            const id = idInput ? idInput : Date.now();
+
+            const dataBaru = { id, perusahaan, posisi, tanggal, tanggalFollowUp, deadline, link, kontak, metode, gaji, gajiMentah, status, keterangan, isFavorit };
+
+            simpanKeRealtimeDB(dataBaru);
+            tutupModal();
+        }
+
+        function hapusLamaran(id) {
+            if(confirm('Hapus data ini?')) {
+                hapusDariRealtimeDB(id);
+            }
+        }
+
+        function ubahStatus(id, statusBaru) {
+            const index = dataLamaran.findIndex(item => item.id == id);
+            if (index !== -1) {
+                dataLamaran[index].status = statusBaru;
+                simpanKeRealtimeDB(dataLamaran[index]);
+            }
+        }
+
+        function renderTampilan() {
+            const containerCard = document.getElementById('view-card');
+            const containerTabel = document.getElementById('body-tabel');
+            const keyword = document.getElementById('input-pencarian').value.toLowerCase();
+            containerCard.innerHTML = ''; containerTabel.innerHTML = '';
+            
+            let statTotal = dataLamaran.length, statProses = 0, statInterview = 0, statDiterima = 0, statDitolak = 0;
+            dataLamaran.forEach(l => {
+                if (["Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Medical Check Up", "Offering", "Rencana Daftar", "Terkirim"].includes(l.status)) statProses++;
+                if (["Interview HR", "Interview User", "Final Interview"].includes(l.status)) statInterview++;
+                if (l.status === 'Diterima') statDiterima++;
+                if (["Ditolak", "Tidak Ada Kabar"].includes(l.status)) statDitolak++;
+            });
+
+            const dataFiltered = dataLamaran.filter(lamaran => {
+                const matchKeyword = lamaran.perusahaan.toLowerCase().includes(keyword) || lamaran.posisi.toLowerCase().includes(keyword);
+                if (!matchKeyword) return false;
+                const isArsip = ["Ditolak", "Tidak Ada Kabar"].includes(lamaran.status);
+                if (currentFilterStatus === 'Semua') return true;
+                if (currentFilterStatus === 'Proses') return ["Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Medical Check Up", "Offering", "Rencana Daftar", "Terkirim"].includes(lamaran.status);
+                if (currentFilterStatus === 'Interview') return ["Interview HR", "Interview User", "Final Interview"].includes(lamaran.status);
+                if (currentFilterStatus === 'Diterima') return lamaran.status === 'Diterima';
+                if (currentFilterStatus === 'Arsip') return isArsip;
+                return true;
+            });
+
+            if (dataFiltered.length === 0) {
+                const kosong = statTotal === 0 ? 'Belum ada info loker. Tekan tombol + di bawah.' : 'Pencarian tidak ditemukan.';
+                containerCard.innerHTML = `<p class="text-center text-gray-500 py-10 text-xs">${kosong}</p>`;
+                containerTabel.innerHTML = `<tr><td colspan="5" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
+            }
+
+            const daftarStatus = ["Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Interview HR", "Interview User", "Final Interview", "Medical Check Up", "Offering", "Diterima", "Ditolak", "Tidak Ada Kabar"];
+
+            dataFiltered.forEach(lamaran => {
+                const status = lamaran.status;
+                let warnaStatus = currentTheme === 'light' ? 'bg-gray-100 text-gray-800 border-gray-300' : 'bg-[#2d2d2d] text-gray-300 border-gray-600';
+                if (["Screening HR", "Psikotes", "Tes Online", "Tes Teknis"].includes(status)) warnaStatus = currentTheme === 'light' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-blue-900/40 text-blue-300 border-blue-800';
+                if (["Interview HR", "Interview User", "Final Interview", "Medical Check Up"].includes(status)) warnaStatus = currentTheme === 'light' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' : 'bg-yellow-900/40 text-yellow-300 border-yellow-800';
+                if (["Diterima", "Offering"].includes(status)) warnaStatus = currentTheme === 'light' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-green-900/40 text-green-300 border-green-800';
+                if (["Ditolak", "Tidak Ada Kabar"].includes(status)) warnaStatus = currentTheme === 'light' ? 'bg-red-100 text-red-800 border-red-200' : 'bg-red-900/40 text-red-300 border-red-800';
+
+                const dropdownStatusHTML = `
+                    <div class="relative dropdown-status-container inline-block">
+                        <button onclick="toggleDropdownStatus(event, '${lamaran.id}')" class="text-xs border rounded-lg px-2.5 py-1.5 font-semibold outline-none flex items-center gap-1.5 ${warnaStatus}">
+                            <span>${status}</span> <span class="text-[10px]">▾</span>
+                        </button>
+                        <div id="dropdown-status-${lamaran.id}" class="dropdown-status-menu absolute left-0 bottom-full mb-1 w-48 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 max-h-52 overflow-y-auto">
+                            ${daftarStatus.map(s => `
+                                <button onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/10 ${s === status ? 'text-[#ff5ca0] border-l-[3px] border-[#ff5ca0]' : ''}">
+                                    ${s}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
+                const teksFollowUp = lamaran.tanggalFollowUp ? formatTanggal(lamaran.tanggalFollowUp) : '-';
+                const teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-';
+
+                let menuAksiItems = '';
+                const itemClass = currentTheme === 'light' ? 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-gray-100 text-gray-800' : 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/10 text-gray-200';
+                if (lamaran.link) menuAksiItems += `<a href="${lamaran.link}" target="_blank" class="${itemClass}">Buka Link Lowongan</a>`;
+                
+                const emailTujuan = lamaran.kontak && lamaran.kontak.includes('@') ? lamaran.kontak : '';
+                menuAksiItems += `<a href="mailto:${emailTujuan}?subject=${encodeURIComponent('Lamaran - ' + lamaran.posisi)}&body=${encodeURIComponent(templateEmail.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}" class="${itemClass}">Kirim / Buka Email</a>`;
+
+                let noWa = lamaran.kontak ? lamaran.kontak.replace(/[^0-9]/g, '') : '';
+                if (noWa.startsWith('0')) noWa = '62' + noWa.slice(1);
+                const waUrl = noWa.length > 5 ? `https://wa.me/${noWa}?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}` : `https://wa.me/?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}`;
+                
+                menuAksiItems += `<a href="${waUrl}" target="_blank" class="${itemClass}">Konfirmasi Interview</a>`;
+                menuAksiItems += `<button onclick="salinSuratOtomatis('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass}">📋 Salin Surat Lamaran</button>`;
+                menuAksiItems += `<hr class="${currentTheme === 'light' ? 'border-gray-200 my-1' : 'border-gray-700 my-1'}">`;
+                menuAksiItems += `<button onclick="bukaModalEdit('${lamaran.id}')" class="${itemClass}">Edit Data</button>`;
+                menuAksiItems += `<button onclick="hapusLamaran('${lamaran.id}')" class="${itemClass}">Hapus Lamaran</button>`;
+
+                const bintangi = `<button onclick="toggleFavorit('${lamaran.id}')" class="text-base text-yellow-400 hover:scale-125 transition-transform" title="Favorit">${lamaran.isFavorit ? '★' : '☆'}</button>`;
+
+                const dropdownAksiHTML = `
+                    <div class="relative dropdown-aksi-container inline-block">
+                        <button onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-gray-700 bg-[#2d2d2d] hover:bg-gray-700 text-white shadow-sm transition-all flex items-center gap-1">
+                            Aksi ▾
+                        </button>
+                        <div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 bottom-full mb-1 w-48 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
+                            ${menuAksiItems}
+                        </div>
+                    </div>
+                `;
+
+                const kartu = document.createElement('div');
+                kartu.className = currentTheme === 'light' ? 'bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-col gap-3 transition-all' : 'bg-[#1e1e1e] p-4 rounded-xl shadow-sm border border-gray-800 flex flex-col gap-3 transition-all';
+                kartu.innerHTML = `
+                    <div class="flex justify-between items-start gap-2">
+                        <div class="flex items-center gap-2">
+                            ${bintangi}
+                            <div>
+                                <h4 class="text-base font-bold ${currentTheme === 'light' ? 'text-gray-900' : 'text-white'}">${lamaran.perusahaan}</h4>
+                                <p class="text-xs text-[#ff5ca0] font-semibold">${lamaran.posisi}</p>
+                            </div>
+                        </div>
+                        ${teksGaji !== '-' ? `<span class="text-[11px] font-bold text-green-400 bg-green-500/10 px-2 py-0.5 rounded">${teksGaji}</span>` : ''}
+                    </div>
+                    <div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] ${currentTheme === 'light' ? 'text-gray-500' : 'text-gray-400'} pt-1 border-t border-gray-800/40">
+                        <span>Lamar: ${formatTanggal(lamaran.tanggal)}</span>
+                        <span>•</span>
+                        <span class="${lamaran.tanggalFollowUp ? 'text-yellow-400 font-semibold' : ''}">FU: ${teksFollowUp}</span>
+                        <span>•</span>
+                        <span>Metode: ${lamaran.metode || 'Email'}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-800/40">
+                        ${dropdownStatusHTML}
+                        ${dropdownAksiHTML}
+                    </div>
+                `;
+                containerCard.appendChild(kartu);
+
+                const baris = document.createElement('tr');
+                baris.className = currentTheme === 'light' ? 'border-b border-gray-200 hover:bg-gray-50' : 'border-b border-gray-800 hover:bg-[#252525]';
+                baris.innerHTML = `
+                    <td class="p-3">
+                        <div class="flex items-center gap-1.5">
+                            ${bintangi}
+                            <div class="font-bold truncate ${currentTheme === 'light' ? 'text-gray-900' : 'text-white'}">${lamaran.perusahaan}</div>
+                        </div>
+                        <div class="text-[#ff5ca0] font-semibold text-[11px] truncate">${lamaran.posisi}</div>
+                    </td>
+                    <td class="p-3 hidden md:table-cell text-gray-400">${formatTanggal(lamaran.tanggal)}</td>
+                    <td class="p-3 hidden md:table-cell text-yellow-400">${teksFollowUp}</td>
+                    <td class="p-3">
+                        ${dropdownStatusHTML}
+                    </td>
+                    <td class="p-3 text-center">${dropdownAksiHTML}</td>
+                `;
+                containerTabel.appendChild(baris);
+            });
+
+            document.getElementById('stat-total').innerText = statTotal;
+            document.getElementById('stat-proses').innerText = statProses;
+            document.getElementById('stat-interview').innerText = statInterview;
+            document.getElementById('stat-diterima').innerText = statDiterima;
+            document.getElementById('stat-ditolak').innerText = statDitolak;
+            document.getElementById('teks-jumlah-lamaran').innerText = `${dataFiltered.length} dari ${statTotal} lamaran`;
+        }
+    </script>
+</body>
+</html>
