@@ -15,7 +15,7 @@
     <!-- Firebase SDK Compat -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -76,7 +76,7 @@
         </div>
     </div>
 
-    <!-- APLIKASI UTAMA (Tampil setelah login) -->
+    <!-- APLIKASI UTAMA -->
     <div id="app-content" class="hidden">
         <header id="header-app" class="bg-[#1a1a1a] px-4 py-5 md:px-6 shadow-md border-b border-gray-800 transition-colors duration-300">
             <div class="max-w-4xl mx-auto flex flex-col gap-4">
@@ -115,7 +115,6 @@
         </header>
         
         <main class="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
-            
             <div id="daily-note-box" class="bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 shadow-sm transition-colors duration-300">
                 <div class="flex justify-between items-center mb-2">
                     <div class="flex items-center gap-2">
@@ -196,7 +195,7 @@
             </div>
             <div>
                 <p class="font-bold text-[#ff5ca0] mb-1">1. Sinkronisasi Cloud</p>
-                <p>Data lamaranmu otomatis tersimpan di server Firebase. Kamu bisa login dengan email yang sama di perangkat lain untuk melihat data yang sama.</p>
+                <p>Data lamaranmu otomatis tersimpan di server Firebase Realtime Database. Kamu bisa login dengan email yang sama di perangkat lain.</p>
             </div>
             <button onclick="tutupModalPanduan()" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs">Mengerti!</button>
         </div>
@@ -213,7 +212,7 @@
         </div>
     </div>
 
-    <!-- MODAL TEMPLATE PESAN & SURAT LAMARAN (DENGAN TOMBOL SALIN) -->
+    <!-- MODAL TEMPLATE PESAN & SURAT LAMARAN -->
     <div id="modal-template" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
         <div id="modal-template-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
@@ -395,12 +394,10 @@
     </div>
 
     <script>
-        // ==========================================
-        // KONFIGURASI FIREBASE KAMU
-        // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyDG5qmJD0EGEaJRGNtvd8U6jTQDj3cvXRA",
             authDomain: "infol-61428.firebaseapp.com",
+            databaseURL: "https://infol-61428-default-rtdb.firebaseio.com",
             projectId: "infol-61428",
             storageBucket: "infol-61428.firebasestorage.app",
             messagingSenderId: "139934994775",
@@ -410,7 +407,7 @@
 
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const db = firebase.firestore();
+        const rtdb = firebase.database();
 
         let currentUser = null;
         let dataLamaran = [];
@@ -442,14 +439,13 @@
         inisialisasiTemaOtomatis();
         setModeTampilan(currentMode);
 
-        // Pantau Status Login Firebase
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('app-content').classList.remove('hidden');
                 document.getElementById('user-email-label').innerText = user.email;
-                muatDataCloud();
+                muatDataRealtimeDB();
             } else {
                 currentUser = null;
                 document.getElementById('app-content').classList.add('hidden');
@@ -483,42 +479,57 @@
 
         function logoutUser() { auth.signOut(); }
 
-        // Ambil Data Realtime dari Firestore Cloud
-        function muatDataCloud() {
+        function getSafeUserId() {
+            return currentUser.email.replace(/[.#$[\]]/g, "_");
+        }
+
+        function muatDataRealtimeDB() {
             if (!currentUser) return;
-            db.collection('users').doc(currentUser.uid).collection('lamaran').onSnapshot((snapshot) => {
+            const uid = getSafeUserId();
+            
+            rtdb.ref('users/' + uid + '/lamaran').on('value', (snapshot) => {
                 dataLamaran = [];
-                snapshot.forEach(doc => { dataLamaran.push({ id: doc.id, ...doc.data() }); });
+                const val = snapshot.val();
+                if (val) {
+                    Object.keys(val).forEach(key => {
+                        dataLamaran.push({ id: key, ...val[key] });
+                    });
+                }
                 renderTampilan();
             });
 
-            db.collection('users').doc(currentUser.uid).collection('catatan').doc(todayKey).get().then(doc => {
-                if (doc.exists) document.getElementById('input-catatan-harian').value = doc.data().isi || '';
+            rtdb.ref('users/' + uid + '/catatan/' + todayKey).on('value', (snapshot) => {
+                const val = snapshot.val();
+                if (val) document.getElementById('input-catatan-harian').value = val.isi || '';
             });
         }
 
-        function simpanKeCloud(lamaranBaru) {
+        function simpanKeRealtimeDB(lamaranBaru) {
             if (!currentUser) return;
+            const uid = getSafeUserId();
             const idDoc = lamaranBaru.id ? lamaranBaru.id.toString() : Date.now().toString();
-            db.collection('users').doc(currentUser.uid).collection('lamaran').doc(idDoc).set(lamaranBaru);
+            rtdb.ref('users/' + uid + '/lamaran/' + idDoc).set(lamaranBaru);
         }
 
-        function hapusDariCloud(id) {
+        function hapusDariRealtimeDB(id) {
             if (!currentUser) return;
-            db.collection('users').doc(currentUser.uid).collection('lamaran').doc(id.toString()).delete();
+            const uid = getSafeUserId();
+            rtdb.ref('users/' + uid + '/lamaran/' + id.toString()).remove();
         }
 
         function simpanCatatanHarian() {
             if (!currentUser) return;
+            const uid = getSafeUserId();
             const isi = document.getElementById('input-catatan-harian').value;
-            db.collection('users').doc(currentUser.uid).collection('catatan').doc(todayKey).set({ isi: isi })
+            rtdb.ref('users/' + uid + '/catatan/' + todayKey).set({ isi: isi })
             .then(() => alert("Catatan harian berhasil disimpan ke cloud!"));
         }
 
         function autoSimpanCatatan() {
             if (!currentUser) return;
+            const uid = getSafeUserId();
             const isi = document.getElementById('input-catatan-harian').value;
-            db.collection('users').doc(currentUser.uid).collection('catatan').doc(todayKey).set({ isi: isi });
+            rtdb.ref('users/' + uid + '/catatan/' + todayKey).set({ isi: isi });
         }
 
         function toggleCatatanHarian() {
@@ -556,21 +567,24 @@
 
         function bukaModalRiwayatCatatan() {
             if (!currentUser) return;
-            db.collection('users').doc(currentUser.uid).collection('catatan').get().then(snapshot => {
+            const uid = getSafeUserId();
+            rtdb.ref('users/' + uid + '/catatan').once('value').then(snapshot => {
                 const listDiv = document.getElementById('list-riwayat-catatan');
                 listDiv.innerHTML = '';
                 let adaRiwayat = false;
-                snapshot.forEach(doc => {
-                    const tgl = doc.id;
-                    const isiCatatan = doc.data().isi || '';
-                    if (isiCatatan.trim() !== '') {
-                        adaRiwayat = true;
-                        const item = document.createElement('div');
-                        item.className = 'bg-[#121212] border border-gray-700 rounded-xl p-3';
-                        item.innerHTML = `<p class="text-xs font-bold text-[#ff5ca0] mb-1">${tgl}</p><p class="text-xs text-gray-300 leading-relaxed">${isiCatatan}</p>`;
-                        listDiv.appendChild(item);
-                    }
-                });
+                const val = snapshot.val();
+                if (val) {
+                    Object.keys(val).forEach(tgl => {
+                        const isiCatatan = val[tgl].isi || '';
+                        if (isiCatatan.trim() !== '') {
+                            adaRiwayat = true;
+                            const item = document.createElement('div');
+                            item.className = 'bg-[#121212] border border-gray-700 rounded-xl p-3';
+                            item.innerHTML = `<p class="text-xs font-bold text-[#ff5ca0] mb-1">${tgl}</p><p class="text-xs text-gray-300 leading-relaxed">${isiCatatan}</p>`;
+                            listDiv.appendChild(item);
+                        }
+                    });
+                }
                 if (!adaRiwayat) {
                     listDiv.innerHTML = `<p class="text-xs text-gray-500 text-center py-4">Belum ada riwayat catatan.</p>`;
                 }
@@ -600,6 +614,9 @@
             if (!e.target.closest('.dropdown-aksi-container')) {
                 document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden'));
             }
+            if (!e.target.closest('.dropdown-status-container')) {
+                document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
+            }
         });
 
         function toggleMenuTitikTiga(event) {
@@ -609,11 +626,27 @@
 
         function toggleDropdownAksi(event, id) {
             event.stopPropagation();
+            document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
             document.querySelectorAll('.dropdown-aksi-menu').forEach(m => {
                 if (m.id !== `dropdown-aksi-${id}`) m.classList.add('hidden');
             });
             const menu = document.getElementById(`dropdown-aksi-${id}`);
             if (menu) menu.classList.toggle('hidden');
+        }
+
+        function toggleDropdownStatus(event, id) {
+            event.stopPropagation();
+            document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden'));
+            document.querySelectorAll('.dropdown-status-menu').forEach(m => {
+                if (m.id !== `dropdown-status-${id}`) m.classList.add('hidden');
+            });
+            const menu = document.getElementById(`dropdown-status-${id}`);
+            if (menu) menu.classList.toggle('hidden');
+        }
+
+        function pilihStatus(id, statusBaru) {
+            document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
+            ubahStatus(id, statusBaru);
         }
 
         function toggleDropdownPosisi(event) {
@@ -672,7 +705,7 @@
             const index = dataLamaran.findIndex(item => item.id == id);
             if (index !== -1) {
                 dataLamaran[index].isFavorit = !dataLamaran[index].isFavorit;
-                simpanKeCloud(dataLamaran[index]);
+                simpanKeRealtimeDB(dataLamaran[index]);
             }
         }
 
@@ -810,6 +843,15 @@
                     alert("Gagal menyalin teks.");
                 });
             }
+        }
+
+        function salinSuratOtomatis(perusahaan, posisi) {
+            const teks = templateSurat.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi);
+            navigator.clipboard.writeText(teks).then(() => {
+                alert(`Surat Lamaran untuk ${perusahaan} berhasil disalin!`);
+            }).catch(() => {
+                bukaModalTemplate(perusahaan, posisi);
+            });
         }
 
         function bukaModalTemplateGlobal() {
@@ -996,13 +1038,13 @@
 
             const dataBaru = { id, perusahaan, posisi, tanggal, tanggalFollowUp, deadline, link, kontak, metode, gaji, gajiMentah, status, keterangan, isFavorit };
 
-            simpanKeCloud(dataBaru);
+            simpanKeRealtimeDB(dataBaru);
             tutupModal();
         }
 
         function hapusLamaran(id) {
             if(confirm('Hapus data ini?')) {
-                hapusDariCloud(id);
+                hapusDariRealtimeDB(id);
             }
         }
 
@@ -1010,7 +1052,7 @@
             const index = dataLamaran.findIndex(item => item.id == id);
             if (index !== -1) {
                 dataLamaran[index].status = statusBaru;
-                simpanKeCloud(dataLamaran[index]);
+                simpanKeRealtimeDB(dataLamaran[index]);
             }
         }
 
@@ -1056,7 +1098,21 @@
                 if (["Diterima", "Offering"].includes(status)) warnaStatus = currentTheme === 'light' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-green-900/40 text-green-300 border-green-800';
                 if (["Ditolak", "Tidak Ada Kabar"].includes(status)) warnaStatus = currentTheme === 'light' ? 'bg-red-100 text-red-800 border-red-200' : 'bg-red-900/40 text-red-300 border-red-800';
 
-                const optionsHTML = daftarStatus.map(s => `<option value="${s}" ${status === s ? 'selected' : ''}>${s}</option>`).join('');
+                const dropdownStatusHTML = `
+                    <div class="relative dropdown-status-container inline-block">
+                        <button onclick="toggleDropdownStatus(event, '${lamaran.id}')" class="text-xs border rounded-lg px-2.5 py-1.5 font-semibold outline-none flex items-center gap-1.5 ${warnaStatus}">
+                            <span>${status}</span> <span class="text-[10px]">▾</span>
+                        </button>
+                        <div id="dropdown-status-${lamaran.id}" class="dropdown-status-menu absolute left-0 bottom-full mb-1 w-44 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 max-h-52 overflow-y-auto">
+                            ${daftarStatus.map(s => `
+                                <button onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/10 ${s === status ? 'text-[#ff5ca0]' : ''}">
+                                    ${s}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
                 const teksFollowUp = lamaran.tanggalFollowUp ? formatTanggal(lamaran.tanggalFollowUp) : '-';
                 const teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-';
 
@@ -1074,7 +1130,7 @@
                     menuAksiItems += `<a href="${waInterview}" target="_blank" class="${itemClass}">Konfirmasi Interview</a>`;
                 }
 
-                menuAksiItems += `<button onclick="bukaModalTemplate('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass}">Salin Surat Lamaran</button>`;
+                menuAksiItems += `<button onclick="salinSuratOtomatis('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass}">📋 Salin Surat Lamaran</button>`;
                 menuAksiItems += `<hr class="${currentTheme === 'light' ? 'border-gray-200 my-1' : 'border-gray-700 my-1'}">`;
                 menuAksiItems += `<button onclick="bukaModalEdit('${lamaran.id}')" class="${itemClass}">Edit Data</button>`;
                 menuAksiItems += `<button onclick="hapusLamaran('${lamaran.id}')" class="${itemClass}">Hapus Lamaran</button>`;
@@ -1086,7 +1142,7 @@
                         <button onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-gray-700 bg-[#2d2d2d] hover:bg-gray-700 text-white shadow-sm transition-all flex items-center gap-1">
                             Aksi ▾
                         </button>
-                        <div id="dropdown-aksi-${lamaran.id}" class="absolute right-0 bottom-full mb-1 w-52 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
+                        <div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 bottom-full mb-1 w-52 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
                             ${menuAksiItems}
                         </div>
                     </div>
@@ -1113,9 +1169,7 @@
                         <span>Metode: ${lamaran.metode || 'Email'}</span>
                     </div>
                     <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-800/40">
-                        <select onchange="ubahStatus('${lamaran.id}', this.value)" class="text-xs border rounded-lg px-2.5 py-1.5 font-semibold outline-none ${warnaStatus}">
-                            ${optionsHTML}
-                        </select>
+                        ${dropdownStatusHTML}
                         ${dropdownAksiHTML}
                     </div>
                 `;
@@ -1134,9 +1188,7 @@
                     <td class="p-3 hidden md:table-cell text-gray-400">${formatTanggal(lamaran.tanggal)}</td>
                     <td class="p-3 hidden md:table-cell text-yellow-400">${teksFollowUp}</td>
                     <td class="p-3">
-                        <select onchange="ubahStatus('${lamaran.id}', this.value)" class="text-[11px] border rounded p-1 font-semibold outline-none ${warnaStatus}">
-                            ${optionsHTML}
-                        </select>
+                        ${dropdownStatusHTML}
                     </td>
                     <td class="p-3 text-center">${dropdownAksiHTML}</td>
                 `;
