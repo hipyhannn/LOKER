@@ -182,7 +182,7 @@
 
             <div>
                 <p class="font-bold text-[#ff5ca0] mb-1">2. Menu Aksi Ringkas</p>
-                <p>Setiap kartu lamaran kini dilengkapi tombol <b>Aksi ▾</b> untuk membuka menu Email, WhatsApp, Salin Surat, Edit, hingga Hapus secara rapi dan tidak memenuhi layar.</p>
+                <p>Setiap kartu lamaran kini dilengkapi tombol <b>Aksi ▾</b> untuk membuka menu Email, WhatsApp, Salin Surat, Edit, hingga Hapus secara bersih dan rapi.</p>
             </div>
 
             <button onclick="tutupModalPanduan()" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors mt-2 text-xs">Mengerti, Lanjutkan!</button>
@@ -514,7 +514,6 @@
                 dropdownMetode.classList.add('hidden');
             }
             
-            // Tutup dropdown aksi kartu jika klik di luar
             if (!e.target.closest('.dropdown-aksi-container')) {
                 document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden'));
             }
@@ -528,7 +527,6 @@
 
         function toggleDropdownAksi(event, id) {
             event.stopPropagation();
-            // Tutup semua menu aksi lain dulu
             document.querySelectorAll('.dropdown-aksi-menu').forEach(m => {
                 if (m.id !== `dropdown-aksi-${id}`) m.classList.add('hidden');
             });
@@ -1311,17 +1309,18 @@
                     }
                 }
 
-                // DAFTAR MENU DI DALAM DROPDOWN AKSI
+                // DAFTAR MENU DI DALAM DROPDOWN AKSI (TANPA WARNA KHUSUS & TANPA IKON EMOJI)
                 let menuAksiItems = '';
+                const itemClass = currentTheme === 'light' ? 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-gray-100 text-gray-800' : 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/10 text-gray-200';
                 
                 if (lamaran.link) {
-                    menuAksiItems += `<a href="${lamaran.link}" target="_blank" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/20 flex items-center gap-2 text-blue-400">🔗 Buka Link Lowongan</a>`;
+                    menuAksiItems += `<a href="${lamaran.link}" target="_blank" class="${itemClass}">Buka Link Lowongan</a>`;
                 }
 
                 let emailTujuan = lamaran.kontak && lamaran.kontak.includes('@') ? lamaran.kontak : '';
                 const subjekEmail = encodeURIComponent(`Lamaran Pekerjaan - ${lamaran.posisi} - [Nama Anda]`);
                 const isiEmailFinal = encodeURIComponent(templateEmail.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi));
-                menuAksiItems += `<a href="mailto:${emailTujuan}?subject=${subjekEmail}&body=${isiEmailFinal}" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/20 flex items-center gap-2 text-sky-400">✉️ Kirim / Buka Email</a>`;
+                menuAksiItems += `<a href="mailto:${emailTujuan}?subject=${subjekEmail}&body=${isiEmailFinal}" class="${itemClass}">Kirim / Buka Email</a>`;
 
                 if (lamaran.kontak) {
                     let nomorBersih = lamaran.kontak.replace(/[^0-9]/g, '');
@@ -1329,17 +1328,17 @@
                     
                     const pesanTanyaFinal = encodeURIComponent(templateTanya.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi));
                     const linkWa = nomorBersih.length > 5 ? `https://wa.me/${nomorBersih}?text=${pesanTanyaFinal}` : `https://wa.me/?text=${pesanTanyaFinal}`;
-                    menuAksiItems += `<a href="${linkWa}" target="_blank" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/20 flex items-center gap-2 text-green-400">💬 Chat WA (Tanya Kabar)</a>`;
+                    menuAksiItems += `<a href="${linkWa}" target="_blank" class="${itemClass}">Chat WA (Tanya Kabar)</a>`;
 
                     const pesanInterviewFinal = encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi));
                     const linkWaInterview = nomorBersih.length > 5 ? `https://wa.me/${nomorBersih}?text=${pesanInterviewFinal}` : `https://wa.me/?text=${pesanInterviewFinal}`;
-                    menuAksiItems += `<a href="${linkWaInterview}" target="_blank" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/20 flex items-center gap-2 text-emerald-400">🤝 Konfirmasi Interview</a>`;
+                    menuAksiItems += `<a href="${linkWaInterview}" target="_blank" class="${itemClass}">Konfirmasi Interview</a>`;
                 }
 
-                menuAksiItems += `<button onclick="bukaModalTemplate('${lamaran.perusahaan}', '${lamaran.posisi}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/20 flex items-center gap-2 text-purple-400">📋 Salin Surat Lamaran</button>`;
-                menuAksiItems += `<hr class="border-gray-700 my-1">`;
-                menuAksiItems += `<button onclick="bukaModalEdit(${lamaran.id})" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/20 flex items-center gap-2 text-amber-400">✏️ Edit Data</button>`;
-                menuAksiItems += `<button onclick="hapusLamaran(${lamaran.id})" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/20 flex items-center gap-2 text-red-400">🗑️ Hapus Lamaran</button>`;
+                menuAksiItems += `<button onclick="bukaModalTemplate('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass}">Salin Surat Lamaran</button>`;
+                menuAksiItems += `<hr class="${currentTheme === 'light' ? 'border-gray-200 my-1' : 'border-gray-700 my-1'}">`;
+                menuAksiItems += `<button onclick="bukaModalEdit(${lamaran.id})" class="${itemClass}">Edit Data</button>`;
+                menuAksiItems += `<button onclick="hapusLamaran(${lamaran.id})" class="${itemClass}">Hapus Lamaran</button>`;
 
                 const bintangi = `<button onclick="toggleFavorit(${lamaran.id})" class="text-base text-yellow-400 hover:scale-125 transition-transform" title="Tandai Favorit">${lamaran.isFavorit ? '★' : '☆'}</button>`;
 
@@ -1348,7 +1347,7 @@
                         <button onclick="toggleDropdownAksi(event, ${lamaran.id})" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-gray-700 bg-[#2d2d2d] hover:bg-gray-700 text-white shadow transition-all flex items-center gap-1">
                             Aksi ▾
                         </button>
-                        <div id="dropdown-aksi-${lamaran.id}" class="absolute right-0 mt-1 w-52 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
+                        <div id="dropdown-aksi-${lamaran.id}" class="absolute right-0 mt-1 w-52 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
                             ${menuAksiItems}
                         </div>
                     </div>
