@@ -35,7 +35,6 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Styling Slider Gaji */
         input[type=range] {
             accent-color: #ff5ca0;
         }
@@ -225,10 +224,15 @@
                     <input type="text" id="input-perusahaan" required class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
                 </div>
                 
-                <div class="mb-4">
+                <!-- Posisi dengan Dropdown Riwayat Mirip Email -->
+                <div class="mb-4 relative">
                     <label id="label-posisi" class="block text-xs font-bold text-gray-400 mb-1.5">POSISI YANG DILAMAR *</label>
-                    <input type="text" id="input-posisi" list="list-posisi" autocomplete="off" required class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
-                    <datalist id="list-posisi"></datalist>
+                    <div class="flex gap-2">
+                        <input type="text" id="input-posisi" autocomplete="off" required placeholder="Ketik atau pilih dari riwayat..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0]">
+                        <button type="button" onclick="toggleDropdownPosisi(event)" class="bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0 transition-colors" title="Pilih dari Riwayat Posisi">▼</button>
+                    </div>
+                    <!-- Dropdown List Riwayat Posisi -->
+                    <div id="dropdown-posisi-list" class="absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -273,7 +277,7 @@
                     </div>
                 </div>
 
-                <!-- Input Gaji Menggunakan Slider / Geser -->
+                <!-- Input Gaji Slider -->
                 <div class="mb-4 bg-black/20 p-3.5 rounded-xl border border-gray-700/60">
                     <div class="flex justify-between items-center mb-1.5">
                         <label class="text-xs font-bold text-green-400">ESTIMASI GAJI / EXPECTED</label>
@@ -322,8 +326,13 @@
         window.addEventListener('click', function(e) {
             const dropdown = document.getElementById('dropdown-titiktiga');
             const btnTitikTiga = document.getElementById('btn-menu-titiktiga');
+            const dropdownPosisi = document.getElementById('dropdown-posisi-list');
+            
             if (!btnTitikTiga.contains(e.target) && !dropdown.contains(e.target)) {
                 dropdown.classList.add('hidden');
+            }
+            if (!e.target.closest('#input-posisi') && !e.target.closest('button[onclick*="toggleDropdownPosisi"]')) {
+                dropdownPosisi.classList.add('hidden');
             }
         });
 
@@ -331,6 +340,37 @@
             event.stopPropagation();
             const dropdown = document.getElementById('dropdown-titiktiga');
             dropdown.classList.toggle('hidden');
+        }
+
+        function toggleDropdownPosisi(event) {
+            event.stopPropagation();
+            const dropdownPosisi = document.getElementById('dropdown-posisi-list');
+            perbaruiListPosisi();
+            dropdownPosisi.classList.toggle('hidden');
+        }
+
+        function perbaruiListPosisi() {
+            const dropdownPosisi = document.getElementById('dropdown-posisi-list');
+            dropdownPosisi.innerHTML = '';
+            
+            const semuaPosisi = dataLamaran.map(item => item.posisi).filter(Boolean);
+            const posisiUnik = [...new Set(semuaPosisi)];
+
+            if (posisiUnik.length === 0) {
+                dropdownPosisi.innerHTML = `<div class="p-2.5 text-xs text-gray-500 text-center">Belum ada riwayat posisi</div>`;
+                return;
+            }
+
+            posisiUnik.forEach(pos => {
+                const item = document.createElement('div');
+                item.className = currentTheme === 'light' ? 'p-2.5 text-xs text-gray-800 hover:bg-gray-100 cursor-pointer font-semibold border-b border-gray-100 last:border-b-0' : 'p-2.5 text-xs text-gray-200 hover:bg-white/10 cursor-pointer font-semibold border-b border-gray-800 last:border-b-0';
+                item.innerText = pos;
+                item.onclick = function() {
+                    document.getElementById('input-posisi').value = pos;
+                    dropdownPosisi.classList.add('hidden');
+                };
+                dropdownPosisi.appendChild(item);
+            });
         }
 
         function inisialisasiTemaOtomatis() {
@@ -759,7 +799,6 @@
                 document.getElementById('input-status').value = lamaran.status;
                 document.getElementById('input-keterangan').value = lamaran.keterangan || "";
                 
-                // Set nilai gaji slider dari data tersimpan (atau 0 jika format teks lama)
                 let nilaiGajiNum = parseInt(lamaran.gajiMentah) || 0;
                 document.getElementById('input-gaji-slider').value = nilaiGajiNum;
                 updateGajiSlider(nilaiGajiNum);
@@ -771,6 +810,7 @@
         function tutupModal() { 
             modal.classList.add('hidden'); 
             form.reset(); 
+            document.getElementById('dropdown-posisi-list').classList.add('hidden');
         }
         
         function formatTanggal(tanggalString) {
@@ -866,20 +906,6 @@
                 localStorage.setItem('lokertrack_data', JSON.stringify(dataLamaran));
                 renderTampilan();
             }
-        }
-
-        function perbaruiSaranPosisi() {
-            const datalist = document.getElementById('list-posisi');
-            datalist.innerHTML = ''; 
-            
-            const semuaPosisi = dataLamaran.map(item => item.posisi);
-            const posisiUnik = [...new Set(semuaPosisi)];
-            
-            posisiUnik.forEach(posisi => {
-                const opsi = document.createElement('option');
-                opsi.value = posisi;
-                datalist.appendChild(opsi);
-            });
         }
 
         function renderTampilan() {
@@ -1024,8 +1050,6 @@
             document.getElementById('stat-diterima').innerText = statDiterima;
             document.getElementById('stat-ditolak').innerText = statDitolak;
             document.getElementById('teks-jumlah-lamaran').innerText = `${dataFiltered.length} dari ${statTotal} lamaran`;
-            
-            perbaruiSaranPosisi();
         }
 
         renderTampilan();
