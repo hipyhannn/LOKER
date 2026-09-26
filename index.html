@@ -178,25 +178,17 @@
             
             <div>
                 <p class="font-bold text-[#ff5ca0] mb-1">1. Menambah Data Lamaran</p>
-                <p>Klik tombol lingkaran plus (<code class="text-white bg-black/40 px-1 py-0.5 rounded">+</code>) di pojok kanan bawah. Cukup isi Nama Perusahaan, Posisi, Tanggal, dan Status. Jika butuh detail tambahan (Gaji, Link, Kontak), klik tombol <code class="text-white bg-black/40 px-1 rounded">+ Tambah Info Detail</code>.</p>
+                <p>Klik tombol lingkaran plus (<code class="text-white bg-black/40 px-1 py-0.5 rounded">+</code>) di pojok kanan bawah. Cukup isi Nama Perusahaan, Posisi, Tanggal, dan Status. Jika butuh detail tambahan, klik <code class="text-white bg-black/40 px-1 rounded">+ Tambah Info Detail</code>.</p>
             </div>
 
             <div>
-                <p class="font-bold text-[#ff5ca0] mb-1">2. Catatan Harian & Riwayat</p>
-                <p>Catatan harian otomatis mendeteksi tanggal hari ini. Setiap berganti hari, catatan akan bersih secara otomatis untuk hari baru. Kamu bisa melihat catatan-catatan hari sebelumnya dengan mengklik tombol <b>Riwayat</b> di samping judul catatan.</p>
+                <p class="font-bold text-[#ff5ca0] mb-1">2. Kirim Email & Chat WA Otomatis</p>
+                <p>Gunakan tombol <b>Email</b>, <b>WA</b>, atau <b>Konfirmasi Interview</b> di setiap kartu lamaran untuk membuka aplikasi pengirim secara instan. Semua template teks pesannya dapat diedit melalui menu Titik Tiga (⋮) > Atur Template & Pesan.</p>
             </div>
 
             <div>
-                <p class="font-bold text-[#ff5ca0] mb-1">3. Fitur Unggulan (Ghosting Alert & Chat HRD)</p>
-                <ul class="list-disc pl-4 space-y-1 mt-1">
-                    <li><b>Ghosting Alert:</b> Label peringatan oranye otomatis muncul jika lamaran berstatus Terkirim/Screening sudah >14 hari tanpa kabar.</li>
-                    <li><b>Chat WA & Konfirmasi Interview:</b> Tombol WA dan Konfirmasi Interview otomatis mengisi draf pesan formal ke HRD. Template pesannya bisa diedit melalui menu Titik Tiga (⋮) > Atur Template & Pesan.</li>
-                </ul>
-            </div>
-
-            <div>
-                <p class="font-bold text-[#ff5ca0] mb-1">4. Menu Titik Tiga (⋮)</p>
-                <p>Di pojok kanan atas terdapat menu tambahan untuk: Mengatur template surat & pesan WA, menyinkronkan data ke Google Sheets, mengatur link Web App, serta mengganti Mode Terang/Gelap.</p>
+                <p class="font-bold text-[#ff5ca0] mb-1">3. Ghosting Alert</p>
+                <p>Label peringatan oranye otomatis muncul jika lamaran berstatus Terkirim/Screening sudah melewati 14 hari tanpa kabar.</p>
             </div>
 
             <button onclick="tutupModalPanduan()" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors mt-2 text-xs">Mengerti, Lanjutkan!</button>
@@ -227,7 +219,7 @@
         </div>
     </div>
 
-    <!-- Modal Atur Template Surat & Pesan WA -->
+    <!-- Modal Atur Template Surat & Pesan -->
     <div id="modal-template" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
         <div id="modal-template-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 md:p-6 max-h-[90vh] overflow-y-auto transition-colors duration-300">
             <div class="flex justify-between items-center mb-4">
@@ -237,16 +229,26 @@
             
             <div class="space-y-4">
                 <!-- Tab Pilihan Template -->
-                <div class="flex gap-2 border-b border-gray-700 pb-2">
+                <div class="flex gap-2 border-b border-gray-700 pb-2 flex-wrap">
                     <button type="button" onclick="gantiTabTemplate('surat')" id="tab-btn-surat" class="px-3 py-1.5 rounded text-xs font-bold bg-[#ff5ca0] text-white transition-colors">Surat Lamaran</button>
-                    <button type="button" onclick="gantiTabTemplate('tanya')" id="tab-btn-tanya" class="px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors">Chat Tanya Kabar (WA)</button>
-                    <button type="button" onclick="gantiTabTemplate('interview')" id="tab-btn-interview" class="px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors">Konfirmasi Interview (WA)</button>
+                    <button type="button" onclick="gantiTabTemplate('email')" id="tab-btn-email" class="px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors">Isi Email Lamaran</button>
+                    <button type="button" onclick="gantiTabTemplate('tanya')" id="tab-btn-tanya" class="px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors">Chat WA (Tanya)</button>
+                    <button type="button" onclick="gantiTabTemplate('interview')" id="tab-btn-interview" class="px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors">Chat WA (Interview)</button>
                 </div>
 
                 <!-- Konten Textarea Surat -->
                 <div id="tab-content-surat" class="space-y-2">
-                    <p class="text-xs text-gray-400">Gunakan <code class="text-[#ff5ca0]">{perusahaan}</code> dan <code class="text-[#ff5ca0]">{posisi}</code> agar terisi otomatis:</p>
+                    <p class="text-xs text-gray-400">Gunakan <code class="text-[#ff5ca0]">{perusahaan}</code> dan <code class="text-[#ff5ca0]">{posisi}</code>:</p>
                     <textarea id="text-template-surat" rows="8" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] leading-relaxed"></textarea>
+                    <div class="flex gap-2 pt-1">
+                        <button type="button" onclick="salinTemplateSuratSekarang()" class="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 rounded-lg transition-colors text-xs shadow-md">Salin Surat Ini ke Clipboard</button>
+                    </div>
+                </div>
+
+                <!-- Konten Textarea Email -->
+                <div id="tab-content-email" class="space-y-2 hidden">
+                    <p class="text-xs text-gray-400">Template draf isi pesan saat tombol <b>Email</b> diklik. Gunakan <code class="text-[#ff5ca0]">{perusahaan}</code> dan <code class="text-[#ff5ca0]">{posisi}</code>:</p>
+                    <textarea id="text-template-email" rows="8" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] leading-relaxed"></textarea>
                 </div>
 
                 <!-- Konten Textarea Tanya Kabar WA -->
@@ -376,8 +378,8 @@
                             <input type="url" id="input-link" placeholder="https://..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-blue-300 focus:outline-none focus:border-[#ff5ca0]">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-purple-400 mb-1">KONTAK HRD / NO WA</label>
-                            <input type="text" id="input-kontak" placeholder="Nama / 0812xxxx" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-purple-300 focus:outline-none focus:border-[#ff5ca0]">
+                            <label class="block text-xs font-bold text-purple-400 mb-1">KONTAK HRD / NO WA / EMAIL</label>
+                            <input type="text" id="input-kontak" placeholder="Nama / No WA / Email" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-purple-300 focus:outline-none focus:border-[#ff5ca0]">
                         </div>
                     </div>
 
@@ -433,11 +435,14 @@
 
         const defaultTemplateSurat = `Kepada Yth. Tim Rekrutmen / HRD {perusahaan},\nDi Tempat\n\nDengan hormat,\n\nMelalui pesan ini, saya bermaksud untuk menyampaikan ketertarikan saya untuk melamar posisi {posisi} di {perusahaan}.\n\nBerikut saya lampirkan berkas pendukung serta portofolio untuk menjadi bahan pertimbangan Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap seleksi selanjutnya.\n\nAtas waktu dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Lengkap Anda]`;
 
+        const defaultTemplateEmail = `Yth. Tim Rekrutmen / HRD {perusahaan},\n\nMelalui email ini, saya bermaksud mengajukan diri untuk melamar posisi {posisi} di {perusahaan}.\n\nBersama email ini, saya telah melampirkan berkas lamaran serta CV terbaru untuk dapat ditinjau oleh Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap wawancara.\n\nDemikian permohonan ini saya sampaikan. Terima kasih atas perhatian dan kesempatan yang diberikan.\n\nHormat saya,\n[Nama Lengkap Anda]`;
+
         const defaultTemplateTanya = `Yth. Bapak/Ibu HRD {perusahaan},\n\nSelamat pagi/siang. Mohon maaf mengganggu waktunya sebentar. Saya ingin menanyakan perkembangan atau status dari lamaran saya untuk posisi {posisi} yang telah saya kirimkan sebelumnya.\n\nBesar harapan saya untuk mendapatkan informasi lebih lanjut. Atas perhatian dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Anda]`;
 
         const defaultTemplateInterview = `Yth. Bapak/Ibu HRD {perusahaan},\n\nTerima kasih banyak atas undangan serta kesempatan interview untuk posisi {posisi}. Melalui pesan ini, saya bermaksud mengonfirmasi bahwa saya akan hadir memenuhi undangan tersebut sesuai dengan jadwal yang telah ditentukan.\n\nSekali lagi terima kasih atas kesempatan yang diberikan.\n\nHormat saya,\n[Nama Anda]`;
         
         let templateSurat = localStorage.getItem('lokertrack_template_surat') || defaultTemplateSurat;
+        let templateEmail = localStorage.getItem('lokertrack_template_email') || defaultTemplateEmail;
         let templateTanya = localStorage.getItem('lokertrack_template_tanya') || defaultTemplateTanya;
         let templateInterview = localStorage.getItem('lokertrack_template_interview') || defaultTemplateInterview;
         
@@ -824,16 +829,21 @@
 
         function gantiTabTemplate(tab) {
             document.getElementById('tab-content-surat').classList.add('hidden');
+            document.getElementById('tab-content-email').classList.add('hidden');
             document.getElementById('tab-content-tanya').classList.add('hidden');
             document.getElementById('tab-content-interview').classList.add('hidden');
 
             document.getElementById('tab-btn-surat').className = "px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors";
+            document.getElementById('tab-btn-email').className = "px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors";
             document.getElementById('tab-btn-tanya').className = "px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors";
             document.getElementById('tab-btn-interview').className = "px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors";
 
             if (tab === 'surat') {
                 document.getElementById('tab-content-surat').classList.remove('hidden');
                 document.getElementById('tab-btn-surat').className = "px-3 py-1.5 rounded text-xs font-bold bg-[#ff5ca0] text-white transition-colors";
+            } else if (tab === 'email') {
+                document.getElementById('tab-content-email').classList.remove('hidden');
+                document.getElementById('tab-btn-email').className = "px-3 py-1.5 rounded text-xs font-bold bg-[#ff5ca0] text-white transition-colors";
             } else if (tab === 'tanya') {
                 document.getElementById('tab-content-tanya').classList.remove('hidden');
                 document.getElementById('tab-btn-tanya').className = "px-3 py-1.5 rounded text-xs font-bold bg-[#ff5ca0] text-white transition-colors";
@@ -846,6 +856,7 @@
         function bukaModalTemplateGlobal() {
             document.getElementById('dropdown-titiktiga').classList.add('hidden');
             document.getElementById('text-template-surat').value = templateSurat;
+            document.getElementById('text-template-email').value = templateEmail;
             document.getElementById('text-template-tanya').value = templateTanya;
             document.getElementById('text-template-interview').value = templateInterview;
             gantiTabTemplate('surat');
@@ -857,6 +868,7 @@
                 .replace(/{perusahaan}/g, perusahaan)
                 .replace(/{posisi}/g, posisi);
             document.getElementById('text-template-surat').value = pesanFinal;
+            document.getElementById('text-template-email').value = templateEmail;
             document.getElementById('text-template-tanya').value = templateTanya;
             document.getElementById('text-template-interview').value = templateInterview;
             gantiTabTemplate('surat');
@@ -867,21 +879,32 @@
             document.getElementById('modal-template').classList.add('hidden');
         }
 
+        function salinTemplateSuratSekarang() {
+            const textarea = document.getElementById('text-template-surat');
+            textarea.select();
+            navigator.clipboard.writeText(textarea.value);
+            alert("Surat lamaran berhasil disalin ke clipboard!");
+            tutupModalTemplate();
+        }
+
         function simpanSemuaTemplate() {
             const suratBaru = document.getElementById('text-template-surat').value.trim();
+            const emailBaru = document.getElementById('text-template-email').value.trim();
             const tanyaBaru = document.getElementById('text-template-tanya').value.trim();
             const interviewBaru = document.getElementById('text-template-interview').value.trim();
 
-            if(!suratBaru || !tanyaBaru || !interviewBaru) {
+            if(!suratBaru || !emailBaru || !tanyaBaru || !interviewBaru) {
                 alert("Template tidak boleh ada yang kosong!");
                 return;
             }
 
             templateSurat = suratBaru;
+            templateEmail = emailBaru;
             templateTanya = tanyaBaru;
             templateInterview = interviewBaru;
 
             localStorage.setItem('lokertrack_template_surat', templateSurat);
+            localStorage.setItem('lokertrack_template_email', templateEmail);
             localStorage.setItem('lokertrack_template_tanya', templateTanya);
             localStorage.setItem('lokertrack_template_interview', templateInterview);
 
@@ -1301,6 +1324,12 @@
 
                 let tombolLink = lamaran.link ? `<a href="${lamaran.link}" target="_blank" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-blue-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-blue-400'} px-2.5 py-1.5 rounded font-semibold transition-colors" title="Buka Link Lowongan">Link</a>` : '';
 
+                let tombolEmail = '';
+                let emailTujuan = lamaran.kontak && lamaran.kontak.includes('@') ? lamaran.kontak : '';
+                const subjekEmail = encodeURIComponent(`Lamaran Pekerjaan - ${lamaran.posisi} - [Nama Anda]`);
+                const isiEmailFinal = encodeURIComponent(templateEmail.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi));
+                tombolEmail = `<a href="mailto:${emailTujuan}?subject=${subjekEmail}&body=${isiEmailFinal}" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-sky-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-sky-400'} px-2.5 py-1.5 rounded font-semibold transition-colors" title="Kirim/Buka via Email">Email</a>`;
+
                 let tombolKontak = '';
                 let tombolKonfirmasiInterview = '';
                 if (lamaran.kontak) {
@@ -1316,7 +1345,7 @@
                     tombolKonfirmasiInterview = `<a href="${linkWaInterview}" target="_blank" class="text-xs border border-emerald-500/40 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 px-2.5 py-1.5 rounded font-semibold transition-colors" title="Kirim Pesan Konfirmasi Hadir Interview">Konfirmasi Interview</a>`;
                 }
 
-                const tombolTemplate = `<button onclick="bukaModalTemplate('${lamaran.perusahaan}', '${lamaran.posisi}')" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-purple-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-purple-400'} px-2.5 py-1.5 rounded font-semibold transition-colors" title="Salin Surat Lamaran">Surat</button>`;
+                const tombolTemplate = `<button onclick="bukaModalTemplate('${lamaran.perusahaan}', '${lamaran.posisi}')" class="text-xs border ${currentTheme === 'light' ? 'border-gray-300 bg-white hover:bg-gray-50 text-purple-600' : 'border-gray-700 bg-[#2d2d2d] hover:border-gray-500 text-purple-400'} px-2.5 py-1.5 rounded font-semibold transition-colors" title="Salin Surat Lamaran">Salin Surat</button>`;
 
                 const bintangi = `<button onclick="toggleFavorit(${lamaran.id})" class="text-base text-yellow-400 hover:scale-125 transition-transform" title="Tandai Favorit">${lamaran.isFavorit ? '★' : '☆'}</button>`;
 
@@ -1348,6 +1377,7 @@
                         </select>
                         <div class="flex items-center gap-1.5 flex-wrap">
                             ${tombolLink}
+                            ${tombolEmail}
                             ${tombolKontak}
                             ${tombolKonfirmasiInterview}
                             ${tombolTemplate}
@@ -1384,6 +1414,7 @@
                     <td class="p-3 text-center">
                         <div class="flex items-center justify-center gap-1 flex-wrap">
                             ${tombolLink}
+                            ${tombolEmail}
                             ${tombolKontak}
                             ${tombolKonfirmasiInterview}
                             ${tombolTemplate}
