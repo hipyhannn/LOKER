@@ -41,10 +41,6 @@
 
         input[type=range] { accent-color: #ff5ca0; }
         
-        /* Retro Pixel Shadow & Border */
-        .pixel-box {
-            box-shadow: 4px 4px 0px 0px #ff5ca0;
-        }
         .pixel-btn {
             box-shadow: 3px 3px 0px 0px #000000;
             transition: all 0.1s ease;
@@ -57,11 +53,10 @@
 </head>
 <body id="body-app" class="bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden">
     
-    <!-- HALAMAN LOGIN / AUTH FIREBASE (RETRO PIXEL STYLE) -->
+    <!-- HALAMAN LOGIN / AUTH FIREBASE -->
     <div id="auth-screen" class="fixed inset-0 bg-[#0d0d0d] z-50 flex items-center justify-center p-4">
         <div class="bg-[#181818] border-4 border-[#ff5ca0] rounded-none shadow-[8px_8px_0px_0px_rgba(255,92,160,0.3)] w-full max-w-sm p-6 space-y-6 relative">
             
-            <!-- Karakter / Maskot Pixel di atas form -->
             <div class="flex flex-col items-center justify-center space-y-2 pt-2">
                 <div class="relative w-[52px] h-[52px] animate-breathe">
                     <div class="absolute w-[12px] h-[12px] bg-[#111] rounded-none top-[3px] left-[5px]"></div>
@@ -79,7 +74,7 @@
                     <div class="absolute w-[6px] h-[4px] bg-[#111] rounded-none top-[22px] left-[23px] z-20"></div>
                 </div>
                 <h2 class="text-sm font-pixel text-white tracking-wider text-center">APPLY LOKER</h2>
-                <p id="auth-subtitle" class="text-[10px] text-gray-400 font-pixel text-center leading-relaxed">INSERT COIN TO START</p>
+                <p id="auth-subtitle" class="text-[10px] text-gray-400 font-pixel text-center leading-relaxed">SILAKAN MASUK AKUN</p>
             </div>
             
             <div id="auth-error" class="bg-red-500/20 border-2 border-red-500 text-red-300 text-[11px] p-2.5 rounded-none hidden"></div>
@@ -87,20 +82,20 @@
             <form id="form-auth" onsubmit="handleAuthSubmit(event)" class="space-y-4">
                 <div>
                     <label class="block text-[10px] font-pixel text-[#ff5ca0] mb-1">EMAIL:</label>
-                    <input type="email" id="auth-email" required placeholder="player@email.com" class="w-full bg-[#121212] border-2 border-gray-600 rounded-none p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors">
+                    <input type="email" id="auth-email" required placeholder="nama@email.com" class="w-full bg-[#121212] border-2 border-gray-600 rounded-none p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors">
                 </div>
                 <div>
                     <label class="block text-[10px] font-pixel text-[#ff5ca0] mb-1">PASSWORD:</label>
                     <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-[#121212] border-2 border-gray-600 rounded-none p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors">
                 </div>
                 <button type="submit" id="btn-auth-submit" class="w-full bg-[#ff5ca0] hover:bg-[#ff4081] text-white font-pixel text-[11px] py-3.5 rounded-none transition-colors pixel-btn uppercase tracking-widest">
-                    START GAME
+                    Masuk
                 </button>
             </form>
 
             <div class="text-center pt-2 border-t border-gray-800">
                 <button onclick="toggleAuthMode()" id="btn-toggle-auth" class="text-[10px] font-pixel text-[#ff5ca0] hover:underline">
-                    &gt; BELUM PUNYA AKUN? DAFTAR
+                    Belum punya akun? Daftar
                 </button>
             </div>
         </div>
@@ -162,23 +157,23 @@
             </div>
 
             <div class="grid grid-cols-5 gap-2 md:gap-3 text-center">
-                <div onclick="setFilterStatus('Semua')" id="card-total" class="bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-gray-500 cursor-pointer hover:bg-white/5 transition-all ring-2 ring-[#ff5ca0]">
+                <div onclick="setFilterStatus('Semua')" id="card-total" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-gray-500 cursor-pointer hover:bg-black/5 transition-all ring-2 ring-[#ff5ca0]">
                     <p class="text-[10px] text-gray-400 font-bold mb-1">Total</p>
                     <p class="text-base md:text-2xl font-bold" id="stat-total">0</p>
                 </div>
-                <div onclick="setFilterStatus('Proses')" id="card-proses" class="bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-blue-500 cursor-pointer hover:bg-white/5 transition-all">
+                <div onclick="setFilterStatus('Proses')" id="card-proses" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-blue-500 cursor-pointer hover:bg-black/5 transition-all">
                     <p class="text-[10px] text-gray-400 font-bold mb-1">Proses</p>
                     <p class="text-base md:text-2xl font-bold" id="stat-proses">0</p>
                 </div>
-                <div onclick="setFilterStatus('Interview')" id="card-interview" class="bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-yellow-500 cursor-pointer hover:bg-white/5 transition-all">
+                <div onclick="setFilterStatus('Interview')" id="card-interview" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-yellow-500 cursor-pointer hover:bg-black/5 transition-all">
                     <p class="text-[10px] text-gray-400 font-bold mb-1">Interview</p>
                     <p class="text-base md:text-2xl font-bold" id="stat-interview">0</p>
                 </div>
-                <div onclick="setFilterStatus('Diterima')" id="card-diterima" class="bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-green-500 cursor-pointer hover:bg-white/5 transition-all">
+                <div onclick="setFilterStatus('Diterima')" id="card-diterima" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-green-500 cursor-pointer hover:bg-black/5 transition-all">
                     <p class="text-[10px] text-gray-400 font-bold mb-1">Diterima</p>
                     <p class="text-base md:text-2xl font-bold" id="stat-diterima">0</p>
                 </div>
-                <div onclick="setFilterStatus('Arsip')" id="card-ditolak" class="bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-red-500 cursor-pointer hover:bg-white/5 transition-all">
+                <div onclick="setFilterStatus('Arsip')" id="card-ditolak" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-red-500 cursor-pointer hover:bg-black/5 transition-all">
                     <p class="text-[10px] text-gray-400 font-bold mb-1">Ditolak</p>
                     <p class="text-base md:text-2xl font-bold" id="stat-ditolak">0</p>
                 </div>
@@ -485,9 +480,9 @@
 
         function toggleAuthMode() {
             isSignUpMode = !isSignUpMode;
-            document.getElementById('btn-auth-submit').innerText = isSignUpMode ? "REGISTER ACCOUNT" : "START GAME";
-            document.getElementById('auth-subtitle').innerText = isSignUpMode ? "CREATE NEW PLAYER PROFILE" : "INSERT COIN TO START";
-            document.getElementById('btn-toggle-auth').innerText = isSignUpMode ? "< SUDAH PUNYA AKUN? MASUK" : "> BELUM PUNYA AKUN? DAFTAR";
+            document.getElementById('btn-auth-submit').innerText = isSignUpMode ? "Daftar" : "Masuk";
+            document.getElementById('auth-subtitle').innerText = isSignUpMode ? "BUAT AKUN BARU" : "SILAKAN MASUK AKUN";
+            document.getElementById('btn-toggle-auth').innerText = isSignUpMode ? "Sudah punya akun? Masuk" : "Belum punya akun? Daftar";
         }
 
         function handleAuthSubmit(e) {
@@ -788,6 +783,8 @@
             const modalCloseBtn = document.getElementById('modal-close-btn');
             const inputPencarian = document.getElementById('input-pencarian');
             const metaThemeColor = document.getElementById('meta-theme-color');
+            const menuTextTema = document.getElementById('menu-text-tema');
+            const statCards = document.querySelectorAll('.stat-card');
 
             if (theme === 'light') {
                 metaThemeColor.setAttribute('content', '#ffffff');
@@ -806,6 +803,8 @@
                 modalJudul.className = "text-base font-bold text-gray-900";
                 modalCloseBtn.className = "bg-gray-100 hover:bg-gray-200 rounded text-gray-600 px-3 py-1 font-bold";
                 inputPencarian.className = "search-input w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-inner transition-colors duration-300";
+                menuTextTema.innerText = "Mode Gelap";
+                statCards.forEach(card => card.className = "stat-card bg-white py-3 px-1 rounded-xl shadow-sm border-t-[4px] cursor-pointer hover:bg-gray-50 transition-all " + card.className.split(' ').slice(4).join(' '));
             } else {
                 metaThemeColor.setAttribute('content', '#1a1a1a');
                 body.className = "bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden";
@@ -823,6 +822,8 @@
                 modalJudul.className = "text-base font-bold text-white";
                 modalCloseBtn.className = "bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold";
                 inputPencarian.className = "search-input w-full bg-[#121212] border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-inner transition-colors duration-300";
+                menuTextTema.innerText = "Mode Terang";
+                statCards.forEach(card => card.className = "stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] cursor-pointer hover:bg-white/5 transition-all " + card.className.split(' ').slice(4).join(' '));
             }
             renderTampilan();
         }
@@ -1132,7 +1133,7 @@
                         </button>
                         <div id="dropdown-status-${lamaran.id}" class="dropdown-status-menu absolute left-0 bottom-full mb-1 w-48 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 max-h-52 overflow-y-auto">
                             ${daftarStatus.map(s => `
-                                <button onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/15 ${s === status ? 'text-[#ff5ca0] border-l-[3px] border-[#ff5ca0]' : ''}">
+                                <button onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 ${s === status ? 'text-[#ff5ca0] border-l-[3px] border-[#ff5ca0]' : ''}">
                                     ${s}
                                 </button>
                             `).join('')}
