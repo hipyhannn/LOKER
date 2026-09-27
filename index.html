@@ -318,7 +318,7 @@
         </div>
     </div>
 
-    <!-- PANDA MASCCOT (FITUR CEK DEADLINE & FOLLOW UP DIKEMBALIKAN) -->
+    <!-- PANDA MASCCOT -->
     <div id="panda-container" class="fixed bottom-6 left-6 z-30 flex items-end gap-3 pb-2 select-none touch-none cursor-grab" title="Geser panda!">
         <div id="panda-avatar" class="relative w-[48px] h-[48px] cursor-pointer select-none shrink-0 transition-all duration-300 animate-breathe drop-shadow-lg" onclick="handlePandaClick(event)">
             <div id="speech-bubble" class="absolute bottom-[120%] left-[-10px] w-[220px] max-h-[180px] overflow-y-auto bg-white text-black p-3 rounded-2xl shadow-xl opacity-0 translate-y-2 transition-all duration-300 pointer-events-auto z-50">
@@ -481,7 +481,7 @@
         let isPandaPersistent = false;
         
         let currentPage = 1;
-        const itemsPerPage = 10;
+        const itemsPerPage = 50; // Ditingkatkan agar semua data langsung tampil di HP
         let notifikasiSudahMuncul = false;
 
         const todayKey = new Date().toISOString().split('T')[0];
@@ -581,7 +581,6 @@
             });
         }
 
-        // FUNGSI CEK DEADLINE & FOLLOW-UP DIKEMBALIKAN KE PANDA
         function updatePandaMoodAndCheck() {
             const hariIni = new Date().toISOString().split('T')[0];
             let pesanPeringatan = [];
@@ -590,10 +589,10 @@
                 if (["Ditolak", "Diterima"].includes(l.status)) return;
                 
                 if (l.tanggalFollowUp && l.tanggalFollowUp <= hariIni) {
-                    pesanPeringatan.push(`⚠️ Janlup Boss Follow-Up ke <b>${l.perusahaan}</b> (${l.posisi}) Hari inii`);
+                    pesanPeringatan.push(`⚠️ Follow-Up: <b>${l.perusahaan}</b> (${l.posisi})`);
                 }
                 if (l.deadline && l.deadline <= hariIni) {
-                    pesanPeringatan.push(`🚨 Deadline Lamar ke <b>${l.perusahaan}</b> (${l.posisi}) Hari ini banget lho boss!!`);
+                    pesanPeringatan.push(`🚨 Deadline: <b>${l.perusahaan}</b> (${l.posisi})`);
                 }
             });
 
@@ -602,7 +601,6 @@
             }
         }
 
-        // Efek Konfeti Menggunakan Pure Vanilla JavaScript
         function triggerConfetti() {
             const colors = ['#ff5ca0', '#ffd700', '#00ffcc', '#ffffff', '#ff4081', '#3b82f6'];
             for (let i = 0; i < 60; i++) {
@@ -1367,8 +1365,11 @@
 
             const containerCard = document.getElementById('view-card');
             const containerTabel = document.getElementById('body-tabel');
-            const keyword = document.getElementById('input-pencarian').value.toLowerCase();
-            containerCard.innerHTML = ''; containerTabel.innerHTML = '';
+            const keywordInput = document.getElementById('input-pencarian');
+            const keyword = keywordInput ? keywordInput.value.toLowerCase() : '';
+            
+            if(containerCard) containerCard.innerHTML = ''; 
+            if(containerTabel) containerTabel.innerHTML = '';
             
             let statTotal = dataLamaran.length, statFavorit = 0, statProses = 0, statInterview = 0, statDiterima = 0, statDitolak = 0;
             dataLamaran.forEach(l => {
@@ -1380,7 +1381,7 @@
             });
 
             const dataFiltered = dataLamaran.filter(lamaran => {
-                const matchKeyword = lamaran.perusahaan.toLowerCase().includes(keyword) || lamaran.posisi.toLowerCase().includes(keyword);
+                const matchKeyword = (lamaran.perusahaan || '').toLowerCase().includes(keyword) || (lamaran.posisi || '').toLowerCase().includes(keyword);
                 if (!matchKeyword) return false;
                 
                 const isArsip = ["Ditolak", "Tidak Ada Kabar"].includes(lamaran.status);
@@ -1402,15 +1403,15 @@
 
             const loadMoreContainer = document.getElementById('load-more-container');
             if (totalFiltered > currentPage * itemsPerPage) {
-                loadMoreContainer.classList.remove('hidden');
+                if(loadMoreContainer) loadMoreContainer.classList.remove('hidden');
             } else {
-                loadMoreContainer.classList.add('hidden');
+                if(loadMoreContainer) loadMoreContainer.classList.add('hidden');
             }
 
             if (totalFiltered === 0) {
                 const kosong = statTotal === 0 ? 'Belum ada info loker. Tekan tombol + di bawah.' : 'Pencarian tidak ditemukan.';
-                containerCard.innerHTML = `<p class="text-center text-gray-500 py-10 text-xs">${kosong}</p>`;
-                containerTabel.innerHTML = `<tr><td colspan="5" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
+                if(containerCard) containerCard.innerHTML = `<p class="text-center text-gray-500 py-10 text-xs">${kosong}</p>`;
+                if(containerTabel) containerTabel.innerHTML = `<tr><td colspan="5" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
             }
 
             const daftarStatus = ["Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Interview HR", "Interview User", "Final Interview", "Medical Check Up", "Offering", "Diterima", "Ditolak", "Tidak Ada Kabar"];
@@ -1509,7 +1510,7 @@
                         ${dropdownAksiHTML}
                     </div>
                 `;
-                containerCard.appendChild(kartu);
+                if(containerCard) containerCard.appendChild(kartu);
 
                 const baris = document.createElement('tr');
                 baris.className = currentTheme === 'light' ? 'border-b border-gray-200 hover:bg-gray-50' : 'border-b border-gray-800 hover:bg-[#252525]';
@@ -1531,17 +1532,24 @@
                     </td>
                     <td class="p-3 text-center">${dropdownAksiHTML}</td>
                 `;
-                containerTabel.appendChild(baris);
+                if(containerTabel) containerTabel.appendChild(baris);
             });
 
-            document.getElementById('stat-total').innerText = statTotal;
-            document.getElementById('stat-favorit').innerText = statFavorit;
-            document.getElementById('stat-proses').innerText = statProses;
-            document.getElementById('stat-interview').innerText = statInterview;
-            document.getElementById('stat-diterima').innerText = statDiterima;
-            document.getElementById('stat-ditolak').innerText = statDitolak;
-            
-            document.getElementById('teks-jumlah-lamaran').innerText = `${dataToRender.length} dari ${totalFiltered} lamaran`;
+            const statTotalEl = document.getElementById('stat-total');
+            const statFavoritEl = document.getElementById('stat-favorit');
+            const statProsesEl = document.getElementById('stat-proses');
+            const statInterviewEl = document.getElementById('stat-interview');
+            const statDiterimaEl = document.getElementById('stat-diterima');
+            const statDitolakEl = document.getElementById('stat-ditolak');
+            const teksJumlah = document.getElementById('teks-jumlah-lamaran');
+
+            if(statTotalEl) statTotalEl.innerText = statTotal;
+            if(statFavoritEl) statFavoritEl.innerText = statFavorit;
+            if(statProsesEl) statProsesEl.innerText = statProses;
+            if(statInterviewEl) statInterviewEl.innerText = statInterview;
+            if(statDiterimaEl) statDiterimaEl.innerText = statDiterima;
+            if(statDitolakEl) statDitolakEl.innerText = statDitolak;
+            if(teksJumlah) teksJumlah.innerText = `${dataToRender.length} dari ${totalFiltered} lamaran`;
         }
     </script>
 </body>
