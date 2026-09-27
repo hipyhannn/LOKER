@@ -481,11 +481,14 @@
         let isPandaPersistent = false;
         
         let currentPage = 1;
-        const itemsPerPage = 50; // Ditingkatkan agar semua data langsung tampil di HP
+        const itemsPerPage = 100; // Ditingkatkan agar langsung meload semua data sekaligus di HP
         let notifikasiSudahMuncul = false;
 
         const todayKey = new Date().toISOString().split('T')[0];
-        document.getElementById('label-tanggal-hari-ini').innerText = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        const labelHariIniEl = document.getElementById('label-tanggal-hari-ini');
+        if (labelHariIniEl) {
+            labelHariIniEl.innerText = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
 
         const defaultTemplateSurat = `Kepada Yth. Tim Rekrutmen / HRD {perusahaan},\nDi Tempat\n\nDengan hormat,\n\nMelalui pesan ini, saya bermaksud untuk menyampaikan ketertarikan saya untuk melamar posisi {posisi} di {perusahaan}.\n\nBerikut saya lampirkan berkas pendukung serta portofolio untuk menjadi bahan pertimbangan Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap seleksi selanjutnya.\n\nAtas waktu dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Lengkap Anda]`;
         const defaultTemplateEmail = `Yth. Tim Rekrutmen / HRD {perusahaan},\n\nMelalui email ini, saya bermaksud mengajukan diri untuk melamar posisi {posisi} di {perusahaan}.\n\nBersama email ini, saya telah melampirkan berkas lamaran serta CV terbaru untuk dapat ditinjau oleh Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap wawancara.\n\nDemikian permohonan ini saya sampaikan. Terima kasih atas perhatian dan kesempatan yang diberikan.\n\nHormat saya,\n[Nama Lengkap Anda]`;
@@ -566,7 +569,10 @@
 
             rtdb.ref('users/' + uid + '/catatan/' + todayKey).on('value', (snapshot) => {
                 const val = snapshot.val();
-                if (val) document.getElementById('input-catatan-harian').value = val.isi || '';
+                if (val) {
+                    const catatanInput = document.getElementById('input-catatan-harian');
+                    if (catatanInput) catatanInput.value = val.isi || '';
+                }
             });
 
             rtdb.ref('users/' + uid + '/quickLinks').on('value', (snapshot) => {
@@ -589,10 +595,10 @@
                 if (["Ditolak", "Diterima"].includes(l.status)) return;
                 
                 if (l.tanggalFollowUp && l.tanggalFollowUp <= hariIni) {
-                    pesanPeringatan.push(`⚠️ Follow-Up: <b>${l.perusahaan}</b> (${l.posisi})`);
+                    pesanPeringatan.push(`⚠️ Janlup Boss Follow-Up ke <b>${l.perusahaan}</b> (${l.posisi}) Hari inii`);
                 }
                 if (l.deadline && l.deadline <= hariIni) {
-                    pesanPeringatan.push(`🚨 Deadline: <b>${l.perusahaan}</b> (${l.posisi})`);
+                    pesanPeringatan.push(`🚨 Deadline Lamar ke <b>${l.perusahaan}</b> (${l.posisi}) Hari ini banget lho boss!!`);
                 }
             });
 
