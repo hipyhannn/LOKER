@@ -156,7 +156,7 @@
         </header>
         
         <main class="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
-            <!-- CATATAN HARIAN & LINK CEPAT (Default Tersembunyi) -->
+            <!-- CATATAN HARIAN & LINK CEPAT -->
             <div id="daily-note-box" class="bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 shadow-sm transition-colors duration-300 space-y-3">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center gap-2">
@@ -172,7 +172,6 @@
                 <div id="content-catatan-harian" class="space-y-3 pt-1 hidden">
                     <textarea id="input-catatan-harian" oninput="autoSimpanCatatan()" rows="2" placeholder="Tulis target harianmu di sini..." class="w-full bg-[#121212] border border-gray-700/60 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed"></textarea>
                     
-                    <!-- FITUR TAUTAN CEPAT (BOOKMARK LOKER) -->
                     <div class="border-t border-gray-800/80 pt-3 space-y-2">
                         <div class="flex justify-between items-center">
                             <span class="text-xs font-bold text-blue-400">🔗 Simpan Tautan Cepat (LinkedIn / IG)</span>
@@ -188,7 +187,7 @@
                 </div>
             </div>
 
-            <!-- TAB STATISTIK & FILTER (DENGAN FAVORIT) -->
+            <!-- TAB STATISTIK & FILTER -->
             <div class="grid grid-cols-6 gap-1.5 md:gap-3 text-center">
                 <div onclick="setFilterStatus('Semua')" id="card-total" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-gray-500 cursor-pointer hover:bg-black/5 transition-all ring-2 ring-[#ff5ca0]">
                     <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Total</p>
@@ -245,13 +244,12 @@
                     </table>
                 </div>
 
-                <!-- TOMBOL LOAD MORE (PAGINATION) -->
+                <!-- TOMBOL LOAD MORE -->
                 <div id="load-more-container" class="hidden flex justify-center pt-2">
                     <button id="btn-load-more" onclick="muatLebihBanyak()" class="bg-[#2d2d2d] hover:bg-gray-700 text-gray-300 font-bold py-2.5 px-6 rounded-xl text-xs border border-gray-700 transition-colors shadow-sm">
                         Muat Lebih Banyak...
                     </button>
                 </div>
-
             </div>
         </main>
     </div>
@@ -481,7 +479,7 @@
         let isPandaPersistent = false;
         
         let currentPage = 1;
-        const itemsPerPage = 100; // Ditingkatkan agar langsung meload semua data sekaligus di HP
+        const itemsPerPage = 100;
         let notifikasiSudahMuncul = false;
 
         const todayKey = new Date().toISOString().split('T')[0];
@@ -1061,15 +1059,6 @@
             }
         }
 
-        function salinSuratOtomatis(perusahaan, posisi) {
-            const teks = templateSurat.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi);
-            navigator.clipboard.writeText(teks).then(() => {
-                alert(`Surat Lamaran untuk ${perusahaan} berhasil disalin!`);
-            }).catch(() => {
-                bukaModalTemplate(perusahaan, posisi);
-            });
-        }
-
         function downloadSuratWord(perusahaan, posisi) {
             let teks = templateSurat.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi);
             let teksHTML = teks.replace(/\n/g, '<br>');
@@ -1100,15 +1089,6 @@
         function bukaModalTemplateGlobal() {
             document.getElementById('dropdown-titiktiga').classList.add('hidden');
             document.getElementById('text-template-surat').value = templateSurat;
-            document.getElementById('text-template-email').value = templateEmail;
-            document.getElementById('text-template-tanya').value = templateTanya;
-            document.getElementById('text-template-interview').value = templateInterview;
-            gantiTabTemplate('surat');
-            document.getElementById('modal-template').classList.remove('hidden');
-        }
-
-        function bukaModalTemplate(perusahaan, posisi) {
-            document.getElementById('text-template-surat').value = templateSurat.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi);
             document.getElementById('text-template-email').value = templateEmail;
             document.getElementById('text-template-tanya').value = templateTanya;
             document.getElementById('text-template-interview').value = templateInterview;
@@ -1366,7 +1346,7 @@
             renderTampilan(false);
         }
 
-       function renderTampilan(resetPaging = true) {
+        function renderTampilan(resetPaging = true) {
             if (resetPaging) currentPage = 1;
 
             const containerCard = document.getElementById('view-card');
@@ -1386,7 +1366,6 @@
                 if (["Ditolak", "Tidak Ada Kabar"].includes(l.status)) statDitolak++;
             });
 
-            // FILTER DATA YANG AMAN DAN PASTI MUNCUL
             const dataFiltered = dataLamaran.filter(lamaran => {
                 const matchKeyword = (lamaran.perusahaan || '').toLowerCase().includes(keyword) || (lamaran.posisi || '').toLowerCase().includes(keyword);
                 if (!matchKeyword) return false;
@@ -1397,179 +1376,6 @@
                 if (currentFilterStatus === 'Interview') return ["Interview HR", "Interview User", "Final Interview"].includes(lamaran.status);
                 if (currentFilterStatus === 'Diterima') return lamaran.status === 'Diterima';
                 if (currentFilterStatus === 'Arsip' || currentFilterStatus === 'Ditolak') return ["Ditolak", "Tidak Ada Kabar"].includes(lamaran.status);
-                return true;
-            });
-
-            if(resetPaging && Notification.permission === "granted") {
-                cekNotifikasiFollowUp(dataFiltered);
-            }
-
-            const totalFiltered = dataFiltered.length;
-            const dataToRender = dataFiltered.slice(0, currentPage * itemsPerPage);
-
-            const loadMoreContainer = document.getElementById('load-more-container');
-            if (totalFiltered > currentPage * itemsPerPage) {
-                if(loadMoreContainer) loadMoreContainer.classList.remove('hidden');
-            } else {
-                if(loadMoreContainer) loadMoreContainer.classList.add('hidden');
-            }
-
-            if (totalFiltered === 0) {
-                const kosong = statTotal === 0 ? 'Belum ada info loker. Tekan tombol + di bawah.' : 'Pencarian tidak ditemukan.';
-                if(containerCard) containerCard.innerHTML = `<p class="text-center text-gray-500 py-10 text-xs">${kosong}</p>`;
-                if(containerTabel) containerTabel.innerHTML = `<tr><td colspan="5" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
-            }
-
-            const daftarStatus = ["Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Interview HR", "Interview User", "Final Interview", "Medical Check Up", "Offering", "Diterima", "Ditolak", "Tidak Ada Kabar"];
-
-            dataToRender.forEach(lamaran => {
-                const status = lamaran.status;
-                let warnaStatus = currentTheme === 'light' ? 'bg-gray-100 text-gray-800 border-gray-300' : 'bg-[#2d2d2d] text-gray-300 border-gray-600';
-                if (["Screening HR", "Psikotes", "Tes Online", "Tes Teknis"].includes(status)) warnaStatus = currentTheme === 'light' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-blue-900/40 text-blue-300 border-blue-800';
-                if (["Interview HR", "Interview User", "Final Interview", "Medical Check Up"].includes(status)) warnaStatus = currentTheme === 'light' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' : 'bg-yellow-900/40 text-yellow-300 border-yellow-800';
-                if (["Diterima", "Offering"].includes(status)) warnaStatus = currentTheme === 'light' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-green-900/40 text-green-300 border-green-800';
-                if (["Ditolak", "Tidak Ada Kabar"].includes(status)) warnaStatus = currentTheme === 'light' ? 'bg-red-100 text-red-800 border-red-200' : 'bg-red-900/40 text-red-300 border-red-800';
-
-                const dropdownStatusHTML = `
-                    <div class="relative dropdown-status-container inline-block">
-                        <button onclick="toggleDropdownStatus(event, '${lamaran.id}')" class="text-xs border rounded-lg px-2.5 py-1.5 font-semibold outline-none flex items-center gap-1.5 whitespace-nowrap ${warnaStatus}">
-                            <span>${status}</span> <span class="text-[10px]">▾</span>
-                        </button>
-                        <div id="dropdown-status-${lamaran.id}" class="dropdown-status-menu absolute left-0 bottom-full mb-1 w-48 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 max-h-52 overflow-y-auto">
-                            ${daftarStatus.map(s => `
-                                <button onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 ${s === status ? 'text-[#ff5ca0] border-l-[3px] border-[#ff5ca0]' : ''}">
-                                    ${s}
-                                </button>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-
-                const linkButtonHTML = lamaran.link ? `
-                    <a href="${lamaran.link}" target="_blank" class="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-blue-500/40 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all flex items-center gap-1 shrink-0" title="Buka Link Lowongan">
-                        🔗 <span class="hidden md:inline">Link</span>
-                    </a>
-                ` : '';
-
-                const teksFollowUp = lamaran.tanggalFollowUp ? formatTanggal(lamaran.tanggalFollowUp) : '-';
-                const teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-';
-
-                let menuAksiItems = '';
-                const itemClass = currentTheme === 'light' ? 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-gray-100 text-gray-800' : 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/15 text-gray-200';
-                
-                const emailTujuan = lamaran.kontak && lamaran.kontak.includes('@') ? lamaran.kontak : '';
-                menuAksiItems += `<a href="mailto:${emailTujuan}?subject=${encodeURIComponent('Lamaran - ' + lamaran.posisi)}&body=${encodeURIComponent(templateEmail.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}" class="${itemClass} block">Kirim Email</a>`;
-
-                let noWa = lamaran.kontak ? lamaran.kontak.replace(/[^0-9]/g, '') : '';
-                if (noWa.startsWith('0')) noWa = '62' + noWa.slice(1);
-                const waUrl = noWa.length > 5 ? `https://wa.me/${noWa}?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}` : `https://wa.me/?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}`;
-                
-                menuAksiItems += `<a href="${waUrl}" target="_blank" class="${itemClass} block">Konfirmasi Interview</a>`;
-                menuAksiItems += `<button onclick="downloadSuratWord('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass} block w-full text-left text-[#ff5ca0]">Download Surat (Word)</button>`;
-                
-                if (lamaran.tanggalFollowUp) {
-                    menuAksiItems += `<button onclick="bukaGoogleCalendar('${lamaran.perusahaan}', '${lamaran.posisi}', '${lamaran.tanggalFollowUp}')" class="${itemClass} block w-full text-left">Add Kalender (Follow Up)</button>`;
-                }
-
-                menuAksiItems += `<hr class="${currentTheme === 'light' ? 'border-gray-200 my-1' : 'border-gray-700 my-1'}">`;
-                menuAksiItems += `<button onclick="bukaModalEdit('${lamaran.id}')" class="${itemClass} block w-full text-left">Edit Data</button>`;
-                menuAksiItems += `<button onclick="hapusLamaran('${lamaran.id}')" class="${itemClass} block w-full text-left">Hapus Lamaran</button>`;
-
-                const bintangi = `<button onclick="toggleFavorit('${lamaran.id}')" class="text-base text-yellow-400 hover:scale-125 transition-transform" title="Favorit">${lamaran.isFavorit ? '★' : '☆'}</button>`;
-
-                const dropdownAksiHTML = `
-                    <div class="relative dropdown-aksi-container inline-block">
-                        <button onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-gray-700 bg-[#2d2d2d] hover:bg-gray-700 text-white shadow-sm transition-all flex items-center gap-1 whitespace-nowrap">
-                            Aksi ▾
-                        </button>
-                        <div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 bottom-full mb-1 w-52 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
-                            ${menuAksiItems}
-                        </div>
-                    </div>
-                `;
-
-                const kartu = document.createElement('div');
-                kartu.className = currentTheme === 'light' ? 'bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-col gap-3 transition-all' : 'bg-[#1e1e1e] p-4 rounded-xl shadow-sm border border-gray-800 flex flex-col gap-3 transition-all';
-                kartu.innerHTML = `
-                    <div class="flex justify-between items-start gap-2">
-                        <div class="flex items-center gap-2">
-                            ${bintangi}
-                            <div>
-                                <h4 class="text-base font-bold ${currentTheme === 'light' ? 'text-gray-900' : 'text-white'}">${lamaran.perusahaan}</h4>
-                                <p class="text-xs text-[#ff5ca0] font-semibold">${lamaran.posisi}</p>
-                            </div>
-                        </div>
-                        ${teksGaji !== '-' ? `<span class="text-[11px] font-bold text-green-400 bg-green-500/10 px-2 py-0.5 rounded">${teksGaji}</span>` : ''}
-                    </div>
-                    <div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] ${currentTheme === 'light' ? 'text-gray-500' : 'text-gray-400'} pt-1 border-t border-gray-800/40">
-                        <span>Lamar: ${formatTanggal(lamaran.tanggal)}</span>
-                        <span>•</span>
-                        <span class="${lamaran.tanggalFollowUp ? 'text-yellow-400 font-semibold' : ''}">FU: ${teksFollowUp}</span>
-                        <span>•</span>
-                        <span>Sumber: ${lamaran.metode || 'Email'}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-800/40">
-                        <div class="flex items-center gap-2">
-                            ${dropdownStatusHTML}
-                            ${linkButtonHTML}
-                        </div>
-                        ${dropdownAksiHTML}
-                    </div>
-                `;
-                if(containerCard) containerCard.appendChild(kartu);
-
-                const baris = document.createElement('tr');
-                baris.className = currentTheme === 'light' ? 'border-b border-gray-200 hover:bg-gray-50' : 'border-b border-gray-800 hover:bg-[#252525]';
-                baris.innerHTML = `
-                    <td class="p-3">
-                        <div class="flex items-center gap-1.5">
-                            ${bintangi}
-                            <div class="font-bold truncate ${currentTheme === 'light' ? 'text-gray-900' : 'text-white'}">${lamaran.perusahaan}</div>
-                        </div>
-                        <div class="text-[#ff5ca0] font-semibold text-[11px] truncate">${lamaran.posisi}</div>
-                    </td>
-                    <td class="p-3 hidden md:table-cell text-gray-400">${formatTanggal(lamaran.tanggal)}</td>
-                    <td class="p-3 hidden md:table-cell text-yellow-400">${teksFollowUp}</td>
-                    <td class="p-3">
-                        <div class="flex items-center gap-2">
-                            ${dropdownStatusHTML}
-                            ${linkButtonHTML}
-                        </div>
-                    </td>
-                    <td class="p-3 text-center">${dropdownAksiHTML}</td>
-                `;
-                if(containerTabel) containerTabel.appendChild(baris);
-            });
-
-            const statTotalEl = document.getElementById('stat-total');
-            const statFavoritEl = document.getElementById('stat-favorit');
-            const statProsesEl = document.getElementById('stat-proses');
-            const statInterviewEl = document.getElementById('stat-interview');
-            const statDiterimaEl = document.getElementById('stat-diterima');
-            const statDitolakEl = document.getElementById('stat-ditolak');
-            const teksJumlah = document.getElementById('teks-jumlah-lamaran');
-
-            if(statTotalEl) statTotalEl.innerText = statTotal;
-            if(statFavoritEl) statFavoritEl.innerText = statFavorit;
-            if(statProsesEl) statProsesEl.innerText = statProses;
-            if(statInterviewEl) statInterviewEl.innerText = statInterview;
-            if(statDiterimaEl) statDiterimaEl.innerText = statDiterima;
-            if(statDitolakEl) statDitolakEl.innerText = statDitolak;
-            if(teksJumlah) teksJumlah.innerText = `${dataToRender.length} dari ${totalFiltered} lamaran`;
-        }
-
-          const dataFiltered = dataLamaran.filter(lamaran => {
-                const matchKeyword = (lamaran.perusahaan || '').toLowerCase().includes(keyword) || (lamaran.posisi || '').toLowerCase().includes(keyword);
-                if (!matchKeyword) return false;
-                
-                const isArsip = ["Ditolak", "Tidak Ada Kabar"].includes(lamaran.status);
-                
-                if (currentFilterStatus === 'Semua') return true;
-                if (currentFilterStatus === 'Favorit') return !!lamaran.isFavorit;
-                if (currentFilterStatus === 'Proses') return ["Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Medical Check Up", "Offering", "Rencana Daftar", "Terkirim"].includes(lamaran.status);
-                if (currentFilterStatus === 'Interview') return ["Interview HR", "Interview User", "Final Interview"].includes(lamaran.status);
-                if (currentFilterStatus === 'Diterima') return lamaran.status === 'Diterima';
-                if (currentFilterStatus === 'Arsip') return isArsip;
                 return true;
             });
 
