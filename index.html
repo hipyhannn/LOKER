@@ -119,11 +119,14 @@
                                 ⋮
                             </button>
                             <div id="dropdown-titiktiga" class="absolute right-0 mt-2 w-64 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300">
-                                <button onclick="bukaModalPanduan()" id="menu-item-panduan" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-[#ff5ca0]">
+                                <button onclick="bukaModalPanduan()" id="menu-item-panduan" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
                                     <span>Panduan & Cara Pakai</span>
                                 </button>
+                                <button onclick="aktifkanNotifikasi()" id="menu-item-notif" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
+                                    <span>Aktifkan Notif Follow-Up</span>
+                                </button>
                                 <button onclick="bukaModalTemplateGlobal()" id="menu-item-template" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
-                                    <span>Atur Template & Pesan</span>
+                                    <span>Atur Template</span>
                                 </button>
                                 <hr id="menu-divider" class="border-gray-700 my-1">
                                 <button onclick="toggleTemaManual()" id="menu-item-theme" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
@@ -134,7 +137,7 @@
                     </div>
                 </div>
                 <div>
-                    <input type="text" id="input-pencarian" oninput="renderTampilan()" placeholder="Cari perusahaan atau posisi..." class="search-input w-full bg-[#121212] border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-inner transition-colors duration-300">
+                    <input type="text" id="input-pencarian" oninput="renderTampilan(true)" placeholder="Cari perusahaan atau posisi..." class="search-input w-full bg-[#121212] border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-inner transition-colors duration-300">
                 </div>
             </div>
         </header>
@@ -207,6 +210,14 @@
                         <tbody id="body-tabel"></tbody>
                     </table>
                 </div>
+
+                <!-- TOMBOL LOAD MORE (PAGINATION) -->
+                <div id="load-more-container" class="hidden flex justify-center pt-2">
+                    <button id="btn-load-more" onclick="muatLebihBanyak()" class="bg-[#2d2d2d] hover:bg-gray-700 text-gray-300 font-bold py-2.5 px-6 rounded-xl text-xs border border-gray-700 transition-colors shadow-sm">
+                        Muat Lebih Banyak...
+                    </button>
+                </div>
+
             </div>
         </main>
     </div>
@@ -221,6 +232,8 @@
             <div>
                 <p class="font-bold text-[#ff5ca0] mb-1">1. Sinkronisasi Cloud</p>
                 <p>Data lamaranmu otomatis tersimpan di server Firebase Realtime Database. Kamu bisa login dengan email yang sama di perangkat lain.</p>
+                <p class="font-bold text-yellow-500 mt-2 mb-1">2. Fitur Baru!</p>
+                <p>- <b>Sistem Paging:</b> Agar aplikasi tetap ringan, data ditampilkan 10 lamaran per halaman. Tekan "Muat Lebih Banyak" di bagian bawah untuk melihat sisanya.<br>- <b>Notifikasi:</b> Aktifkan notifikasi di menu titik tiga agar browser memunculkan pengingat jika ada jadwal Follow-Up hari ini.</p>
             </div>
             <button onclick="tutupModalPanduan()" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs">Mengerti!</button>
         </div>
@@ -241,7 +254,7 @@
     <div id="modal-template" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
         <div id="modal-template-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
-                <h2 id="modal-template-title" class="text-sm font-bold text-white">Atur Template & Pesan</h2>
+                <h2 id="modal-template-title" class="text-sm font-bold text-white">Atur Template</h2>
                 <button onclick="tutupModalTemplate()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold">&times;</button>
             </div>
             <div class="space-y-4">
@@ -278,6 +291,7 @@
                 <p id="panda-pesan" class="text-xs font-bold leading-tight">"Halo bos!"</p>
                 <div class="absolute top-full left-[30px] w-0 h-0 border-l-[8px] border-l-transparent border-t-[10px] border-t-white border-r-[8px] border-r-transparent"></div>
             </div>
+            <!-- ... (elemen panda) ... -->
             <div class="absolute w-[12px] h-[12px] bg-[#111] rounded-full top-[3px] left-[5px]"></div>
             <div class="absolute w-[12px] h-[12px] bg-[#111] rounded-full top-[3px] right-[5px]"></div>
             <div class="absolute w-[10px] h-[16px] bg-[#111] rounded-full top-[20px] left-[2px] -rotate-45 z-10"></div>
@@ -291,7 +305,6 @@
             <div id="panda-eye-l" class="absolute w-[4px] h-[4px] bg-white rounded-full top-[17px] left-[12px] z-30"></div>
             <div id="panda-eye-r" class="absolute w-[4px] h-[4px] bg-white rounded-full top-[17px] right-[12px] z-30"></div>
             <div class="absolute w-[6px] h-[4px] bg-[#111] rounded-full top-[22px] left-[21px] z-20"></div>
-            <div id="panda-aksesoris" class="absolute top-[4px] -right-[6px] text-[14px] z-40"></div>
         </div>
     </div>
 
@@ -308,13 +321,12 @@
             </div>
             
             <form id="form-lamaran" onsubmit="simpanLamaran(event)">
+                <!-- isi form tidak diubah -->
                 <input type="hidden" id="input-id">
-                
                 <div class="mb-3">
                     <label id="label-perusahaan" class="block text-xs font-bold text-gray-400 mb-1">NAMA PERUSAHAAN *</label>
                     <input type="text" id="input-perusahaan" required placeholder="Contoh: PT Tokopedia..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
                 </div>
-                
                 <div class="mb-3 relative">
                     <label id="label-posisi" class="block text-xs font-bold text-gray-400 mb-1">POSISI YANG DILAMAR *</label>
                     <div class="flex gap-2">
@@ -323,7 +335,6 @@
                     </div>
                     <div id="dropdown-posisi-list" class="absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                     <div>
                         <label id="label-tgl" class="block text-xs font-bold text-gray-400 mb-1">TGL MELAMAR *</label>
@@ -349,13 +360,11 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="my-3 pt-1 border-t border-gray-800">
                     <button type="button" onclick="toggleFormOpsional()" id="btn-toggle-opsional" class="text-xs font-bold text-[#ff5ca0] hover:underline focus:outline-none">
                         + Tambah Info Detail (Deadline, Gaji, Link, Kontak)
                     </button>
                 </div>
-
                 <div id="form-opsional-container" class="hidden space-y-3 mb-3 bg-black/20 p-3 rounded-xl border border-gray-800">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
@@ -367,7 +376,6 @@
                             <input type="date" id="input-deadline" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-red-300 focus:outline-none focus:border-[#ff5ca0]">
                         </div>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-[11px] font-bold text-blue-400 mb-1">LINK LOWONGAN (URL)</label>
@@ -378,7 +386,6 @@
                             <input type="text" id="input-kontak" placeholder="Nama / No WA / Email" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-purple-300 focus:outline-none focus:border-[#ff5ca0]">
                         </div>
                     </div>
-
                     <div class="relative">
                         <label id="label-metode" class="block text-[11px] font-bold text-gray-400 mb-1">METODE</label>
                         <div class="flex gap-2">
@@ -387,7 +394,6 @@
                         </div>
                         <div id="dropdown-metode-list" class="absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
                     </div>
-
                     <div class="bg-black/30 p-3 rounded-xl border border-gray-700/60">
                         <div class="flex justify-between items-center mb-1">
                             <label class="text-[11px] font-bold text-green-400">ESTIMASI GAJI</label>
@@ -404,13 +410,11 @@
                             <button type="button" onclick="setGajiCepat(25000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded border border-gray-700">25jt+</button>
                         </div>
                     </div>
-
                     <div>
                         <label id="label-keterangan" class="block text-[11px] font-bold text-gray-400 mb-1">KETERANGAN</label>
                         <textarea id="input-keterangan" rows="2" placeholder="Catatan tambahan..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
                     </div>
                 </div>
-
                 <button type="submit" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs shadow-md mt-2">
                     Simpan Perubahan
                 </button>
@@ -441,16 +445,18 @@
         let currentMode = localStorage.getItem('lokertrack_mode') || 'card';
         let currentFilterStatus = 'Semua';
         let pesanTimer = null;
+        
+        // VARIABEL BARU UNTUK PAGING & NOTIFIKASI
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let notifikasiSudahMuncul = false;
 
         const todayKey = new Date().toISOString().split('T')[0];
         document.getElementById('label-tanggal-hari-ini').innerText = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 
         const defaultTemplateSurat = `Kepada Yth. Tim Rekrutmen / HRD {perusahaan},\nDi Tempat\n\nDengan hormat,\n\nMelalui pesan ini, saya bermaksud untuk menyampaikan ketertarikan saya untuk melamar posisi {posisi} di {perusahaan}.\n\nBerikut saya lampirkan berkas pendukung serta portofolio untuk menjadi bahan pertimbangan Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap seleksi selanjutnya.\n\nAtas waktu dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Lengkap Anda]`;
-
         const defaultTemplateEmail = `Yth. Tim Rekrutmen / HRD {perusahaan},\n\nMelalui email ini, saya bermaksud mengajukan diri untuk melamar posisi {posisi} di {perusahaan}.\n\nBersama email ini, saya telah melampirkan berkas lamaran serta CV terbaru untuk dapat ditinjau oleh Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap wawancara.\n\nDemikian permohonan ini saya sampaikan. Terima kasih atas perhatian dan kesempatan yang diberikan.\n\nHormat saya,\n[Nama Lengkap Anda]`;
-
         const defaultTemplateTanya = `Yth. Bapak/Ibu HRD {perusahaan},\n\nSelamat pagi/siang. Mohon maaf mengganggu waktunya sebentar. Saya ingin menanyakan perkembangan atau status dari lamaran saya untuk posisi {posisi} yang telah saya kirimkan sebelumnya.\n\nBesar harapan saya untuk mendapatkan informasi lebih lanjut. Atas perhatian dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Anda]`;
-
         const defaultTemplateInterview = `Yth. Bapak/Ibu HRD {perusahaan},\n\nTerima kasih banyak atas undangan serta kesempatan interview untuk posisi {posisi}. Melalui pesan ini, saya bermaksud mengonfirmasi bahwa saya akan hadir memenuhi undangan tersebut sesuai dengan jadwal yang telah ditentukan.\n\nSekali lagi terima kasih atas kesempatan yang diberikan.\n\nHormat saya,\n[Nama Anda]`;
         
         let templateSurat = localStorage.getItem('lokertrack_template_surat') || defaultTemplateSurat;
@@ -516,8 +522,13 @@
                     Object.keys(val).forEach(key => {
                         dataLamaran.push({ id: key, ...val[key] });
                     });
+                    // URUTKAN DATA DARI YANG TERBARU BERDASARKAN TANGGAL & ID
+                    dataLamaran.sort((a, b) => {
+                        const dateDiff = new Date(b.tanggal || 0) - new Date(a.tanggal || 0);
+                        return dateDiff !== 0 ? dateDiff : b.id - a.id;
+                    });
                 }
-                renderTampilan();
+                renderTampilan(true); // reset paging ke hal 1 tiap ada update database
             });
 
             rtdb.ref('users/' + uid + '/catatan/' + todayKey).on('value', (snapshot) => {
@@ -525,6 +536,48 @@
                 if (val) document.getElementById('input-catatan-harian').value = val.isi || '';
             });
         }
+
+        // --- FUNGSI BARU: WEB PUSH NOTIFICATION ---
+        function aktifkanNotifikasi() {
+            document.getElementById('dropdown-titiktiga').classList.add('hidden');
+            if (!("Notification" in window)) {
+                alert("Browser ini tidak mendukung fitur notifikasi desktop.");
+            } else if (Notification.permission === "granted") {
+                alert("Notifikasi sudah aktif!");
+                cekNotifikasiFollowUp(dataLamaran, true); // Force trigger testing
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        alert("Notifikasi berhasil diaktifkan!");
+                        cekNotifikasiFollowUp(dataLamaran, true);
+                    }
+                });
+            } else {
+                alert("Notifikasi diblokir. Harap izinkan situs ini memunculkan notifikasi dari pengaturan browser.");
+            }
+        }
+
+        function cekNotifikasiFollowUp(data, force = false) {
+            if (!("Notification" in window) || Notification.permission !== "granted") return;
+            if (notifikasiSudahMuncul && !force) return;
+
+            const hariIni = new Date().toISOString().split('T')[0];
+            let listFollowUp = data.filter(l => l.tanggalFollowUp === hariIni && !["Ditolak", "Diterima"].includes(l.status));
+
+            if (listFollowUp.length > 0) {
+                new Notification("Pengingat Apply LOKER", {
+                    body: `Hei! Hari ini kamu punya ${listFollowUp.length} lamaran yang harus di-follow up.`,
+                    icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png" // Icon generik
+                });
+                notifikasiSudahMuncul = true;
+            } else if (force) {
+                new Notification("Apply LOKER", {
+                    body: "Notifikasi aktif! Kami akan mengingatkanmu jika ada jadwal follow-up hari ini.",
+                    icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png"
+                });
+            }
+        }
+        // ------------------------------------------
 
         function simpanKeRealtimeDB(lamaranBaru) {
             if (!currentUser) return;
@@ -785,6 +838,7 @@
             const metaThemeColor = document.getElementById('meta-theme-color');
             const menuTextTema = document.getElementById('menu-text-tema');
             const statCards = document.querySelectorAll('.stat-card');
+            const btnLoadMore = document.getElementById('btn-load-more');
 
             if (theme === 'light') {
                 metaThemeColor.setAttribute('content', '#ffffff');
@@ -805,6 +859,7 @@
                 inputPencarian.className = "search-input w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-inner transition-colors duration-300";
                 menuTextTema.innerText = "Mode Gelap";
                 statCards.forEach(card => card.className = "stat-card bg-white py-3 px-1 rounded-xl shadow-sm border-t-[4px] cursor-pointer hover:bg-gray-50 transition-all " + card.className.split(' ').slice(4).join(' '));
+                if(btnLoadMore) btnLoadMore.className = "bg-white hover:bg-gray-50 text-gray-700 font-bold py-2.5 px-6 rounded-xl text-xs border border-gray-300 transition-colors shadow-sm";
             } else {
                 metaThemeColor.setAttribute('content', '#1a1a1a');
                 body.className = "bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden";
@@ -824,8 +879,9 @@
                 inputPencarian.className = "search-input w-full bg-[#121212] border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-inner transition-colors duration-300";
                 menuTextTema.innerText = "Mode Terang";
                 statCards.forEach(card => card.className = "stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] cursor-pointer hover:bg-white/5 transition-all " + card.className.split(' ').slice(4).join(' '));
+                if(btnLoadMore) btnLoadMore.className = "bg-[#2d2d2d] hover:bg-gray-700 text-gray-300 font-bold py-2.5 px-6 rounded-xl text-xs border border-gray-700 transition-colors shadow-sm";
             }
-            renderTampilan();
+            renderTampilan(false); // Render ulang tanpa mereset pagination jika hanya ubah tema
         }
 
         function setFilterStatus(status) {
@@ -839,7 +895,7 @@
                     card.classList.remove('ring-2', 'ring-[#ff5ca0]');
                 }
             });
-            renderTampilan();
+            renderTampilan(true);
         }
 
         function gantiTabTemplate(tab) {
@@ -880,6 +936,37 @@
             }).catch(() => {
                 bukaModalTemplate(perusahaan, posisi);
             });
+        }
+
+        function downloadSuratWord(perusahaan, posisi) {
+            let teks = templateSurat.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi);
+            
+            // Ubah enter (\n) menjadi tag <br>
+            let teksHTML = teks.replace(/\n/g, '<br>');
+
+            let preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Surat Lamaran</title></head><body><div style='font-family: Arial, sans-serif; font-size: 12pt;'>";
+            let postHtml = "</div></body></html>";
+            let html = preHtml + teksHTML + postHtml;
+
+            let blob = new Blob(['\ufeff', html], {
+                type: 'application/msword'
+            });
+
+            let namaFile = `Surat_Lamaran_${perusahaan.replace(/\s+/g, '_')}_${posisi.replace(/\s+/g, '_')}.doc`;
+
+            let downloadLink = document.createElement("a");
+            document.body.appendChild(downloadLink);
+            
+            if (navigator.msSaveOrOpenBlob) {
+                navigator.msSaveOrOpenBlob(blob, namaFile);
+            } else {
+                downloadLink.href = URL.createObjectURL(blob);
+                downloadLink.download = namaFile;
+                downloadLink.click();
+            }
+            
+            document.body.removeChild(downloadLink);
+            alert(`File Word untuk ${perusahaan} berhasil didownload!`);
         }
 
         function bukaModalTemplateGlobal() {
@@ -1105,7 +1192,15 @@
             window.open(url, '_blank');
         }
 
-        function renderTampilan() {
+        // FUNGSI UNTUK TOMBOL MUAT LEBIH BANYAK (PAGINATION)
+        function muatLebihBanyak() {
+            currentPage++;
+            renderTampilan(false);
+        }
+
+        function renderTampilan(resetPaging = true) {
+            if (resetPaging) currentPage = 1;
+
             const containerCard = document.getElementById('view-card');
             const containerTabel = document.getElementById('body-tabel');
             const keyword = document.getElementById('input-pencarian').value.toLowerCase();
@@ -1131,7 +1226,25 @@
                 return true;
             });
 
-            if (dataFiltered.length === 0) {
+            // Trigger notifikasi HANYA jika permission granted dan belum muncul di sesi ini
+            if(resetPaging && Notification.permission === "granted") {
+                cekNotifikasiFollowUp(dataFiltered);
+            }
+
+            // --- LOGIKA PAGING ---
+            const totalFiltered = dataFiltered.length;
+            const dataToRender = dataFiltered.slice(0, currentPage * itemsPerPage);
+
+            // Tombol "Muat Lebih Banyak" visibility
+            const loadMoreContainer = document.getElementById('load-more-container');
+            if (totalFiltered > currentPage * itemsPerPage) {
+                loadMoreContainer.classList.remove('hidden');
+            } else {
+                loadMoreContainer.classList.add('hidden');
+            }
+            // ---------------------
+
+            if (totalFiltered === 0) {
                 const kosong = statTotal === 0 ? 'Belum ada info loker. Tekan tombol + di bawah.' : 'Pencarian tidak ditemukan.';
                 containerCard.innerHTML = `<p class="text-center text-gray-500 py-10 text-xs">${kosong}</p>`;
                 containerTabel.innerHTML = `<tr><td colspan="5" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
@@ -1139,7 +1252,7 @@
 
             const daftarStatus = ["Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Interview HR", "Interview User", "Final Interview", "Medical Check Up", "Offering", "Diterima", "Ditolak", "Tidak Ada Kabar"];
 
-            dataFiltered.forEach(lamaran => {
+            dataToRender.forEach(lamaran => {
                 const status = lamaran.status;
                 let warnaStatus = currentTheme === 'light' ? 'bg-gray-100 text-gray-800 border-gray-300' : 'bg-[#2d2d2d] text-gray-300 border-gray-600';
                 if (["Screening HR", "Psikotes", "Tes Online", "Tes Teknis"].includes(status)) warnaStatus = currentTheme === 'light' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-blue-900/40 text-blue-300 border-blue-800';
@@ -1170,14 +1283,14 @@
                 if (lamaran.link) menuAksiItems += `<a href="${lamaran.link}" target="_blank" class="${itemClass} block">Buka Link Lowongan</a>`;
                 
                 const emailTujuan = lamaran.kontak && lamaran.kontak.includes('@') ? lamaran.kontak : '';
-                menuAksiItems += `<a href="mailto:${emailTujuan}?subject=${encodeURIComponent('Lamaran - ' + lamaran.posisi)}&body=${encodeURIComponent(templateEmail.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}" class="${itemClass} block">Kirim / Buka Email</a>`;
+                menuAksiItems += `<a href="mailto:${emailTujuan}?subject=${encodeURIComponent('Lamaran - ' + lamaran.posisi)}&body=${encodeURIComponent(templateEmail.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}" class="${itemClass} block">Kirim Email</a>`;
 
                 let noWa = lamaran.kontak ? lamaran.kontak.replace(/[^0-9]/g, '') : '';
                 if (noWa.startsWith('0')) noWa = '62' + noWa.slice(1);
                 const waUrl = noWa.length > 5 ? `https://wa.me/${noWa}?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}` : `https://wa.me/?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}`;
                 
                 menuAksiItems += `<a href="${waUrl}" target="_blank" class="${itemClass} block">Konfirmasi Interview</a>`;
-                menuAksiItems += `<button onclick="salinSuratOtomatis('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass} block w-full text-left">Salin Surat Lamaran</button>`;
+                menuAksiItems += `<button onclick="downloadSuratWord('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass} block w-full text-left text-[#ff5ca0]">Download Surat (Word)</button>`;
                 
                 if (lamaran.tanggalFollowUp) {
                     menuAksiItems += `<button onclick="bukaGoogleCalendar('${lamaran.perusahaan}', '${lamaran.posisi}', '${lamaran.tanggalFollowUp}')" class="${itemClass} block w-full text-left">Add Kalender (Follow Up)</button>`;
@@ -1252,7 +1365,9 @@
             document.getElementById('stat-interview').innerText = statInterview;
             document.getElementById('stat-diterima').innerText = statDiterima;
             document.getElementById('stat-ditolak').innerText = statDitolak;
-            document.getElementById('teks-jumlah-lamaran').innerText = `${dataFiltered.length} dari ${statTotal} lamaran`;
+            
+            // Perbarui teks jumlah (Berapa yang tampil dari total filtered data)
+            document.getElementById('teks-jumlah-lamaran').innerText = `${dataToRender.length} dari ${totalFiltered} lamaran`;
         }
     </script>
 </body>
