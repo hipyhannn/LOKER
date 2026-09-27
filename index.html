@@ -143,42 +143,63 @@
         </header>
         
         <main class="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
-            <div id="daily-note-box" class="bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 shadow-sm transition-colors duration-300">
-                <div class="flex justify-between items-center mb-2">
+            <!-- CATATAN HARIAN & LINK CEPAT (Default Tersembunyi) -->
+            <div id="daily-note-box" class="bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 shadow-sm transition-colors duration-300 space-y-3">
+                <div class="flex justify-between items-center">
                     <div class="flex items-center gap-2">
-                        <button onclick="toggleCatatanHarian()" id="btn-toggle-catatan" class="text-xs font-bold text-[#ff5ca0] hover:underline focus:outline-none">▼ Sembunyikan Catatan</button>
-                        <span id="daily-note-title" class="text-[11px] font-semibold text-gray-400">| Harian (<span id="label-tanggal-hari-ini">Hari Ini</span>)</span>
+                        <button onclick="toggleCatatanHarian()" id="btn-toggle-catatan" class="text-xs font-bold text-[#ff5ca0] hover:underline focus:outline-none">▶ Buka Catatan</button>
+                        <span id="daily-note-title" class="text-[11px] font-semibold text-gray-400 hidden md:inline"> (<span id="label-tanggal-hari-ini">Hari Ini</span>)</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button onclick="bukaModalRiwayatCatatan()" class="text-[11px] bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold px-2.5 py-1 rounded-lg transition-colors" title="Lihat catatan hari sebelumnya">Riwayat</button>
-                        <button onclick="simpanCatatanHarian()" class="text-[11px] bg-[#ff5ca0]/20 hover:bg-[#ff5ca0]/30 text-[#ff5ca0] font-bold px-2.5 py-1 rounded-lg transition-colors">Simpan</button>
+                        <button onclick="bukaModalRiwayatCatatan()" class="text-[11px] bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold px-2.5 py-1 rounded-lg transition-colors" title="Lihat riwayat catatan hari sebelumnya">Riwayat</button>
+                        <button onclick="simpanCatatanHarian()" class="text-[11px] bg-[#ff5ca0]/20 hover:bg-[#ff5ca0]/30 text-[#ff5ca0] font-bold px-2.5 py-1 rounded-lg transition-colors">Simpan Catatan</button>
                     </div>
                 </div>
-                <div id="content-catatan-harian">
-                    <textarea id="input-catatan-harian" oninput="autoSimpanCatatan()" rows="2" placeholder="Tulis target harianmu di sini..." class="w-full bg-[#121212] border border-gray-700/60 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed mt-1"></textarea>
+                
+                <div id="content-catatan-harian" class="space-y-3 pt-1 hidden">
+                    <textarea id="input-catatan-harian" oninput="autoSimpanCatatan()" rows="2" placeholder="Tulis target harianmu di sini..." class="w-full bg-[#121212] border border-gray-700/60 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed"></textarea>
+                    
+                    <!-- FITUR TAUTAN CEPAT (BOOKMARK LOKER) -->
+                    <div class="border-t border-gray-800/80 pt-3 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-blue-400">Simpan Tautan Cepat (LinkedIn / IG)</span>
+                            <span class="text-[10px] text-gray-400">Akses kilat sebelum dimasukkan ke lamaran</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" id="input-quick-nama" placeholder="Nama Perusahaan / Posisi" class="w-1/3 bg-[#121212] border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                            <input type="url" id="input-quick-link" placeholder="https://linkedin.com/posts/..." class="w-2/3 bg-[#121212] border border-gray-700 rounded-lg px-3 py-2 text-xs text-blue-300 focus:outline-none focus:border-[#ff5ca0]">
+                            <button onclick="tambahQuickLink()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-lg text-xs shrink-0 transition-colors">Tambah</button>
+                        </div>
+                        <div id="list-quick-links" class="flex flex-wrap gap-2 pt-1"></div>
+                    </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-5 gap-2 md:gap-3 text-center">
+            <!-- TAB STATISTIK & FILTER (DENGAN FAVORIT) -->
+            <div class="grid grid-cols-6 gap-1.5 md:gap-3 text-center">
                 <div onclick="setFilterStatus('Semua')" id="card-total" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-gray-500 cursor-pointer hover:bg-black/5 transition-all ring-2 ring-[#ff5ca0]">
-                    <p class="text-[10px] text-gray-400 font-bold mb-1">Total</p>
-                    <p class="text-base md:text-2xl font-bold" id="stat-total">0</p>
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Total</p>
+                    <p class="text-sm md:text-2xl font-bold" id="stat-total">0</p>
+                </div>
+                <div onclick="setFilterStatus('Favorit')" id="card-favorit" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-yellow-400 cursor-pointer hover:bg-black/5 transition-all">
+                    <p class="text-[9px] md:text-[10px] text-yellow-400 font-bold mb-1">★ Favorit</p>
+                    <p class="text-sm md:text-2xl font-bold text-yellow-400" id="stat-favorit">0</p>
                 </div>
                 <div onclick="setFilterStatus('Proses')" id="card-proses" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-blue-500 cursor-pointer hover:bg-black/5 transition-all">
-                    <p class="text-[10px] text-gray-400 font-bold mb-1">Proses</p>
-                    <p class="text-base md:text-2xl font-bold" id="stat-proses">0</p>
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Proses</p>
+                    <p class="text-sm md:text-2xl font-bold" id="stat-proses">0</p>
                 </div>
                 <div onclick="setFilterStatus('Interview')" id="card-interview" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-yellow-500 cursor-pointer hover:bg-black/5 transition-all">
-                    <p class="text-[10px] text-gray-400 font-bold mb-1">Interview</p>
-                    <p class="text-base md:text-2xl font-bold" id="stat-interview">0</p>
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Interview</p>
+                    <p class="text-sm md:text-2xl font-bold" id="stat-interview">0</p>
                 </div>
                 <div onclick="setFilterStatus('Diterima')" id="card-diterima" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-green-500 cursor-pointer hover:bg-black/5 transition-all">
-                    <p class="text-[10px] text-gray-400 font-bold mb-1">Diterima</p>
-                    <p class="text-base md:text-2xl font-bold" id="stat-diterima">0</p>
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Diterima</p>
+                    <p class="text-sm md:text-2xl font-bold" id="stat-diterima">0</p>
                 </div>
                 <div onclick="setFilterStatus('Arsip')" id="card-ditolak" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-red-500 cursor-pointer hover:bg-black/5 transition-all">
-                    <p class="text-[10px] text-gray-400 font-bold mb-1">Ditolak</p>
-                    <p class="text-base md:text-2xl font-bold" id="stat-ditolak">0</p>
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Ditolak</p>
+                    <p class="text-sm md:text-2xl font-bold" id="stat-ditolak">0</p>
                 </div>
             </div>
 
@@ -200,11 +221,11 @@
                     <table class="w-full text-left text-xs">
                         <thead id="table-head" class="bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors">
                             <tr>
-                                <th class="p-3 font-bold w-[45%]">Perusahaan / Posisi</th>
+                                <th class="p-3 font-bold w-[40%]">Perusahaan / Posisi</th>
                                 <th class="p-3 font-bold hidden md:table-cell md:w-[15%]">Tgl Lamar</th>
                                 <th class="p-3 font-bold text-yellow-500 hidden md:table-cell md:w-[15%]">Follow Up</th>
-                                <th class="p-3 font-bold w-[35%]">Status</th>
-                                <th class="p-3 font-bold w-[20%] text-center">Aksi</th>
+                                <th class="p-3 font-bold w-[40%]">Status & Link</th>
+                                <th class="p-3 font-bold w-[15%] text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="body-tabel"></tbody>
@@ -232,8 +253,8 @@
             <div>
                 <p class="font-bold text-[#ff5ca0] mb-1">1. Sinkronisasi Cloud</p>
                 <p>Data lamaranmu otomatis tersimpan di server Firebase Realtime Database. Kamu bisa login dengan email yang sama di perangkat lain.</p>
-                <p class="font-bold text-yellow-500 mt-2 mb-1">2. Fitur Baru!</p>
-                <p>- <b>Sistem Paging:</b> Agar aplikasi tetap ringan, data ditampilkan 10 lamaran per halaman. Tekan "Muat Lebih Banyak" di bagian bawah untuk melihat sisanya.<br>- <b>Notifikasi:</b> Aktifkan notifikasi di menu titik tiga agar browser memunculkan pengingat jika ada jadwal Follow-Up hari ini.</p>
+                <p class="font-bold text-yellow-500 mt-2 mb-1">2. Simpan Tautan Cepat (Bookmark)</p>
+                <p>Gunakan fitur <b>Simpan Tautan Cepat</b> di bawah catatan harian untuk menyimpan link lowongan dari LinkedIn atau Instagram secara instan.</p>
             </div>
             <button onclick="tutupModalPanduan()" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs">Mengerti!</button>
         </div>
@@ -291,7 +312,6 @@
                 <p id="panda-pesan" class="text-xs font-bold leading-tight">"Halo bos!"</p>
                 <div class="absolute top-full left-[30px] w-0 h-0 border-l-[8px] border-l-transparent border-t-[10px] border-t-white border-r-[8px] border-r-transparent"></div>
             </div>
-            <!-- ... (elemen panda) ... -->
             <div class="absolute w-[12px] h-[12px] bg-[#111] rounded-full top-[3px] left-[5px]"></div>
             <div class="absolute w-[12px] h-[12px] bg-[#111] rounded-full top-[3px] right-[5px]"></div>
             <div class="absolute w-[10px] h-[16px] bg-[#111] rounded-full top-[20px] left-[2px] -rotate-45 z-10"></div>
@@ -321,7 +341,6 @@
             </div>
             
             <form id="form-lamaran" onsubmit="simpanLamaran(event)">
-                <!-- isi form tidak diubah -->
                 <input type="hidden" id="input-id">
                 <div class="mb-3">
                     <label id="label-perusahaan" class="block text-xs font-bold text-gray-400 mb-1">NAMA PERUSAHAAN *</label>
@@ -379,7 +398,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-[11px] font-bold text-blue-400 mb-1">LINK LOWONGAN (URL)</label>
-                            <input type="url" id="input-link" placeholder="https://..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-blue-300 focus:outline-none focus:border-[#ff5ca0]">
+                            <input type="url" id="input-link" placeholder="https://linkedin.com/..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-blue-300 focus:outline-none focus:border-[#ff5ca0]">
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-purple-400 mb-1">KONTAK (WA / EMAIL)</label>
@@ -387,7 +406,7 @@
                         </div>
                     </div>
                     <div class="relative">
-                        <label id="label-metode" class="block text-[11px] font-bold text-gray-400 mb-1">METODE</label>
+                        <label id="label-metode" class="block text-[11px] font-bold text-gray-400 mb-1">METODE (LinkedIn, IG, JobStreet, dll)</label>
                         <div class="flex gap-2">
                             <input type="text" id="input-metode" autocomplete="off" placeholder="Pilih atau ketik metode..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
                             <button type="button" onclick="toggleDropdownMetode(event)" class="bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0">▼</button>
@@ -440,13 +459,13 @@
 
         let currentUser = null;
         let dataLamaran = [];
+        let quickLinksData = [];
         let isSignUpMode = false;
         let currentTheme = localStorage.getItem('lokertrack_theme') || 'auto';
         let currentMode = localStorage.getItem('lokertrack_mode') || 'card';
         let currentFilterStatus = 'Semua';
         let pesanTimer = null;
         
-        // VARIABEL BARU UNTUK PAGING & NOTIFIKASI
         let currentPage = 1;
         const itemsPerPage = 10;
         let notifikasiSudahMuncul = false;
@@ -522,29 +541,81 @@
                     Object.keys(val).forEach(key => {
                         dataLamaran.push({ id: key, ...val[key] });
                     });
-                    // URUTKAN DATA DARI YANG TERBARU BERDASARKAN TANGGAL & ID
                     dataLamaran.sort((a, b) => {
                         const dateDiff = new Date(b.tanggal || 0) - new Date(a.tanggal || 0);
                         return dateDiff !== 0 ? dateDiff : b.id - a.id;
                     });
                 }
-                renderTampilan(true); // reset paging ke hal 1 tiap ada update database
+                renderTampilan(true);
             });
 
             rtdb.ref('users/' + uid + '/catatan/' + todayKey).on('value', (snapshot) => {
                 const val = snapshot.val();
                 if (val) document.getElementById('input-catatan-harian').value = val.isi || '';
             });
+
+            rtdb.ref('users/' + uid + '/quickLinks').on('value', (snapshot) => {
+                quickLinksData = [];
+                const val = snapshot.val();
+                if (val) {
+                    Object.keys(val).forEach(key => {
+                        quickLinksData.push({ id: key, ...val[key] });
+                    });
+                }
+                renderQuickLinks();
+            });
         }
 
-        // --- FUNGSI BARU: WEB PUSH NOTIFICATION ---
+        function tambahQuickLink() {
+            if (!currentUser) return;
+            const nama = document.getElementById('input-quick-nama').value.trim();
+            const link = document.getElementById('input-quick-link').value.trim();
+            if (!nama || !link) {
+                alert("Harap isi nama perusahaan dan link URL!");
+                return;
+            }
+            const uid = currentUser.uid;
+            const id = Date.now().toString();
+            rtdb.ref('users/' + uid + '/quickLinks/' + id).set({ nama, link }).then(() => {
+                document.getElementById('input-quick-nama').value = '';
+                document.getElementById('input-quick-link').value = '';
+            });
+        }
+
+        function hapusQuickLink(id) {
+            if (!currentUser) return;
+            const uid = currentUser.uid;
+            rtdb.ref('users/' + uid + '/quickLinks/' + id).remove();
+        }
+
+        function renderQuickLinks() {
+            const container = document.getElementById('list-quick-links');
+            if (!container) return;
+            container.innerHTML = '';
+            if (quickLinksData.length === 0) {
+                container.innerHTML = `<span class="text-[11px] text-gray-500 italic">Belum ada tautan cepat tersimpan.</span>`;
+                return;
+            }
+            quickLinksData.forEach(item => {
+                const chip = document.createElement('div');
+                chip.className = currentTheme === 'light' ? 'flex items-center gap-1.5 bg-gray-100 border border-gray-300 rounded-lg px-2.5 py-1 text-xs text-gray-800 font-semibold shadow-sm' : 'flex items-center gap-1.5 bg-[#121212] border border-gray-700 rounded-lg px-2.5 py-1 text-xs text-gray-200 font-semibold shadow-sm';
+                chip.innerHTML = `
+                    <a href="${item.link}" target="_blank" class="text-blue-400 hover:underline flex items-center gap-1 truncate max-w-[200px]" title="${item.link}">
+                         <span>${item.nama}</span>
+                    </a>
+                    <button onclick="hapusQuickLink('${item.id}')" class="text-gray-500 hover:text-red-400 font-bold ml-1 text-sm leading-none" title="Hapus">&times;</button>
+                `;
+                container.appendChild(chip);
+            });
+        }
+
         function aktifkanNotifikasi() {
             document.getElementById('dropdown-titiktiga').classList.add('hidden');
             if (!("Notification" in window)) {
                 alert("Browser ini tidak mendukung fitur notifikasi desktop.");
             } else if (Notification.permission === "granted") {
                 alert("Notifikasi sudah aktif!");
-                cekNotifikasiFollowUp(dataLamaran, true); // Force trigger testing
+                cekNotifikasiFollowUp(dataLamaran, true);
             } else if (Notification.permission !== "denied") {
                 Notification.requestPermission().then(permission => {
                     if (permission === "granted") {
@@ -567,7 +638,7 @@
             if (listFollowUp.length > 0) {
                 new Notification("Pengingat Apply LOKER", {
                     body: `Hei! Hari ini kamu punya ${listFollowUp.length} lamaran yang harus di-follow up.`,
-                    icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png" // Icon generik
+                    icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png"
                 });
                 notifikasiSudahMuncul = true;
             } else if (force) {
@@ -577,7 +648,6 @@
                 });
             }
         }
-        // ------------------------------------------
 
         function simpanKeRealtimeDB(lamaranBaru) {
             if (!currentUser) return;
@@ -763,7 +833,7 @@
         function perbaruiListMetode() {
             const dropdownMetode = document.getElementById('dropdown-metode-list');
             dropdownMetode.innerHTML = '';
-            const metodeUnik = [...new Set(["Email", "Website Perusahaan", "Job Portal", "LinkedIn", ...dataLamaran.map(item => item.metode).filter(Boolean)])];
+            const metodeUnik = [...new Set(["LinkedIn", "Instagram", "JobStreet", "Email", "Website Perusahaan", ...dataLamaran.map(item => item.metode).filter(Boolean)])];
             metodeUnik.forEach(met => {
                 const item = document.createElement('div');
                 item.className = 'p-2.5 text-xs text-gray-200 hover:bg-white/10 cursor-pointer font-semibold border-b border-gray-800 last:border-b-0';
@@ -847,8 +917,8 @@
                 headerTitle.className = "text-lg md:text-2xl text-gray-900 font-pixel tracking-wide leading-none";
                 btnTitikTiga.className = "w-9 h-9 rounded-xl text-sm font-bold border border-gray-300 bg-gray-100 text-gray-700 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0";
                 dropdownTitikTiga.className = "absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
-                dailyNoteBox.className = "bg-white border border-gray-200 rounded-2xl p-4 shadow-sm transition-colors duration-300";
-                inputCatatanHarian.className = "w-full bg-gray-50 border border-gray-300 rounded-xl p-3 text-xs text-gray-900 focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed mt-1";
+                dailyNoteBox.className = "bg-white border border-gray-200 rounded-2xl p-4 shadow-sm transition-colors duration-300 space-y-3";
+                inputCatatanHarian.className = "w-full bg-gray-50 border border-gray-300 rounded-xl p-3 text-xs text-gray-900 focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed";
                 labelInfo.className = "text-lg md:text-xl font-bold text-gray-900";
                 viewToggleBg.className = "flex gap-1 bg-gray-200 p-1 rounded-lg border border-gray-300 transition-colors";
                 viewTabelContainer.className = "bg-white rounded-xl shadow-sm border border-gray-200 transition-colors overflow-x-hidden pb-3";
@@ -867,8 +937,8 @@
                 headerTitle.className = "text-lg md:text-2xl text-white font-pixel tracking-wide leading-none";
                 btnTitikTiga.className = "w-9 h-9 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0";
                 dropdownTitikTiga.className = "absolute right-0 mt-2 w-64 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
-                dailyNoteBox.className = "bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 shadow-sm transition-colors duration-300";
-                inputCatatanHarian.className = "w-full bg-[#121212] border border-gray-700/60 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed mt-1";
+                dailyNoteBox.className = "bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 shadow-sm transition-colors duration-300 space-y-3";
+                inputCatatanHarian.className = "w-full bg-[#121212] border border-gray-700/60 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed";
                 labelInfo.className = "text-lg md:text-xl font-bold text-white";
                 viewToggleBg.className = "flex gap-1 bg-[#1a1a1a] p-1 rounded-lg border border-gray-800 transition-colors";
                 viewTabelContainer.className = "bg-[#1e1e1e] rounded-xl shadow-sm border border-gray-800 transition-colors overflow-x-hidden pb-3";
@@ -881,13 +951,15 @@
                 statCards.forEach(card => card.className = "stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] cursor-pointer hover:bg-white/5 transition-all " + card.className.split(' ').slice(4).join(' '));
                 if(btnLoadMore) btnLoadMore.className = "bg-[#2d2d2d] hover:bg-gray-700 text-gray-300 font-bold py-2.5 px-6 rounded-xl text-xs border border-gray-700 transition-colors shadow-sm";
             }
-            renderTampilan(false); // Render ulang tanpa mereset pagination jika hanya ubah tema
+            renderQuickLinks();
+            renderTampilan(false);
         }
 
         function setFilterStatus(status) {
             currentFilterStatus = status;
-            ['Semua', 'Proses', 'Interview', 'Diterima', 'Arsip'].forEach(s => {
-                const card = document.getElementById(s === 'Semua' ? 'card-total' : (s === 'Arsip' ? 'card-ditolak' : `card-${s.toLowerCase()}`));
+            ['Semua', 'Favorit', 'Proses', 'Interview', 'Diterima', 'Arsip'].forEach(s => {
+                const cardId = s === 'Semua' ? 'card-total' : (s === 'Favorit' ? 'card-favorit' : (s === 'Arsip' ? 'card-ditolak' : `card-${s.toLowerCase()}`));
+                const card = document.getElementById(cardId);
                 if (!card) return;
                 if(s === status) {
                     card.classList.add('ring-2', 'ring-[#ff5ca0]');
@@ -940,8 +1012,6 @@
 
         function downloadSuratWord(perusahaan, posisi) {
             let teks = templateSurat.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi);
-            
-            // Ubah enter (\n) menjadi tag <br>
             let teksHTML = teks.replace(/\n/g, '<br>');
 
             let preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Surat Lamaran</title></head><body><div style='font-family: Arial, sans-serif; font-size: 12pt;'>";
@@ -953,7 +1023,6 @@
             });
 
             let namaFile = `Surat_Lamaran_${perusahaan.replace(/\s+/g, '_')}_${posisi.replace(/\s+/g, '_')}.doc`;
-
             let downloadLink = document.createElement("a");
             document.body.appendChild(downloadLink);
             
@@ -964,7 +1033,6 @@
                 downloadLink.download = namaFile;
                 downloadLink.click();
             }
-            
             document.body.removeChild(downloadLink);
             alert(`File Word untuk ${perusahaan} berhasil didownload!`);
         }
@@ -1192,7 +1260,6 @@
             window.open(url, '_blank');
         }
 
-        // FUNGSI UNTUK TOMBOL MUAT LEBIH BANYAK (PAGINATION)
         function muatLebihBanyak() {
             currentPage++;
             renderTampilan(false);
@@ -1206,8 +1273,9 @@
             const keyword = document.getElementById('input-pencarian').value.toLowerCase();
             containerCard.innerHTML = ''; containerTabel.innerHTML = '';
             
-            let statTotal = dataLamaran.length, statProses = 0, statInterview = 0, statDiterima = 0, statDitolak = 0;
+            let statTotal = dataLamaran.length, statFavorit = 0, statProses = 0, statInterview = 0, statDiterima = 0, statDitolak = 0;
             dataLamaran.forEach(l => {
+                if (l.isFavorit) statFavorit++;
                 if (["Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Medical Check Up", "Offering", "Rencana Daftar", "Terkirim"].includes(l.status)) statProses++;
                 if (["Interview HR", "Interview User", "Final Interview"].includes(l.status)) statInterview++;
                 if (l.status === 'Diterima') statDiterima++;
@@ -1217,8 +1285,10 @@
             const dataFiltered = dataLamaran.filter(lamaran => {
                 const matchKeyword = lamaran.perusahaan.toLowerCase().includes(keyword) || lamaran.posisi.toLowerCase().includes(keyword);
                 if (!matchKeyword) return false;
+                
                 const isArsip = ["Ditolak", "Tidak Ada Kabar"].includes(lamaran.status);
                 if (currentFilterStatus === 'Semua') return true;
+                if (currentFilterStatus === 'Favorit') return !!lamaran.isFavorit;
                 if (currentFilterStatus === 'Proses') return ["Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Medical Check Up", "Offering", "Rencana Daftar", "Terkirim"].includes(lamaran.status);
                 if (currentFilterStatus === 'Interview') return ["Interview HR", "Interview User", "Final Interview"].includes(lamaran.status);
                 if (currentFilterStatus === 'Diterima') return lamaran.status === 'Diterima';
@@ -1226,23 +1296,19 @@
                 return true;
             });
 
-            // Trigger notifikasi HANYA jika permission granted dan belum muncul di sesi ini
             if(resetPaging && Notification.permission === "granted") {
                 cekNotifikasiFollowUp(dataFiltered);
             }
 
-            // --- LOGIKA PAGING ---
             const totalFiltered = dataFiltered.length;
             const dataToRender = dataFiltered.slice(0, currentPage * itemsPerPage);
 
-            // Tombol "Muat Lebih Banyak" visibility
             const loadMoreContainer = document.getElementById('load-more-container');
             if (totalFiltered > currentPage * itemsPerPage) {
                 loadMoreContainer.classList.remove('hidden');
             } else {
                 loadMoreContainer.classList.add('hidden');
             }
-            // ---------------------
 
             if (totalFiltered === 0) {
                 const kosong = statTotal === 0 ? 'Belum ada info loker. Tekan tombol + di bawah.' : 'Pencarian tidak ditemukan.';
@@ -1275,12 +1341,17 @@
                     </div>
                 `;
 
+                const linkButtonHTML = lamaran.link ? `
+                    <a href="${lamaran.link}" target="_blank" class="px-2.5 py-1.5 rounded-lg text-xs font-bold border border-blue-500/40 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all flex items-center gap-1 shrink-0" title="Buka Link Lowongan">
+                        <span class="hidden md:inline">Link</span>
+                    </a>
+                ` : '';
+
                 const teksFollowUp = lamaran.tanggalFollowUp ? formatTanggal(lamaran.tanggalFollowUp) : '-';
                 const teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-';
 
                 let menuAksiItems = '';
                 const itemClass = currentTheme === 'light' ? 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-gray-100 text-gray-800' : 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/15 text-gray-200';
-                if (lamaran.link) menuAksiItems += `<a href="${lamaran.link}" target="_blank" class="${itemClass} block">Buka Link Lowongan</a>`;
                 
                 const emailTujuan = lamaran.kontak && lamaran.kontak.includes('@') ? lamaran.kontak : '';
                 menuAksiItems += `<a href="mailto:${emailTujuan}?subject=${encodeURIComponent('Lamaran - ' + lamaran.posisi)}&body=${encodeURIComponent(templateEmail.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}" class="${itemClass} block">Kirim Email</a>`;
@@ -1331,10 +1402,13 @@
                         <span>•</span>
                         <span class="${lamaran.tanggalFollowUp ? 'text-yellow-400 font-semibold' : ''}">FU: ${teksFollowUp}</span>
                         <span>•</span>
-                        <span>Metode: ${lamaran.metode || 'Email'}</span>
+                        <span>Sumber: ${lamaran.metode || 'Email'}</span>
                     </div>
                     <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-800/40">
-                        ${dropdownStatusHTML}
+                        <div class="flex items-center gap-2">
+                            ${dropdownStatusHTML}
+                            ${linkButtonHTML}
+                        </div>
                         ${dropdownAksiHTML}
                     </div>
                 `;
@@ -1353,7 +1427,10 @@
                     <td class="p-3 hidden md:table-cell text-gray-400">${formatTanggal(lamaran.tanggal)}</td>
                     <td class="p-3 hidden md:table-cell text-yellow-400">${teksFollowUp}</td>
                     <td class="p-3">
-                        ${dropdownStatusHTML}
+                        <div class="flex items-center gap-2">
+                            ${dropdownStatusHTML}
+                            ${linkButtonHTML}
+                        </div>
                     </td>
                     <td class="p-3 text-center">${dropdownAksiHTML}</td>
                 `;
@@ -1361,13 +1438,13 @@
             });
 
             document.getElementById('stat-total').innerText = statTotal;
+            document.getElementById('stat-favorit').innerText = statFavorit;
             document.getElementById('stat-proses').innerText = statProses;
             document.getElementById('stat-interview').innerText = statInterview;
             document.getElementById('stat-diterima').innerText = statDiterima;
             document.getElementById('stat-ditolak').innerText = statDitolak;
             
-            // Perbarui teks jumlah (Berapa yang tampil dari total filtered data)
-            document.getElementById('teks-jumlah-lamaran').innerText = `${dataToRender.length} dari ${totalFiltered} lamaran`;
+            document.getElementById('teks-jumlah-lamaran').innerText = `${dataToRender.length} . dari ${totalFiltered} lamaran`;
         }
     </script>
 </body>
