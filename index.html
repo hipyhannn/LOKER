@@ -1386,11 +1386,12 @@
                 if (["Ditolak", "Tidak Ada Kabar"].includes(l.status)) statDitolak++;
             });
 
-            const dataFiltered = dataLamaran.filter(lamaran => {
+          const dataFiltered = dataLamaran.filter(lamaran => {
                 const matchKeyword = (lamaran.perusahaan || '').toLowerCase().includes(keyword) || (lamaran.posisi || '').toLowerCase().includes(keyword);
                 if (!matchKeyword) return false;
                 
                 const isArsip = ["Ditolak", "Tidak Ada Kabar"].includes(lamaran.status);
+                
                 if (currentFilterStatus === 'Semua') return true;
                 if (currentFilterStatus === 'Favorit') return !!lamaran.isFavorit;
                 if (currentFilterStatus === 'Proses') return ["Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Medical Check Up", "Offering", "Rencana Daftar", "Terkirim"].includes(lamaran.status);
