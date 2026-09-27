@@ -120,7 +120,7 @@
                             </button>
                             <div id="dropdown-titiktiga" class="absolute right-0 mt-2 w-64 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300">
                                 <button onclick="bukaModalPanduan()" id="menu-item-panduan" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-[#ff5ca0]">
-                                    <span>📖 Panduan & Cara Pakai</span>
+                                    <span>Panduan & Cara Pakai</span>
                                 </button>
                                 <button onclick="bukaModalTemplateGlobal()" id="menu-item-template" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
                                     <span>Atur Template & Pesan</span>
@@ -215,7 +215,7 @@
     <div id="modal-panduan" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
         <div id="modal-panduan-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 max-h-[85vh] overflow-y-auto text-gray-300 text-xs leading-relaxed space-y-4">
             <div class="flex justify-between items-center border-b border-gray-700 pb-3">
-                <h2 class="text-sm font-bold text-white">📖 Panduan & Cara Pakai Aplikasi Cloud</h2>
+                <h2 class="text-sm font-bold text-white">Panduan & Cara Pakai Aplikasi Cloud</h2>
                 <button onclick="tutupModalPanduan()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold text-sm">&times;</button>
             </div>
             <div>
@@ -264,7 +264,7 @@
                     <textarea id="text-template-interview" rows="7" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="salinIsiTemplateAktif()" class="w-1/2 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold py-2.5 rounded-lg transition-colors text-xs">📋 Salin Teks</button>
+                    <button onclick="salinIsiTemplateAktif()" class="w-1/2 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold py-2.5 rounded-lg transition-colors text-xs">Salin Teks</button>
                     <button onclick="simpanSemuaTemplate()" class="w-1/2 bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs">Simpan Template</button>
                 </div>
             </div>
@@ -1084,6 +1084,27 @@
             }
         }
 
+        function bukaGoogleCalendar(perusahaan, posisi, tgl) {
+            if (!tgl) return;
+            const dateObj = new Date(tgl);
+            const yyyy = dateObj.getFullYear();
+            const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const dd = String(dateObj.getDate()).padStart(2, '0');
+
+            const nextDate = new Date(dateObj);
+            nextDate.setDate(nextDate.getDate() + 1);
+            const nyyyy = nextDate.getFullYear();
+            const nmm = String(nextDate.getMonth() + 1).padStart(2, '0');
+            const ndd = String(nextDate.getDate()).padStart(2, '0');
+
+            const dateStr = `${yyyy}${mm}${dd}/${nyyyy}${nmm}${ndd}`;
+            const title = encodeURIComponent(`Follow Up: ${perusahaan} - ${posisi}`);
+            const details = encodeURIComponent(`Pengingat untuk follow up lamaran kerja di ${perusahaan} untuk posisi ${posisi}.`);
+
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&dates=${dateStr}`;
+            window.open(url, '_blank');
+        }
+
         function renderTampilan() {
             const containerCard = document.getElementById('view-card');
             const containerTabel = document.getElementById('body-tabel');
@@ -1156,7 +1177,12 @@
                 const waUrl = noWa.length > 5 ? `https://wa.me/${noWa}?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}` : `https://wa.me/?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}`;
                 
                 menuAksiItems += `<a href="${waUrl}" target="_blank" class="${itemClass} block">Konfirmasi Interview</a>`;
-                menuAksiItems += `<button onclick="salinSuratOtomatis('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass} block w-full text-left">📋 Salin Surat Lamaran</button>`;
+                menuAksiItems += `<button onclick="salinSuratOtomatis('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass} block w-full text-left">Salin Surat Lamaran</button>`;
+                
+                if (lamaran.tanggalFollowUp) {
+                    menuAksiItems += `<button onclick="bukaGoogleCalendar('${lamaran.perusahaan}', '${lamaran.posisi}', '${lamaran.tanggalFollowUp}')" class="${itemClass} block w-full text-left">Add Kalender (Follow Up)</button>`;
+                }
+
                 menuAksiItems += `<hr class="${currentTheme === 'light' ? 'border-gray-200 my-1' : 'border-gray-700 my-1'}">`;
                 menuAksiItems += `<button onclick="bukaModalEdit('${lamaran.id}')" class="${itemClass} block w-full text-left">Edit Data</button>`;
                 menuAksiItems += `<button onclick="hapusLamaran('${lamaran.id}')" class="${itemClass} block w-full text-left">Hapus Lamaran</button>`;
