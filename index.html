@@ -21,7 +21,7 @@
         body { font-family: 'Inter', sans-serif; }
         .font-pixel { font-family: 'Press Start 2P', cursive; }
         ::-webkit-scrollbar { height: 6px; width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--scroll-track, #121212); }
+        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #ff5ca0; border-radius: 4px; }
         
         @keyframes breathe {
@@ -124,7 +124,7 @@
                         <h2 id="header-title" class="text-lg md:text-2xl text-white font-pixel tracking-wide leading-none">Apply LOKER</h2>
                     </div>
                     <div class="flex items-center gap-3">
-                        <button onclick="logoutUser()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-red-500/20 text-red-300 border border-red-500/30 hover:bg-red-500/30 transition-all">
+                        <button onclick="logoutUser()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all">
                             Keluar
                         </button>
                         <div class="relative">
@@ -132,17 +132,17 @@
                                 ⋮
                             </button>
                             <div id="dropdown-titiktiga" class="absolute right-0 mt-2 w-64 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300">
-                                <button onclick="bukaModalPanduan()" id="menu-item-panduan" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
+                                <button onclick="bukaModalPanduan()" id="menu-item-panduan" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit">
                                     <span>Panduan & Cara Pakai</span>
                                 </button>
-                                <button onclick="aktifkanNotifikasi()" id="menu-item-notif" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
+                                <button onclick="aktifkanNotifikasi()" id="menu-item-notif" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit">
                                     <span>Aktifkan Notif Follow-Up</span>
                                 </button>
-                                <button onclick="bukaModalTemplateGlobal()" id="menu-item-template" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
+                                <button onclick="bukaModalTemplateGlobal()" id="menu-item-template" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit">
                                     <span>Atur Template</span>
                                 </button>
                                 <hr id="menu-divider" class="border-gray-700 my-1">
-                                <button onclick="toggleTemaManual()" id="menu-item-theme" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-gray-200">
+                                <button onclick="toggleTemaManual()" id="menu-item-theme" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit">
                                     <span id="menu-text-tema">Mode Terang</span>
                                 </button>
                             </div>
@@ -164,23 +164,22 @@
                         <span id="daily-note-title" class="text-[11px] font-semibold text-gray-400 hidden md:inline">| Harian (<span id="label-tanggal-hari-ini">Hari Ini</span>)</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button onclick="bukaModalRiwayatCatatan()" class="text-[11px] bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold px-2.5 py-1 rounded-lg transition-colors" title="Lihat riwayat catatan hari sebelumnya">Riwayat</button>
-                        <button onclick="simpanCatatanHarian()" class="text-[11px] bg-[#ff5ca0]/20 hover:bg-[#ff5ca0]/30 text-[#ff5ca0] font-bold px-2.5 py-1 rounded-lg transition-colors">Simpan Catatan</button>
+                        <button onclick="bukaModalRiwayatCatatan()" class="text-[11px] border border-gray-600 bg-transparent hover:bg-gray-700 text-gray-300 font-semibold px-2.5 py-1 rounded-lg transition-colors theme-border-btn" title="Lihat riwayat catatan">Riwayat</button>
+                        <button onclick="simpanCatatanHarian()" class="text-[11px] bg-[#ff5ca0]/20 hover:bg-[#ff5ca0]/30 text-[#ff5ca0] font-bold px-2.5 py-1 rounded-lg transition-colors">Simpan</button>
                     </div>
                 </div>
                 
                 <div id="content-catatan-harian" class="space-y-3 pt-1 hidden">
-                    <textarea id="input-catatan-harian" oninput="autoSimpanCatatan()" rows="2" placeholder="Tulis target harianmu di sini..." class="w-full bg-[#121212] border border-gray-700/60 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed"></textarea>
+                    <textarea id="input-catatan-harian" oninput="autoSimpanCatatan()" rows="2" placeholder="Tulis target harianmu di sini..." class="w-full bg-[#121212] border border-gray-700/60 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed input-themed"></textarea>
                     
                     <div class="border-t border-gray-800/80 pt-3 space-y-2">
                         <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold text-gray-400">Simpan Tautan Cepat</span>
-                            <span class="text-[10px] text-gray-500">Akses kilat sebelum dimasukkan ke lamaran</span>
+                            <span class="text-xs font-bold text-gray-400 label-themed-note">Simpan Tautan Cepat</span>
                         </div>
                         <div class="flex gap-2">
-                            <input type="text" id="input-quick-nama" placeholder="Nama Perusahaan / Posisi" class="w-1/3 bg-[#121212] border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
-                            <input type="url" id="input-quick-link" placeholder="https://..." class="w-2/3 bg-[#121212] border border-gray-700 rounded-lg px-3 py-2 text-xs text-gray-300 focus:outline-none focus:border-[#ff5ca0]">
-                            <button onclick="tambahQuickLink()" class="bg-gray-700 hover:bg-gray-600 text-white font-bold px-4 py-2 rounded-lg text-xs shrink-0 transition-colors">Tambah</button>
+                            <input type="text" id="input-quick-nama" placeholder="Nama Perusahaan" class="w-1/3 bg-[#121212] border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0] input-themed">
+                            <input type="url" id="input-quick-link" placeholder="URL Link..." class="w-2/3 bg-[#121212] border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0] input-themed">
+                            <button onclick="tambahQuickLink()" class="bg-gray-700 hover:bg-gray-600 text-white font-bold px-4 py-2 rounded-lg text-xs shrink-0 transition-colors btn-themed">Tambah</button>
                         </div>
                         <div id="list-quick-links" class="flex flex-wrap gap-2 pt-1"></div>
                     </div>
@@ -189,29 +188,29 @@
 
             <!-- TAB STATISTIK & FILTER -->
             <div class="grid grid-cols-6 gap-1.5 md:gap-3 text-center">
-                <div onclick="setFilterStatus('Semua')" id="card-total" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-gray-500 cursor-pointer hover:bg-black/5 transition-all ring-2 ring-[#ff5ca0]">
-                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Total</p>
-                    <p class="text-sm md:text-2xl font-bold" id="stat-total">0</p>
+                <div onclick="setFilterStatus('Semua')" id="card-total" class="stat-card bg-[#1e1e1e] border-gray-800 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all ring-2 ring-[#ff5ca0]">
+                    <p class="text-[9px] md:text-[10px] text-[#ff5ca0] font-bold mb-1">Total</p>
+                    <p class="text-sm md:text-2xl font-bold text-white" id="stat-total">0</p>
                 </div>
-                <div onclick="setFilterStatus('Favorit')" id="card-favorit" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-gray-500 cursor-pointer hover:bg-black/5 transition-all">
+                <div onclick="setFilterStatus('Favorit')" id="card-favorit" class="stat-card bg-[#1e1e1e] border-gray-800 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
                     <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Favorit</p>
-                    <p class="text-sm md:text-2xl font-bold" id="stat-favorit">0</p>
+                    <p class="text-sm md:text-2xl font-bold text-white" id="stat-favorit">0</p>
                 </div>
-                <div onclick="setFilterStatus('Proses')" id="card-proses" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-gray-500 cursor-pointer hover:bg-black/5 transition-all">
+                <div onclick="setFilterStatus('Proses')" id="card-proses" class="stat-card bg-[#1e1e1e] border-gray-800 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
                     <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Proses</p>
-                    <p class="text-sm md:text-2xl font-bold" id="stat-proses">0</p>
+                    <p class="text-sm md:text-2xl font-bold text-white" id="stat-proses">0</p>
                 </div>
-                <div onclick="setFilterStatus('Interview')" id="card-interview" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-gray-500 cursor-pointer hover:bg-black/5 transition-all">
+                <div onclick="setFilterStatus('Interview')" id="card-interview" class="stat-card bg-[#1e1e1e] border-gray-800 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
                     <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Interview</p>
-                    <p class="text-sm md:text-2xl font-bold" id="stat-interview">0</p>
+                    <p class="text-sm md:text-2xl font-bold text-white" id="stat-interview">0</p>
                 </div>
-                <div onclick="setFilterStatus('Diterima')" id="card-diterima" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-gray-500 cursor-pointer hover:bg-black/5 transition-all">
+                <div onclick="setFilterStatus('Diterima')" id="card-diterima" class="stat-card bg-[#1e1e1e] border-gray-800 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
                     <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Diterima</p>
-                    <p class="text-sm md:text-2xl font-bold" id="stat-diterima">0</p>
+                    <p class="text-sm md:text-2xl font-bold text-white" id="stat-diterima">0</p>
                 </div>
-                <div onclick="setFilterStatus('Arsip')" id="card-ditolak" class="stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-gray-500 cursor-pointer hover:bg-black/5 transition-all">
+                <div onclick="setFilterStatus('Arsip')" id="card-ditolak" class="stat-card bg-[#1e1e1e] border-gray-800 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
                     <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Ditolak</p>
-                    <p class="text-sm md:text-2xl font-bold" id="stat-ditolak">0</p>
+                    <p class="text-sm md:text-2xl font-bold text-white" id="stat-ditolak">0</p>
                 </div>
             </div>
 
@@ -231,11 +230,11 @@
 
                 <div id="view-tabel" class="hidden bg-[#1e1e1e] rounded-xl shadow-sm border border-gray-800 transition-colors overflow-visible pb-3 relative">
                     <table class="w-full text-left text-xs">
-                        <thead id="table-head" class="bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors relative z-10">
+                        <thead id="table-head" class="bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors relative">
                             <tr>
                                 <th class="p-3 font-bold w-[40%]">Perusahaan / Posisi</th>
                                 <th class="p-3 font-bold hidden md:table-cell md:w-[15%]">Tgl Lamar</th>
-                                <th class="p-3 font-bold text-gray-400 hidden md:table-cell md:w-[15%]">Follow Up</th>
+                                <th class="p-3 font-bold hidden md:table-cell md:w-[15%]">Follow Up</th>
                                 <th class="p-3 font-bold w-[40%]">Status & Link</th>
                                 <th class="p-3 font-bold w-[15%] text-center">Aksi</th>
                             </tr>
@@ -246,7 +245,7 @@
 
                 <!-- TOMBOL LOAD MORE -->
                 <div id="load-more-container" class="hidden flex justify-center pt-2 relative z-0">
-                    <button id="btn-load-more" onclick="muatLebihBanyak()" class="bg-[#2d2d2d] hover:bg-gray-700 text-gray-300 font-bold py-2.5 px-6 rounded-xl text-xs border border-gray-700 transition-colors shadow-sm">
+                    <button id="btn-load-more" onclick="muatLebihBanyak()" class="bg-[#2d2d2d] hover:bg-gray-700 text-gray-300 font-bold py-2.5 px-6 rounded-xl text-xs border border-gray-700 transition-colors shadow-sm btn-themed">
                         Muat Lebih Banyak...
                     </button>
                 </div>
@@ -258,14 +257,14 @@
     <div id="modal-panduan" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
         <div id="modal-panduan-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 max-h-[85vh] overflow-y-auto text-gray-300 text-xs leading-relaxed space-y-4">
             <div class="flex justify-between items-center border-b border-gray-700 pb-3">
-                <h2 class="text-sm font-bold text-white">Panduan & Cara Pakai Aplikasi Cloud</h2>
-                <button onclick="tutupModalPanduan()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold text-sm">&times;</button>
+                <h2 class="text-sm font-bold text-white header-text">Panduan & Cara Pakai Aplikasi Cloud</h2>
+                <button onclick="tutupModalPanduan()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold text-sm btn-close-modal">&times;</button>
             </div>
-            <div>
+            <div class="text-themed-modal">
                 <p class="font-bold text-[#ff5ca0] mb-1">1. Sinkronisasi Cloud</p>
                 <p>Data lamaranmu otomatis tersimpan di server Firebase Realtime Database. Kamu bisa login dengan email yang sama di perangkat lain.</p>
-                <p class="font-bold text-gray-300 mt-2 mb-1">2. Simpan Tautan Cepat (Bookmark)</p>
-                <p>Gunakan fitur <b>Simpan Tautan Cepat</b> di bawah catatan harian untuk menyimpan link lowongan dari LinkedIn atau Instagram secara instan.</p>
+                <p class="font-bold text-gray-400 mt-2 mb-1">2. Simpan Tautan Cepat</p>
+                <p>Gunakan fitur <b>Simpan Tautan Cepat</b> di bawah catatan harian untuk menyimpan link lowongan secara instan.</p>
             </div>
             <button onclick="tutupModalPanduan()" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs">Mengerti!</button>
         </div>
@@ -274,9 +273,9 @@
     <!-- MODAL RIWAYAT CATATAN -->
     <div id="modal-riwayat-catatan" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
         <div id="modal-riwayat-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[80vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-sm font-bold text-white">Riwayat Catatan Harian</h2>
-                <button onclick="tutupModalRiwayatCatatan()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold">&times;</button>
+            <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-3">
+                <h2 class="text-sm font-bold text-white header-text">Riwayat Catatan Harian</h2>
+                <button onclick="tutupModalRiwayatCatatan()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold btn-close-modal">&times;</button>
             </div>
             <div id="list-riwayat-catatan" class="space-y-3"></div>
         </div>
@@ -286,30 +285,30 @@
     <div id="modal-template" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
         <div id="modal-template-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
-                <h2 id="modal-template-title" class="text-sm font-bold text-white">Atur Template</h2>
-                <button onclick="tutupModalTemplate()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold">&times;</button>
+                <h2 id="modal-template-title" class="text-sm font-bold text-white header-text">Atur Template</h2>
+                <button onclick="tutupModalTemplate()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold btn-close-modal">&times;</button>
             </div>
             <div class="space-y-4">
-                <div class="flex gap-2 border-b border-gray-700 pb-2 flex-wrap">
+                <div class="flex gap-2 border-b border-gray-700 pb-2 flex-wrap tab-container">
                     <button type="button" onclick="gantiTabTemplate('surat')" id="tab-btn-surat" class="px-3 py-1.5 rounded text-xs font-bold bg-[#ff5ca0] text-white transition-colors">Surat</button>
-                    <button type="button" onclick="gantiTabTemplate('email')" id="tab-btn-email" class="px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors">Email</button>
-                    <button type="button" onclick="gantiTabTemplate('tanya')" id="tab-btn-tanya" class="px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors">WA (Tanya)</button>
-                    <button type="button" onclick="gantiTabTemplate('interview')" id="tab-btn-interview" class="px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors">WA (Interview)</button>
+                    <button type="button" onclick="gantiTabTemplate('email')" id="tab-btn-email" class="px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors btn-tab-inactive">Email</button>
+                    <button type="button" onclick="gantiTabTemplate('tanya')" id="tab-btn-tanya" class="px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors btn-tab-inactive">WA (Tanya)</button>
+                    <button type="button" onclick="gantiTabTemplate('interview')" id="tab-btn-interview" class="px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors btn-tab-inactive">WA (Interview)</button>
                 </div>
                 <div id="tab-content-surat" class="space-y-2">
-                    <textarea id="text-template-surat" rows="7" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
+                    <textarea id="text-template-surat" rows="7" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
                 </div>
                 <div id="tab-content-email" class="space-y-2 hidden">
-                    <textarea id="text-template-email" rows="7" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
+                    <textarea id="text-template-email" rows="7" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
                 </div>
                 <div id="tab-content-tanya" class="space-y-2 hidden">
-                    <textarea id="text-template-tanya" rows="7" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
+                    <textarea id="text-template-tanya" rows="7" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
                 </div>
                 <div id="tab-content-interview" class="space-y-2 hidden">
-                    <textarea id="text-template-interview" rows="7" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
+                    <textarea id="text-template-interview" rows="7" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="salinIsiTemplateAktif()" class="w-1/2 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold py-2.5 rounded-lg transition-colors text-xs">Salin Teks</button>
+                    <button onclick="salinIsiTemplateAktif()" class="w-1/2 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold py-2.5 rounded-lg transition-colors text-xs btn-themed">Salin Teks</button>
                     <button onclick="simpanSemuaTemplate()" class="w-1/2 bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs">Simpan Template</button>
                 </div>
             </div>
@@ -319,7 +318,7 @@
     <!-- PANDA MASCCOT -->
     <div id="panda-container" class="fixed bottom-6 left-6 z-30 flex items-end gap-3 pb-2 select-none touch-none cursor-grab" title="Geser panda!">
         <div id="panda-avatar" class="relative w-[48px] h-[48px] cursor-pointer select-none shrink-0 transition-all duration-300 animate-breathe drop-shadow-lg" onclick="handlePandaClick(event)">
-            <div id="speech-bubble" class="absolute bottom-[120%] left-[-10px] w-[220px] max-h-[220px] overflow-y-auto bg-white text-black p-3 rounded-2xl shadow-xl opacity-0 translate-y-2 transition-all duration-300 pointer-events-auto z-50">
+            <div id="speech-bubble" class="absolute bottom-[120%] left-[-10px] w-[220px] max-h-[220px] overflow-y-auto bg-white text-black p-3 rounded-2xl shadow-xl opacity-0 translate-y-2 transition-all duration-300 pointer-events-auto z-50 border border-gray-200">
                 <p id="panda-pesan" class="text-xs font-bold leading-tight">"Halo bos!"</p>
                 <div class="absolute top-full left-[30px] w-0 h-0 border-l-[8px] border-l-transparent border-t-[10px] border-t-white border-r-[8px] border-r-transparent"></div>
             </div>
@@ -347,32 +346,32 @@
     <div id="modal-form" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
         <div id="modal-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-base font-bold text-white" id="modal-judul">Tambah Info Loker</h2>
-                <button onclick="tutupModal()" id="modal-close-btn" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold">&times;</button>
+                <h2 class="text-base font-bold text-white header-text" id="modal-judul">Tambah Info Loker</h2>
+                <button onclick="tutupModal()" id="modal-close-btn" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold btn-close-modal">&times;</button>
             </div>
             
             <form id="form-lamaran" onsubmit="simpanLamaran(event)">
                 <input type="hidden" id="input-id">
                 <div class="mb-3">
-                    <label id="label-perusahaan" class="block text-xs font-bold text-gray-400 mb-1">NAMA PERUSAHAAN *</label>
-                    <input type="text" id="input-perusahaan" required placeholder="Contoh: PT Tokopedia..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                    <label id="label-perusahaan" class="label-themed block text-xs font-bold text-gray-400 mb-1">NAMA PERUSAHAAN *</label>
+                    <input type="text" id="input-perusahaan" required placeholder="Contoh: PT Tokopedia..." class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
                 </div>
                 <div class="mb-3 relative">
-                    <label id="label-posisi" class="block text-xs font-bold text-gray-400 mb-1">POSISI YANG DILAMAR *</label>
+                    <label id="label-posisi" class="label-themed block text-xs font-bold text-gray-400 mb-1">POSISI YANG DILAMAR *</label>
                     <div class="flex gap-2">
-                        <input type="text" id="input-posisi" autocomplete="off" required placeholder="Contoh: Frontend Developer..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
-                        <button type="button" onclick="toggleDropdownPosisi(event)" class="bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0">▼</button>
+                        <input type="text" id="input-posisi" autocomplete="off" required placeholder="Contoh: Frontend Developer..." class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                        <button type="button" onclick="toggleDropdownPosisi(event)" class="btn-themed bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0">▼</button>
                     </div>
-                    <div id="dropdown-posisi-list" class="absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
+                    <div id="dropdown-posisi-list" class="menu-dropdown absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                     <div>
-                        <label id="label-tgl" class="block text-xs font-bold text-gray-400 mb-1">TGL MELAMAR *</label>
-                        <input type="date" id="input-tanggal" required class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                        <label id="label-tgl" class="label-themed block text-xs font-bold text-gray-400 mb-1">TGL MELAMAR *</label>
+                        <input type="date" id="input-tanggal" required class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-1">STATUS</label>
-                        <select id="input-status" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                        <label class="label-themed block text-xs font-bold text-gray-400 mb-1">STATUS</label>
+                        <select id="input-status" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
                             <option value="Rencana Daftar">Rencana Daftar</option>
                             <option value="Terkirim">Terkirim</option>
                             <option value="Screening HR">Screening HR</option>
@@ -390,47 +389,47 @@
                         </select>
                     </div>
                 </div>
-                <div class="my-3 pt-1 border-t border-gray-800">
+                <div class="my-3 pt-1 border-t border-gray-800 border-themed">
                     <button type="button" onclick="toggleFormOpsional()" id="btn-toggle-opsional" class="text-xs font-bold text-[#ff5ca0] hover:underline focus:outline-none">
-                        + Tambah Info Detail (Deadline, Gaji, Link, Kontak)
+                        + Tambah Info Detail
                     </button>
                 </div>
-                <div id="form-opsional-container" class="hidden space-y-3 mb-3 bg-black/20 p-3 rounded-xl border border-gray-800">
+                <div id="form-opsional-container" class="hidden space-y-3 mb-3 bg-black/20 p-3 rounded-xl border border-gray-800 transition-colors">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-[11px] font-bold text-gray-400 mb-1">TGL FOLLOW UP</label>
-                            <input type="date" id="input-followup" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-gray-300 focus:outline-none focus:border-[#ff5ca0]">
+                            <label class="label-themed block text-[11px] font-bold text-gray-400 mb-1">TGL FOLLOW UP</label>
+                            <input type="date" id="input-followup" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-bold text-gray-400 mb-1">DEADLINE LAMAR</label>
-                            <input type="date" id="input-deadline" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-gray-300 focus:outline-none focus:border-[#ff5ca0]">
+                            <label class="label-themed block text-[11px] font-bold text-gray-400 mb-1">DEADLINE LAMAR</label>
+                            <input type="date" id="input-deadline" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-[11px] font-bold text-gray-400 mb-1">LINK LOWONGAN (URL)</label>
-                            <input type="url" id="input-link" placeholder="https://..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-gray-300 focus:outline-none focus:border-[#ff5ca0]">
+                            <label class="label-themed block text-[11px] font-bold text-gray-400 mb-1">LINK LOWONGAN</label>
+                            <input type="url" id="input-link" placeholder="https://..." class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-bold text-gray-400 mb-1">KONTAK (WA / EMAIL)</label>
-                            <input type="text" id="input-kontak" placeholder="Nama / No WA / Email" class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-gray-300 focus:outline-none focus:border-[#ff5ca0]">
+                            <label class="label-themed block text-[11px] font-bold text-gray-400 mb-1">KONTAK (WA / EMAIL)</label>
+                            <input type="text" id="input-kontak" placeholder="Nama / No WA / Email" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
                         </div>
                     </div>
                     <div class="relative">
-                        <label id="label-metode" class="block text-[11px] font-bold text-gray-400 mb-1">METODE (LinkedIn, IG, JobStreet, dll)</label>
+                        <label id="label-metode" class="label-themed block text-[11px] font-bold text-gray-400 mb-1">METODE LAMAR (Platform)</label>
                         <div class="flex gap-2">
-                            <input type="text" id="input-metode" autocomplete="off" placeholder="Pilih atau ketik metode..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
-                            <button type="button" onclick="toggleDropdownMetode(event)" class="bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0">▼</button>
+                            <input type="text" id="input-metode" autocomplete="off" placeholder="Pilih / ketik manual..." class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                            <button type="button" onclick="toggleDropdownMetode(event)" class="btn-themed bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0">▼</button>
                         </div>
-                        <div id="dropdown-metode-list" class="absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
+                        <div id="dropdown-metode-list" class="menu-dropdown absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
                     </div>
-                    <div class="bg-black/30 p-3 rounded-xl border border-gray-700/60">
+                    <div class="p-3 rounded-xl border border-gray-700/60 bg-black/20" id="container-slider-gaji">
                         <div class="flex justify-between items-center mb-1">
-                            <label class="text-[11px] font-bold text-gray-400">ESTIMASI GAJI</label>
-                            <span id="label-nominal-gaji" class="text-[11px] font-bold text-gray-300 bg-gray-800 px-2 py-0.5 rounded">Rp 0</span>
+                            <label class="text-[11px] font-bold text-gray-400 label-themed">ESTIMASI GAJI</label>
+                            <span id="label-nominal-gaji" class="text-[11px] font-bold text-gray-300 bg-gray-800 px-2 py-0.5 rounded badge-themed">Rp 0</span>
                         </div>
                         <input type="range" id="input-gaji-slider" min="0" max="25000000" step="500000" value="0" oninput="updateGajiSlider(this.value)" class="w-full h-1.5 bg-gray-700 rounded-lg appearance-none cursor-pointer mb-2">
-                        <div class="flex justify-between items-center gap-1 overflow-x-auto no-scrollbar pt-1">
+                        <div class="flex justify-between items-center gap-1 overflow-x-auto no-scrollbar pt-1 btn-gaji-cepat-container">
                             <button type="button" onclick="setGajiCepat(0)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded border border-gray-700">0</button>
                             <button type="button" onclick="setGajiCepat(4500000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded border border-gray-700">4.5jt</button>
                             <button type="button" onclick="setGajiCepat(6000000)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded border border-gray-700">6jt</button>
@@ -441,8 +440,8 @@
                         </div>
                     </div>
                     <div>
-                        <label id="label-keterangan" class="block text-[11px] font-bold text-gray-400 mb-1">KETERANGAN</label>
-                        <textarea id="input-keterangan" rows="2" placeholder="Catatan tambahan..." class="modal-input w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
+                        <label id="label-keterangan" class="label-themed block text-[11px] font-bold text-gray-400 mb-1">KETERANGAN TAMBAHAN</label>
+                        <textarea id="input-keterangan" rows="2" placeholder="Tulis catatan..." class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
                     </div>
                 </div>
                 <button type="submit" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs shadow-md mt-2">
@@ -453,6 +452,7 @@
     </div>
 
     <script>
+        // FIREBASE SETUP
         const firebaseConfig = {
             apiKey: "AIzaSyDG5qmJD0EGEaJRGNtvd8U6jTQDj3cvXRA",
             authDomain: "infol-61428.firebaseapp.com",
@@ -587,10 +587,7 @@
 
         function updatePandaMoodAndCheck() {
             const hariIni = new Date().toISOString().split('T')[0];
-            
-            if (localStorage.getItem('lokertrack_reminder_dismissed') === hariIni) {
-                return;
-            }
+            if (localStorage.getItem('lokertrack_reminder_dismissed') === hariIni) return;
 
             let pesanPeringatan = [];
 
@@ -615,7 +612,6 @@
         function dismissReminderHariIni() {
             const hariIni = new Date().toISOString().split('T')[0];
             localStorage.setItem('lokertrack_reminder_dismissed', hariIni);
-            
             isPandaPersistent = false;
             const bubble = document.getElementById('speech-bubble');
             bubble.classList.remove('opacity-100', 'translate-y-0');
@@ -631,11 +627,7 @@
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 confetti.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
                 confetti.style.animationDelay = (Math.random() * 0.5) + 's';
-                
-                if (Math.random() > 0.5) {
-                    confetti.style.borderRadius = '50%';
-                }
-                
+                if (Math.random() > 0.5) confetti.style.borderRadius = '50%';
                 document.body.appendChild(confetti);
                 setTimeout(() => { confetti.remove(); }, 3000);
             }
@@ -659,8 +651,7 @@
 
         function hapusQuickLink(id) {
             if (!currentUser) return;
-            const uid = currentUser.uid;
-            rtdb.ref('users/' + uid + '/quickLinks/' + id).remove();
+            rtdb.ref('users/' + currentUser.uid + '/quickLinks/' + id).remove();
         }
 
         function renderQuickLinks() {
@@ -671,14 +662,18 @@
                 container.innerHTML = `<span class="text-[11px] text-gray-500 italic">Belum ada tautan cepat tersimpan.</span>`;
                 return;
             }
+            
+            const isLight = currentTheme === 'light';
+            const chipBg = isLight ? 'bg-gray-100 border-gray-300 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-300';
+            
             quickLinksData.forEach(item => {
                 const chip = document.createElement('div');
-                chip.className = currentTheme === 'light' ? 'flex items-center gap-1.5 bg-gray-100 border border-gray-300 rounded-lg px-2.5 py-1 text-xs text-gray-800 font-semibold shadow-sm' : 'flex items-center gap-1.5 bg-[#121212] border border-gray-700 rounded-lg px-2.5 py-1 text-xs text-gray-200 font-semibold shadow-sm';
+                chip.className = `flex items-center gap-1.5 border rounded-lg px-2.5 py-1 text-xs font-semibold shadow-sm ${chipBg}`;
                 chip.innerHTML = `
-                    <a href="${item.link}" target="_blank" class="text-gray-600 dark:text-gray-300 hover:underline flex items-center gap-1 truncate max-w-[200px]" title="${item.link}">
+                    <a href="${item.link}" target="_blank" class="hover:underline flex items-center gap-1 truncate max-w-[200px]" title="${item.link}">
                         <span>${item.nama}</span>
                     </a>
-                    <button onclick="hapusQuickLink('${item.id}')" class="text-gray-400 hover:text-red-400 font-bold ml-1 text-sm leading-none" title="Hapus">&times;</button>
+                    <button onclick="hapusQuickLink('${item.id}')" class="text-gray-400 hover:text-red-500 font-bold ml-1 text-sm leading-none" title="Hapus">&times;</button>
                 `;
                 container.appendChild(chip);
             });
@@ -733,23 +728,20 @@
 
         function hapusDariRealtimeDB(id) {
             if (!currentUser) return;
-            const uid = currentUser.uid;
-            rtdb.ref('users/' + uid + '/lamaran/' + id.toString()).remove();
+            rtdb.ref('users/' + currentUser.uid + '/lamaran/' + id.toString()).remove();
         }
 
         function simpanCatatanHarian() {
             if (!currentUser) return;
-            const uid = currentUser.uid;
             const isi = document.getElementById('input-catatan-harian').value;
-            rtdb.ref('users/' + uid + '/catatan/' + todayKey).set({ isi: isi })
-            .then(() => alert("Catatan harian berhasil disimpan ke cloud!"));
+            rtdb.ref('users/' + currentUser.uid + '/catatan/' + todayKey).set({ isi: isi })
+            .then(() => alert("Catatan harian berhasil disimpan!"));
         }
 
         function autoSimpanCatatan() {
             if (!currentUser) return;
-            const uid = currentUser.uid;
             const isi = document.getElementById('input-catatan-harian').value;
-            rtdb.ref('users/' + uid + '/catatan/' + todayKey).set({ isi: isi });
+            rtdb.ref('users/' + currentUser.uid + '/catatan/' + todayKey).set({ isi: isi });
         }
 
         function toggleCatatanHarian() {
@@ -772,7 +764,7 @@
                 btn.innerText = "- Sembunyikan Info Detail";
             } else {
                 container.classList.add('hidden');
-                btn.innerText = "+ Tambah Info Detail (Deadline, Gaji, Link, Kontak)";
+                btn.innerText = "+ Tambah Info Detail";
             }
         }
 
@@ -787,8 +779,7 @@
 
         function bukaModalRiwayatCatatan() {
             if (!currentUser) return;
-            const uid = currentUser.uid;
-            rtdb.ref('users/' + uid + '/catatan').once('value').then(snapshot => {
+            rtdb.ref('users/' + currentUser.uid + '/catatan').once('value').then(snapshot => {
                 const listDiv = document.getElementById('list-riwayat-catatan');
                 listDiv.innerHTML = '';
                 let adaRiwayat = false;
@@ -799,8 +790,9 @@
                         if (isiCatatan.trim() !== '') {
                             adaRiwayat = true;
                             const item = document.createElement('div');
-                            item.className = 'bg-[#121212] border border-gray-700 rounded-xl p-3';
-                            item.innerHTML = `<p class="text-xs font-bold text-gray-400 mb-1">${tgl}</p><p class="text-xs text-gray-300 leading-relaxed">${isiCatatan}</p>`;
+                            const isLight = currentTheme === 'light';
+                            item.className = `border rounded-xl p-3 ${isLight ? 'bg-gray-50 border-gray-200' : 'bg-[#121212] border-gray-700'}`;
+                            item.innerHTML = `<p class="text-xs font-bold text-[#ff5ca0] mb-1">${tgl}</p><p class="text-xs ${isLight ? 'text-gray-700' : 'text-gray-300'} leading-relaxed">${isiCatatan}</p>`;
                             listDiv.appendChild(item);
                         }
                     });
@@ -812,9 +804,7 @@
             });
         }
 
-        function tutupModalRiwayatCatatan() {
-            document.getElementById('modal-riwayat-catatan').classList.add('hidden');
-        }
+        function tutupModalRiwayatCatatan() { document.getElementById('modal-riwayat-catatan').classList.add('hidden'); }
 
         window.addEventListener('click', function(e) {
             const dropdown = document.getElementById('dropdown-titiktiga');
@@ -833,13 +823,20 @@
             }
             if (!e.target.closest('.dropdown-aksi-container')) {
                 document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden'));
-                document.querySelectorAll('#body-tabel tr').forEach(tr => tr.style.zIndex = '0');
+                resetTableZIndex();
             }
             if (!e.target.closest('.dropdown-status-container')) {
                 document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
-                document.querySelectorAll('#body-tabel tr').forEach(tr => tr.style.zIndex = '0');
+                resetTableZIndex();
             }
         });
+
+        function resetTableZIndex() {
+            document.querySelectorAll('#body-tabel tr').forEach(tr => {
+                tr.style.zIndex = '1';
+                tr.style.position = 'relative';
+            });
+        }
 
         function toggleMenuTitikTiga(event) {
             event.stopPropagation();
@@ -852,15 +849,17 @@
             document.querySelectorAll('.dropdown-aksi-menu').forEach(m => {
                 if (m.id !== `dropdown-aksi-${id}`) m.classList.add('hidden');
             });
-            document.querySelectorAll('#body-tabel tr').forEach(tr => tr.style.zIndex = '0');
+            resetTableZIndex();
             
             const menu = document.getElementById(`dropdown-aksi-${id}`);
             if (menu) {
                 menu.classList.toggle('hidden');
-                const parentTr = menu.closest('tr');
-                if(parentTr && !menu.classList.contains('hidden')) {
-                    parentTr.style.position = 'relative';
-                    parentTr.style.zIndex = '50';
+                if(!menu.classList.contains('hidden')) {
+                    const parentTr = menu.closest('tr');
+                    if(parentTr) {
+                        parentTr.style.position = 'relative';
+                        parentTr.style.zIndex = '50';
+                    }
                 }
             }
         }
@@ -871,22 +870,24 @@
             document.querySelectorAll('.dropdown-status-menu').forEach(m => {
                 if (m.id !== `dropdown-status-${id}`) m.classList.add('hidden');
             });
-            document.querySelectorAll('#body-tabel tr').forEach(tr => tr.style.zIndex = '0');
+            resetTableZIndex();
             
             const menu = document.getElementById(`dropdown-status-${id}`);
             if (menu) {
                 menu.classList.toggle('hidden');
-                const parentTr = menu.closest('tr');
-                if(parentTr && !menu.classList.contains('hidden')) {
-                    parentTr.style.position = 'relative';
-                    parentTr.style.zIndex = '50';
+                if(!menu.classList.contains('hidden')) {
+                    const parentTr = menu.closest('tr');
+                    if(parentTr) {
+                        parentTr.style.position = 'relative';
+                        parentTr.style.zIndex = '50';
+                    }
                 }
             }
         }
 
         function pilihStatus(id, statusBaru) {
             document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
-            document.querySelectorAll('#body-tabel tr').forEach(tr => tr.style.zIndex = '0');
+            resetTableZIndex();
             ubahStatus(id, statusBaru);
         }
 
@@ -916,7 +917,7 @@
             }
             posisiUnik.forEach(pos => {
                 const item = document.createElement('div');
-                item.className = 'p-2.5 text-xs text-gray-200 hover:bg-white/10 cursor-pointer font-semibold border-b border-gray-800 last:border-b-0';
+                item.className = 'p-2.5 text-xs hover:bg-black/10 cursor-pointer font-semibold border-b border-gray-500/20 last:border-b-0 menu-item-themed';
                 item.innerText = pos;
                 item.onclick = function() {
                     document.getElementById('input-posisi').value = pos;
@@ -932,7 +933,7 @@
             const metodeUnik = [...new Set(["LinkedIn", "Instagram", "JobStreet", "Email", "Website Perusahaan", ...dataLamaran.map(item => item.metode).filter(Boolean)])];
             metodeUnik.forEach(met => {
                 const item = document.createElement('div');
-                item.className = 'p-2.5 text-xs text-gray-200 hover:bg-white/10 cursor-pointer font-semibold border-b border-gray-800 last:border-b-0';
+                item.className = 'p-2.5 text-xs hover:bg-black/10 cursor-pointer font-semibold border-b border-gray-500/20 last:border-b-0 menu-item-themed';
                 item.innerText = met;
                 item.onclick = function() {
                     document.getElementById('input-metode').value = met;
@@ -953,19 +954,18 @@
         function inisialisasiTemaOtomatis() {
             const savedTheme = localStorage.getItem('lokertrack_theme');
             if (savedTheme === 'light' || savedTheme === 'dark') {
-                currentTheme = savedTheme;
+                applyTheme(savedTheme);
             } else {
                 const jam = new Date().getHours();
-                currentTheme = (jam >= 6 && jam < 18) ? 'light' : 'dark';
+                applyTheme((jam >= 6 && jam < 18) ? 'light' : 'dark');
             }
-            applyTheme(currentTheme);
         }
 
         function toggleTemaManual() {
             document.getElementById('dropdown-titiktiga').classList.add('hidden');
-            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('lokertrack_theme', currentTheme);
-            applyTheme(currentTheme);
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('lokertrack_theme', newTheme);
+            applyTheme(newTheme);
         }
 
         function formatRupiah(angka) {
@@ -986,84 +986,188 @@
         }
 
         function applyTheme(theme) {
-            const body = document.getElementById('body-app');
-            const header = document.getElementById('header-app');
-            const headerTitle = document.getElementById('header-title');
-            const btnTitikTiga = document.getElementById('btn-menu-titiktiga');
-            const dropdownTitikTiga = document.getElementById('dropdown-titiktiga');
-            const dailyNoteBox = document.getElementById('daily-note-box');
-            const inputCatatanHarian = document.getElementById('input-catatan-harian');
-            const labelInfo = document.getElementById('label-info-lamaran');
-            const viewToggleBg = document.getElementById('view-toggle-bg');
-            const viewTabelContainer = document.getElementById('view-tabel');
-            const viewCardContainer = document.getElementById('view-card');
-            const tableHead = document.getElementById('table-head');
-            const modalBox = document.getElementById('modal-box');
-            const modalJudul = document.getElementById('modal-judul');
-            const modalCloseBtn = document.getElementById('modal-close-btn');
-            const inputPencarian = document.getElementById('input-pencarian');
-            const metaThemeColor = document.getElementById('meta-theme-color');
-            const menuTextTema = document.getElementById('menu-text-tema');
-            const statCards = document.querySelectorAll('.stat-card');
-            const btnLoadMore = document.getElementById('btn-load-more');
+            currentTheme = theme;
+            const isLight = theme === 'light';
+            
+            // Meta Color
+            document.getElementById('meta-theme-color').setAttribute('content', isLight ? '#ffffff' : '#1a1a1a');
+            
+            // Body & Header
+            document.getElementById('body-app').className = isLight 
+                ? "bg-gray-100 text-gray-900 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden" 
+                : "bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden";
+            
+            document.getElementById('header-app').className = isLight 
+                ? "bg-white px-4 py-5 md:px-6 shadow-md border-b border-gray-200 transition-colors duration-300"
+                : "bg-[#1a1a1a] px-4 py-5 md:px-6 shadow-md border-b border-gray-800 transition-colors duration-300";
+            
+            document.getElementById('header-title').className = isLight ? "text-lg md:text-2xl text-gray-900 font-pixel tracking-wide leading-none" : "text-lg md:text-2xl text-white font-pixel tracking-wide leading-none";
+            
+            document.getElementById('menu-text-tema').innerText = isLight ? "Mode Gelap" : "Mode Terang";
 
-            const isTabelHidden = currentMode === 'card' ? 'hidden' : '';
-            const isCardHidden = currentMode === 'tabel' ? 'hidden' : '';
+            // Header Titik Tiga Dropdown
+            document.getElementById('btn-menu-titiktiga').className = isLight 
+                ? "w-9 h-9 rounded-xl text-sm font-bold border border-gray-300 bg-gray-50 text-gray-700 shadow-sm hover:bg-gray-100 transition-all flex items-center justify-center shrink-0"
+                : "w-9 h-9 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0";
+            document.getElementById('dropdown-titiktiga').className = isLight
+                ? "absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300"
+                : "absolute right-0 mt-2 w-64 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
+            
+            // Note Box Base
+            document.getElementById('daily-note-box').className = isLight 
+                ? "bg-white border border-gray-200 rounded-2xl p-4 shadow-sm transition-colors duration-300 space-y-3"
+                : "bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 shadow-sm transition-colors duration-300 space-y-3";
 
-            if (theme === 'light') {
-                metaThemeColor.setAttribute('content', '#ffffff');
-                body.className = "bg-gray-100 text-gray-900 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden";
-                header.className = "bg-white px-4 py-5 md:px-6 shadow-md border-b border-gray-200 transition-colors duration-300";
-                headerTitle.className = "text-lg md:text-2xl text-gray-900 font-pixel tracking-wide leading-none";
-                btnTitikTiga.className = "w-9 h-9 rounded-xl text-sm font-bold border border-gray-300 bg-gray-100 text-gray-700 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0";
-                dropdownTitikTiga.className = "absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
-                dailyNoteBox.className = "bg-white border border-gray-200 rounded-2xl p-4 shadow-sm transition-colors duration-300 space-y-3";
-                inputCatatanHarian.className = "w-full bg-gray-50 border border-gray-300 rounded-xl p-3 text-xs text-gray-900 focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed";
-                labelInfo.className = "text-lg md:text-xl font-bold text-gray-900";
-                viewToggleBg.className = "flex gap-1 bg-gray-200 p-1 rounded-lg border border-gray-300 transition-colors";
-                
-                viewTabelContainer.className = `bg-white rounded-xl shadow-sm border border-gray-200 transition-colors overflow-visible pb-3 ${isTabelHidden} relative`;
-                viewCardContainer.className = `space-y-3 ${isCardHidden}`;
+            // Modals Base
+            document.querySelectorAll('#modal-box, #modal-panduan-box, #modal-riwayat-box, #modal-template-box').forEach(el => {
+                el.className = isLight
+                    ? "bg-white border border-gray-200 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto"
+                    : "bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto";
+            });
+            // Fix modal-panduan and modal-template width specifics
+            document.getElementById('modal-panduan-box').classList.add('max-w-lg');
+            document.getElementById('modal-template-box').classList.add('max-w-lg');
 
-                tableHead.className = "bg-gray-50 text-gray-700 border-b border-gray-200 transition-colors relative z-10";
-                modalBox.className = "bg-white border border-gray-200 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto";
-                modalJudul.className = "text-base font-bold text-gray-900";
-                modalCloseBtn.className = "bg-gray-100 hover:bg-gray-200 rounded text-gray-600 px-3 py-1 font-bold";
-                inputPencarian.className = "search-input w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-inner transition-colors duration-300";
-                menuTextTema.innerText = "Mode Gelap";
-                statCards.forEach(card => card.className = "stat-card bg-white py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-gray-300 cursor-pointer hover:bg-gray-50 transition-all");
-                if(btnLoadMore) btnLoadMore.className = "bg-white hover:bg-gray-50 text-gray-700 font-bold py-2.5 px-6 rounded-xl text-xs border border-gray-300 transition-colors shadow-sm relative z-0";
+            // Header Texts in Modals
+            document.querySelectorAll('.header-text, #label-info-lamaran').forEach(el => {
+                if (isLight) { el.classList.remove('text-white'); el.classList.add('text-gray-900'); } 
+                else { el.classList.remove('text-gray-900'); el.classList.add('text-white'); }
+            });
+
+            // Input / Textarea Fields (monochrome clean style)
+            document.querySelectorAll('.input-themed, .search-input').forEach(el => {
+                if (isLight) {
+                    el.classList.remove('bg-[#121212]', 'text-white', 'border-gray-700');
+                    el.classList.add('bg-gray-50', 'text-gray-900', 'border-gray-300');
+                } else {
+                    el.classList.remove('bg-gray-50', 'text-gray-900', 'border-gray-300');
+                    el.classList.add('bg-[#121212]', 'text-white', 'border-gray-700');
+                }
+            });
+
+            // Form Labels
+            document.querySelectorAll('.label-themed, .label-themed-note').forEach(el => {
+                if (isLight) {
+                    el.classList.remove('text-gray-400');
+                    el.classList.add('text-gray-700');
+                } else {
+                    el.classList.remove('text-gray-700');
+                    el.classList.add('text-gray-400');
+                }
+            });
+
+            // Form optional container
+            const optContainer = document.getElementById('form-opsional-container');
+            if (isLight) {
+                optContainer.classList.remove('bg-black/20', 'border-gray-800');
+                optContainer.classList.add('bg-gray-50', 'border-gray-200');
             } else {
-                metaThemeColor.setAttribute('content', '#1a1a1a');
-                body.className = "bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden";
-                header.className = "bg-[#1a1a1a] px-4 py-5 md:px-6 shadow-md border-b border-gray-800 transition-colors duration-300";
-                headerTitle.className = "text-lg md:text-2xl text-white font-pixel tracking-wide leading-none";
-                btnTitikTiga.className = "w-9 h-9 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0";
-                dropdownTitikTiga.className = "absolute right-0 mt-2 w-64 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
-                dailyNoteBox.className = "bg-[#1e1e1e] border border-gray-800 rounded-2xl p-4 shadow-sm transition-colors duration-300 space-y-3";
-                inputCatatanHarian.className = "w-full bg-[#121212] border border-gray-700/60 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors leading-relaxed";
-                labelInfo.className = "text-lg md:text-xl font-bold text-white";
-                viewToggleBg.className = "flex gap-1 bg-[#1a1a1a] p-1 rounded-lg border border-gray-800 transition-colors";
-                
-                viewTabelContainer.className = `bg-[#1e1e1e] rounded-xl shadow-sm border border-gray-800 transition-colors overflow-visible pb-3 ${isTabelHidden} relative`;
-                viewCardContainer.className = `space-y-3 ${isCardHidden}`;
-
-                tableHead.className = "bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors relative z-10";
-                modalBox.className = "bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto";
-                modalJudul.className = "text-base font-bold text-white";
-                modalCloseBtn.className = "bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold";
-                inputPencarian.className = "search-input w-full bg-[#121212] border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#ff5ca0] focus:ring-1 focus:ring-[#ff5ca0] shadow-inner transition-colors duration-300";
-                menuTextTema.innerText = "Mode Terang";
-                statCards.forEach(card => card.className = "stat-card bg-[#1e1e1e] py-3 px-1 rounded-xl shadow-sm border-t-[4px] border-gray-600 cursor-pointer hover:bg-white/5 transition-all");
-                if(btnLoadMore) btnLoadMore.className = "bg-[#2d2d2d] hover:bg-gray-700 text-gray-300 font-bold py-2.5 px-6 rounded-xl text-xs border border-gray-700 transition-colors shadow-sm relative z-0";
+                optContainer.classList.remove('bg-gray-50', 'border-gray-200');
+                optContainer.classList.add('bg-black/20', 'border-gray-800');
             }
-            renderQuickLinks();
-            renderTampilan(false);
+
+            // Slider container
+            const sliderContainer = document.getElementById('container-slider-gaji');
+            if (isLight) {
+                sliderContainer.classList.remove('bg-black/20', 'border-gray-700/60');
+                sliderContainer.classList.add('bg-white', 'border-gray-300');
+            } else {
+                sliderContainer.classList.remove('bg-white', 'border-gray-300');
+                sliderContainer.classList.add('bg-black/20', 'border-gray-700/60');
+            }
+
+            // Gaji Badge
+            const gajiBadge = document.getElementById('label-nominal-gaji');
+            if (isLight) {
+                gajiBadge.classList.remove('bg-gray-800', 'text-gray-300');
+                gajiBadge.classList.add('bg-gray-200', 'text-gray-800');
+            } else {
+                gajiBadge.classList.remove('bg-gray-200', 'text-gray-800');
+                gajiBadge.classList.add('bg-gray-800', 'text-gray-300');
+            }
+
+            // Buttons (General Themed)
+            document.querySelectorAll('.btn-themed').forEach(el => {
+                if (isLight) {
+                    el.classList.remove('bg-[#2d2d2d]', 'bg-gray-800', 'bg-gray-700', 'text-gray-300', 'text-white', 'border-gray-700');
+                    el.classList.add('bg-gray-200', 'text-gray-800', 'border-gray-300', 'hover:bg-gray-300');
+                } else {
+                    el.classList.remove('bg-gray-200', 'text-gray-800', 'border-gray-300', 'hover:bg-gray-300');
+                    el.classList.add('bg-[#2d2d2d]', 'text-gray-300', 'border-gray-700');
+                }
+            });
+
+            // Close modal buttons
+            document.querySelectorAll('.btn-close-modal').forEach(el => {
+                if (isLight) {
+                    el.classList.remove('bg-gray-800', 'hover:bg-gray-700', 'text-gray-400');
+                    el.classList.add('bg-gray-100', 'hover:bg-gray-200', 'text-gray-600');
+                } else {
+                    el.classList.remove('bg-gray-100', 'hover:bg-gray-200', 'text-gray-600');
+                    el.classList.add('bg-gray-800', 'hover:bg-gray-700', 'text-gray-400');
+                }
+            });
+
+            // Dropdown menus global (Metode & Posisi & Status Modal)
+            document.querySelectorAll('.menu-dropdown').forEach(el => {
+                if (isLight) {
+                    el.classList.remove('bg-[#1e1e1e]', 'border-gray-700');
+                    el.classList.add('bg-white', 'border-gray-200');
+                } else {
+                    el.classList.remove('bg-white', 'border-gray-200');
+                    el.classList.add('bg-[#1e1e1e]', 'border-gray-700');
+                }
+            });
+
+            // View toggle container
+            document.getElementById('view-toggle-bg').className = isLight 
+                ? "flex gap-1 bg-gray-100 p-1 rounded-lg border border-gray-200 transition-colors"
+                : "flex gap-1 bg-[#1a1a1a] p-1 rounded-lg border border-gray-800 transition-colors";
+
+            // Panduan Text Modal
+            document.querySelectorAll('.text-themed-modal p').forEach(p => {
+                if(p.classList.contains('text-gray-300') || p.classList.contains('text-gray-700')) {
+                    p.classList.remove(isLight ? 'text-gray-300' : 'text-gray-700');
+                    p.classList.add(isLight ? 'text-gray-700' : 'text-gray-300');
+                }
+                if(p.classList.contains('text-gray-400') || p.classList.contains('text-gray-600')) {
+                    p.classList.remove(isLight ? 'text-gray-400' : 'text-gray-600');
+                    p.classList.add(isLight ? 'text-gray-600' : 'text-gray-400');
+                }
+            });
+
+            // Template Tabs
+            document.querySelectorAll('.btn-tab-inactive').forEach(el => {
+                if(isLight) {
+                    el.classList.remove('bg-gray-800', 'text-gray-300');
+                    el.classList.add('bg-gray-200', 'text-gray-700');
+                } else {
+                    el.classList.remove('bg-gray-200', 'text-gray-700');
+                    el.classList.add('bg-gray-800', 'text-gray-300');
+                }
+            });
+
+            // Fix filter cards background
+            document.querySelectorAll('.stat-card').forEach(card => {
+                if (isLight) {
+                    card.classList.remove('bg-[#1e1e1e]', 'border-gray-800', 'hover:bg-black/5');
+                    card.classList.add('bg-white', 'border-gray-200', 'hover:bg-gray-50');
+                } else {
+                    card.classList.remove('bg-white', 'border-gray-200', 'hover:bg-gray-50');
+                    card.classList.add('bg-[#1e1e1e]', 'border-gray-800', 'hover:bg-black/5');
+                }
+            });
+
             setFilterStatus(currentFilterStatus);
+            setModeTampilan(currentMode);
+            renderTampilan(false);
+            renderQuickLinks();
         }
 
         function setFilterStatus(status) {
             currentFilterStatus = status;
+            const isLight = currentTheme === 'light';
+
             ['Semua', 'Favorit', 'Proses', 'Interview', 'Diterima', 'Arsip'].forEach(s => {
                 const cardId = s === 'Semua' ? 'card-total' : (s === 'Favorit' ? 'card-favorit' : (s === 'Arsip' ? 'card-ditolak' : `card-${s.toLowerCase()}`));
                 const card = document.getElementById(cardId);
@@ -1075,27 +1179,31 @@
                 if(s === status) {
                     card.classList.add('ring-2', 'ring-[#ff5ca0]');
                     if (label) label.className = `text-[9px] md:text-[10px] font-bold mb-1 text-[#ff5ca0]`;
-                    if (number) number.className = `text-sm md:text-2xl font-bold ${currentTheme === 'light' ? 'text-gray-900' : 'text-white'}`;
+                    if (number) number.className = `text-sm md:text-2xl font-bold ${isLight ? 'text-gray-900' : 'text-white'}`;
                 } else {
                     card.classList.remove('ring-2', 'ring-[#ff5ca0]');
-                    if (label) label.className = `text-[9px] md:text-[10px] font-bold mb-1 text-gray-400`;
-                    if (number) number.className = `text-sm md:text-2xl font-bold ${currentTheme === 'light' ? 'text-gray-900' : 'text-white'}`;
+                    if (label) label.className = `text-[9px] md:text-[10px] font-bold mb-1 ${isLight ? 'text-gray-500' : 'text-gray-400'}`;
+                    if (number) number.className = `text-sm md:text-2xl font-bold ${isLight ? 'text-gray-900' : 'text-white'}`;
                 }
             });
             renderTampilan(true);
         }
 
         function gantiTabTemplate(tab) {
+            const isLight = currentTheme === 'light';
             ['surat', 'email', 'tanya', 'interview'].forEach(t => {
                 const elContent = document.getElementById(`tab-content-${t}`);
                 const elBtn = document.getElementById(`tab-btn-${t}`);
                 if(elContent) elContent.classList.add('hidden');
-                if(elBtn) elBtn.className = "px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors";
+                if(elBtn) elBtn.className = `px-3 py-1.5 rounded text-xs font-bold transition-colors btn-tab-inactive ${isLight ? 'bg-gray-200 text-gray-700' : 'bg-gray-800 text-gray-300'}`;
             });
             const activeContent = document.getElementById(`tab-content-${tab}`);
             const activeBtn = document.getElementById(`tab-btn-${tab}`);
             if(activeContent) activeContent.classList.remove('hidden');
-            if(activeBtn) activeBtn.className = "px-3 py-1.5 rounded text-xs font-bold bg-[#ff5ca0] text-white transition-colors";
+            if(activeBtn) {
+                activeBtn.className = "px-3 py-1.5 rounded text-xs font-bold transition-colors bg-[#ff5ca0] text-white";
+                activeBtn.classList.remove('btn-tab-inactive');
+            }
         }
 
         function salinIsiTemplateAktif() {
@@ -1270,7 +1378,7 @@
             document.getElementById('input-gaji-slider').value = 0;
             updateGajiSlider(0);
             document.getElementById('form-opsional-container').classList.add('hidden');
-            document.getElementById('btn-toggle-opsional').innerText = "+ Tambah Info Detail (Deadline, Gaji, Link, Kontak)";
+            document.getElementById('btn-toggle-opsional').innerText = "+ Tambah Info Detail";
             modal.classList.remove('hidden'); 
         }
 
@@ -1310,18 +1418,34 @@
         function setModeTampilan(mode) {
             currentMode = mode;
             localStorage.setItem('lokertrack_mode', mode);
+            const isLight = currentTheme === 'light';
+            
             const btnCard = document.getElementById('btn-view-card');
             const btnTabel = document.getElementById('btn-view-tabel');
-            if(mode === 'card') {
-                btnCard.className = "px-3.5 py-1.5 rounded bg-[#2d2d2d] font-bold text-xs text-white transition-all";
-                btnTabel.className = "px-3.5 py-1.5 rounded text-gray-400 font-bold text-xs hover:text-white transition-all";
-                document.getElementById('view-card').classList.remove('hidden');
-                document.getElementById('view-tabel').classList.add('hidden');
+            const viewCard = document.getElementById('view-card');
+            const viewTabel = document.getElementById('view-tabel');
+
+            // Style Table container
+            if (isLight) {
+                viewTabel.classList.remove('bg-[#1e1e1e]', 'border-gray-800');
+                viewTabel.classList.add('bg-white', 'border-gray-200');
+                document.getElementById('table-head').className = "bg-gray-50 text-gray-700 border-b border-gray-200 transition-colors relative";
             } else {
-                btnTabel.className = "px-3.5 py-1.5 rounded bg-[#2d2d2d] font-bold text-xs text-white transition-all";
-                btnCard.className = "px-3.5 py-1.5 rounded text-gray-400 font-bold text-xs hover:text-white transition-all";
-                document.getElementById('view-tabel').classList.remove('hidden');
-                document.getElementById('view-card').classList.add('hidden');
+                viewTabel.classList.remove('bg-white', 'border-gray-200');
+                viewTabel.classList.add('bg-[#1e1e1e]', 'border-gray-800');
+                document.getElementById('table-head').className = "bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors relative";
+            }
+
+            if(mode === 'card') {
+                btnCard.className = `px-3.5 py-1.5 rounded font-bold text-xs transition-all ${isLight ? 'bg-gray-300 text-gray-900' : 'bg-[#2d2d2d] text-white'}`;
+                btnTabel.className = `px-3.5 py-1.5 rounded font-bold text-xs transition-all ${isLight ? 'text-gray-500 hover:text-gray-800' : 'text-gray-400 hover:text-white'}`;
+                viewCard.classList.remove('hidden');
+                viewTabel.classList.add('hidden');
+            } else {
+                btnTabel.className = `px-3.5 py-1.5 rounded font-bold text-xs transition-all ${isLight ? 'bg-gray-300 text-gray-900' : 'bg-[#2d2d2d] text-white'}`;
+                btnCard.className = `px-3.5 py-1.5 rounded font-bold text-xs transition-all ${isLight ? 'text-gray-500 hover:text-gray-800' : 'text-gray-400 hover:text-white'}`;
+                viewTabel.classList.remove('hidden');
+                viewCard.classList.add('hidden');
             }
         }
 
@@ -1457,21 +1581,24 @@
             }
 
             const daftarStatus = ["Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Interview HR", "Interview User", "Final Interview", "Medical Check Up", "Offering", "Diterima", "Ditolak", "Tidak Ada Kabar"];
+            const isLight = currentTheme === 'light';
 
             dataToRender.forEach(lamaran => {
                 const status = lamaran.status;
                 
                 // Desain monokrom / tidak warna-warni untuk status
-                let warnaStatus = currentTheme === 'light' 
+                let warnaStatus = isLight 
                     ? 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200' 
                     : 'bg-[#2d2d2d] text-gray-300 border-gray-600 hover:bg-gray-700';
+                
+                let menuDropdownBg = isLight ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200';
 
                 const dropdownStatusHTML = `
                     <div class="relative dropdown-status-container inline-block w-auto">
                         <button onclick="toggleDropdownStatus(event, '${lamaran.id}')" class="text-xs border rounded-lg px-2.5 py-1.5 font-semibold outline-none flex items-center justify-between gap-1.5 whitespace-nowrap transition-colors ${warnaStatus}">
                             <span>${status}</span> <span class="text-[10px]">▾</span>
                         </button>
-                        <div id="dropdown-status-${lamaran.id}" class="dropdown-status-menu absolute left-0 top-full mt-1 w-44 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-[99] overflow-hidden py-1 max-h-52 overflow-y-auto">
+                        <div id="dropdown-status-${lamaran.id}" class="dropdown-status-menu absolute left-0 top-full mt-1 w-44 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 max-h-52 overflow-y-auto">
                             ${daftarStatus.map(s => `
                                 <button onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 ${s === status ? 'text-[#ff5ca0] border-l-[3px] border-[#ff5ca0]' : ''}">
                                     ${s}
@@ -1482,7 +1609,7 @@
                 `;
 
                 // Desain monokrom untuk tombol link (tanpa ikon emoji)
-                let linkStyle = currentTheme === 'light' ? 'border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-200' : 'border-gray-600 bg-[#2d2d2d] text-gray-300 hover:bg-gray-700';
+                let linkStyle = isLight ? 'border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-200' : 'border-gray-600 bg-[#2d2d2d] text-gray-300 hover:bg-gray-700';
                 const linkButtonHTML = lamaran.link ? `
                     <a href="${lamaran.link}" target="_blank" class="px-2.5 py-1.5 rounded-lg text-xs font-bold border transition-all flex items-center shrink-0 ${linkStyle}" title="Buka Link Lowongan">
                         <span>Link</span>
@@ -1493,7 +1620,7 @@
                 const teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-';
 
                 let menuAksiItems = '';
-                const itemClass = currentTheme === 'light' ? 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-gray-100 text-gray-800' : 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/15 text-gray-200';
+                const itemClass = isLight ? 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-gray-100 text-gray-800' : 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/15 text-gray-200';
                 
                 const emailTujuan = lamaran.kontak && lamaran.kontak.includes('@') ? lamaran.kontak : '';
                 menuAksiItems += `<a href="mailto:${emailTujuan}?subject=${encodeURIComponent('Lamaran - ' + lamaran.posisi)}&body=${encodeURIComponent(templateEmail.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}" class="${itemClass} block">Kirim Email</a>`;
@@ -1509,44 +1636,47 @@
                     menuAksiItems += `<button onclick="bukaGoogleCalendar('${lamaran.perusahaan}', '${lamaran.posisi}', '${lamaran.tanggalFollowUp}')" class="${itemClass} block w-full text-left">Add Kalender (Follow Up)</button>`;
                 }
 
-                menuAksiItems += `<hr class="${currentTheme === 'light' ? 'border-gray-200 my-1' : 'border-gray-700 my-1'}">`;
+                menuAksiItems += `<hr class="${isLight ? 'border-gray-200 my-1' : 'border-gray-700 my-1'}">`;
                 menuAksiItems += `<button onclick="bukaModalEdit('${lamaran.id}')" class="${itemClass} block w-full text-left">Edit Data</button>`;
                 menuAksiItems += `<button onclick="hapusLamaran('${lamaran.id}')" class="${itemClass} block w-full text-left">Hapus Lamaran</button>`;
 
-                const bintangi = `<button onclick="toggleFavorit('${lamaran.id}')" class="text-base text-yellow-400 hover:scale-125 transition-transform" title="Favorit">${lamaran.isFavorit ? '★' : '☆'}</button>`;
+                const bintangi = `<button onclick="toggleFavorit('${lamaran.id}')" class="text-base text-gray-400 hover:scale-125 transition-transform ${lamaran.isFavorit ? '!text-yellow-400' : ''}" title="Favorit">★</button>`;
 
                 const dropdownAksiHTML = `
                     <div class="relative dropdown-aksi-container inline-block">
-                        <button onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-gray-700 bg-[#2d2d2d] hover:bg-gray-700 text-white shadow-sm transition-all flex items-center gap-1 whitespace-nowrap">
+                        <button onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold border transition-all flex items-center gap-1 whitespace-nowrap ${linkStyle}">
                             Aksi ▾
                         </button>
-                        <div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 top-full mt-1 w-52 ${currentTheme === 'light' ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200'} border rounded-xl shadow-2xl hidden z-[99] overflow-hidden py-1">
+                        <div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 top-full mt-1 w-52 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
                             ${menuAksiItems}
                         </div>
                     </div>
                 `;
 
+                // --- VIEW CARD ---
                 const kartu = document.createElement('div');
-                kartu.className = currentTheme === 'light' ? 'bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-col gap-3 transition-all' : 'bg-[#1e1e1e] p-4 rounded-xl shadow-sm border border-gray-800 flex flex-col gap-3 transition-all';
+                kartu.className = isLight 
+                    ? 'bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-col gap-3 transition-all' 
+                    : 'bg-[#1e1e1e] p-4 rounded-xl shadow-sm border border-gray-800 flex flex-col gap-3 transition-all';
                 kartu.innerHTML = `
                     <div class="flex justify-between items-start gap-2">
                         <div class="flex items-center gap-2">
                             ${bintangi}
                             <div>
-                                <h4 class="text-base font-bold ${currentTheme === 'light' ? 'text-gray-900' : 'text-white'}">${lamaran.perusahaan}</h4>
+                                <h4 class="text-base font-bold ${isLight ? 'text-gray-900' : 'text-white'}">${lamaran.perusahaan}</h4>
                                 <p class="text-xs text-[#ff5ca0] font-semibold">${lamaran.posisi}</p>
                             </div>
                         </div>
-                        ${teksGaji !== '-' ? `<span class="text-[11px] font-bold text-gray-300 bg-gray-700 px-2 py-0.5 rounded">${teksGaji}</span>` : ''}
+                        ${teksGaji !== '-' ? `<span class="text-[11px] font-bold ${isLight ? 'bg-gray-100 border border-gray-300 text-gray-700' : 'text-gray-300 bg-gray-700 border border-gray-600'} px-2 py-0.5 rounded">${teksGaji}</span>` : ''}
                     </div>
-                    <div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] ${currentTheme === 'light' ? 'text-gray-500' : 'text-gray-400'} pt-1 border-t border-gray-800/40">
+                    <div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] ${isLight ? 'text-gray-500' : 'text-gray-400'} pt-1 border-t ${isLight ? 'border-gray-100' : 'border-gray-800/40'}">
                         <span>Lamar: ${formatTanggal(lamaran.tanggal)}</span>
                         <span>•</span>
-                        <span class="${lamaran.tanggalFollowUp ? 'text-gray-300 font-semibold' : ''}">FU: ${teksFollowUp}</span>
+                        <span class="${lamaran.tanggalFollowUp ? (isLight ? 'text-gray-900 font-bold' : 'text-gray-200 font-bold') : ''}">FU: ${teksFollowUp}</span>
                         <span>•</span>
                         <span>Sumber: ${lamaran.metode || 'Email'}</span>
                     </div>
-                    <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-800/40">
+                    <div class="flex items-center justify-between gap-2 pt-2 border-t ${isLight ? 'border-gray-100' : 'border-gray-800/40'}">
                         <div class="flex items-center gap-2">
                             ${dropdownStatusHTML}
                             ${linkButtonHTML}
@@ -1556,21 +1686,21 @@
                 `;
                 if(containerCard) containerCard.appendChild(kartu);
 
-                // --- MEMBUAT BARIS TABEL (VIEW TABEL) ---
+                // --- VIEW TABEL ---
                 const baris = document.createElement('tr');
-                baris.className = currentTheme === 'light' ? 'border-b border-gray-200 hover:bg-gray-50 relative' : 'border-b border-gray-800 hover:bg-white/5 relative';
+                baris.className = `border-b relative ${isLight ? 'border-gray-200 hover:bg-gray-50' : 'border-gray-800 hover:bg-white/5'}`;
                 baris.innerHTML = `
                     <td class="p-3">
                         <div class="flex items-center gap-2">
                             ${bintangi}
                             <div>
-                                <p class="font-bold ${currentTheme === 'light' ? 'text-gray-900' : 'text-white'} text-sm">${lamaran.perusahaan}</p>
+                                <p class="font-bold ${isLight ? 'text-gray-900' : 'text-white'} text-sm">${lamaran.perusahaan}</p>
                                 <p class="text-[10px] md:text-xs text-[#ff5ca0] font-semibold">${lamaran.posisi}</p>
                             </div>
                         </div>
                     </td>
-                    <td class="p-3 hidden md:table-cell text-gray-500">${formatTanggal(lamaran.tanggal)}</td>
-                    <td class="p-3 hidden md:table-cell text-gray-400">${teksFollowUp}</td>
+                    <td class="p-3 hidden md:table-cell ${isLight ? 'text-gray-600' : 'text-gray-400'}">${formatTanggal(lamaran.tanggal)}</td>
+                    <td class="p-3 hidden md:table-cell ${isLight ? 'text-gray-800 font-semibold' : 'text-gray-200 font-semibold'}">${teksFollowUp}</td>
                     <td class="p-3">
                         <div class="flex flex-col gap-2 items-start">
                             ${dropdownStatusHTML}
@@ -1582,9 +1712,9 @@
                     </td>
                 `;
                 if(containerTabel) containerTabel.appendChild(baris);
-            }); // Akhir dari foreach dataToRender
+            }); 
 
-            // --- UPDATE STATISTIK DAN INFO JUMLAH LAMARAN ---
+            // UPDATE INFO TEXT
             const teksInfo = document.getElementById('teks-jumlah-lamaran');
             if (teksInfo) teksInfo.innerText = `Menampilkan ${dataToRender.length} dari ${totalFiltered} lamaran (${statTotal} Total)`;
 
@@ -1594,7 +1724,7 @@
             document.getElementById('stat-interview').innerText = statInterview;
             document.getElementById('stat-diterima').innerText = statDiterima;
             document.getElementById('stat-ditolak').innerText = statDitolak;
-        } // Akhir dari fungsi renderTampilan
+        } 
     </script>
 </body>
 </html>
