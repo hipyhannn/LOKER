@@ -822,6 +822,35 @@
             }
         }
 
+        function kirimEmailKontak(perusahaan, posisi, kontakEmail) {
+            let isi = templateEmail.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi);
+            if (kontakEmail && kontakEmail.includes('@')) {
+                window.location.href = `mailto:${kontakEmail}?subject=Lamaran Pekerjaan - ${posisi} - [Nama Anda]&body=${encodeURIComponent(isi)}`;
+            } else {
+                navigator.clipboard.writeText(isi).then(() => {
+                    alert("Template email berhasil disalin ke clipboard karena kontak bukan format email!");
+                });
+            }
+        }
+
+        function kirimWAKontak(perusahaan, posisi, kontakInfo, jenis) {
+            let pesan = jenis === 'tanya' ? templateTanya : templateInterview;
+            pesan = pesan.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi);
+            
+            let nomor = kontakInfo.replace(/[^0-9]/g, '');
+            if (nomor.startsWith('0')) {
+                nomor = '62' + nomor.slice(1);
+            }
+            
+            if (nomor.length >= 10) {
+                window.open(`https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`, '_blank');
+            } else {
+                navigator.clipboard.writeText(pesan).then(() => {
+                    alert("Nomor WA tidak valid/tidak ditemukan, teks template pesan berhasil disalin ke clipboard!");
+                });
+            }
+        }
+
         window.addEventListener('click', function(e) {
             if (!e.target.closest('.dropdown-status-container') && !e.target.closest('.dropdown-status-menu')) {
                 document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
@@ -1544,13 +1573,32 @@
                     </div>
                 `;
 
-                // Tombol aksi titik tiga untuk card & tabel
+                // Menu Aksi lengkap dengan opsi Kirim Email / WA sesuai inputan kontak
+                let kontakAksiHTML = '';
+                const kontakVal = lamaran.kontak ? lamaran.kontak.trim() : '';
+                if (kontakVal.includes('@')) {
+                    kontakAksiHTML = `
+                        <button onclick="kirimEmailKontak('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${kontakVal}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors text-green-400">
+                            ✉️ Kirim Email (Template)
+                        </button>
+                    `;
+                } else if (kontakVal !== '') {
+                    kontakAksiHTML = `
+                        <button onclick="kirimWAKontak('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${kontakVal}', 'tanya')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors text-green-400">
+                            💬 Kirim WA Follow-Up
+                        </button>
+                        <button onclick="kirimWAKontak('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${kontakVal}', 'interview')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors text-green-400">
+                            🤝 Konfirmasi Interview (WA)
+                        </button>
+                    `;
+                }
+
                 const dropdownAksiHTML = `
                     <div class="relative dropdown-aksi-container inline-block" onclick="event.stopPropagation()">
                         <button type="button" onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="w-7 h-7 rounded-lg text-xs font-bold border border-gray-600 bg-transparent text-gray-300 hover:bg-gray-700 flex items-center justify-center transition-colors">
                             ⋮
                         </button>
-                        <div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 top-full mt-1 w-44 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
+                        <div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 top-full mt-1 w-52 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
                             <button onclick="bukaModalEdit('${lamaran.id}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">
                                 Edit Data
                             </button>
@@ -1561,6 +1609,8 @@
                             <button onclick="bukaGoogleCalendar('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${lamaran.tanggalFollowUp}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors text-blue-400">
                                 📅 Google Calendar
                             </button>` : ''}
+                            ${kontakAksiHTML ? '<hr class="border-gray-700 my-1">' : ''}
+                            ${kontakAksiHTML}
                             <hr class="border-gray-700 my-1">
                             <button onclick="hapusLamaran('${lamaran.id}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-red-500/20 text-red-400 transition-colors">
                                 Hapus Lamaran
