@@ -188,29 +188,29 @@
 
             <!-- TAB STATISTIK & FILTER -->
             <div class="grid grid-cols-6 gap-1.5 md:gap-3 text-center">
-                <div onclick="setFilterStatus('Semua')" id="card-total" class="stat-card bg-[#1e1e1e] border-gray-800 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all ring-2 ring-[#ff5ca0]">
-                    <p class="text-[9px] md:text-[10px] text-[#ff5ca0] font-bold mb-1">Total</p>
-                    <p class="text-sm md:text-2xl font-bold text-white" id="stat-total">0</p>
+                <div onclick="setFilterStatus('Semua')" id="card-total" class="stat-card bg-[#1e1e1e] border-gray-700 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all ring-2 ring-[#ff5ca0]">
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Total</p>
+                    <p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-total">0</p>
                 </div>
-                <div onclick="setFilterStatus('Favorit')" id="card-favorit" class="stat-card bg-[#1e1e1e] border-gray-800 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
-                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Favorit</p>
-                    <p class="text-sm md:text-2xl font-bold text-white" id="stat-favorit">0</p>
+                <div onclick="setFilterStatus('Favorit')" id="card-favorit" class="stat-card bg-[#1e1e1e] border-gray-700 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Favorit</p>
+                    <p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-favorit">0</p>
                 </div>
-                <div onclick="setFilterStatus('Proses')" id="card-proses" class="stat-card bg-[#1e1e1e] border-gray-800 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
-                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Proses</p>
-                    <p class="text-sm md:text-2xl font-bold text-white" id="stat-proses">0</p>
+                <div onclick="setFilterStatus('Proses')" id="card-proses" class="stat-card bg-[#1e1e1e] border-gray-700 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Proses</p>
+                    <p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-proses">0</p>
                 </div>
-                <div onclick="setFilterStatus('Interview')" id="card-interview" class="stat-card bg-[#1e1e1e] border-gray-800 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
-                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Interview</p>
-                    <p class="text-sm md:text-2xl font-bold text-white" id="stat-interview">0</p>
+                <div onclick="setFilterStatus('Interview')" id="card-interview" class="stat-card bg-[#1e1e1e] border-gray-700 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Interview</p>
+                    <p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-interview">0</p>
                 </div>
-                <div onclick="setFilterStatus('Diterima')" id="card-diterima" class="stat-card bg-[#1e1e1e] border-gray-800 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
-                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Diterima</p>
-                    <p class="text-sm md:text-2xl font-bold text-white" id="stat-diterima">0</p>
+                <div onclick="setFilterStatus('Diterima')" id="card-diterima" class="stat-card bg-[#1e1e1e] border-gray-700 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Diterima</p>
+                    <p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-diterima">0</p>
                 </div>
-                <div onclick="setFilterStatus('Arsip')" id="card-ditolak" class="stat-card bg-[#1e1e1e] border-gray-800 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
-                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1">Ditolak</p>
-                    <p class="text-sm md:text-2xl font-bold text-white" id="stat-ditolak">0</p>
+                <div onclick="setFilterStatus('Arsip')" id="card-ditolak" class="stat-card bg-[#1e1e1e] border-gray-700 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Ditolak</p>
+                    <p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-ditolak">0</p>
                 </div>
             </div>
 
@@ -228,15 +228,14 @@
                 
                 <div id="view-card" class="space-y-3"></div>
 
-                <div id="view-tabel" class="hidden bg-[#1e1e1e] rounded-xl shadow-sm border border-gray-800 transition-colors overflow-visible pb-3 relative">
+                <div id="view-tabel" class="hidden bg-[#1e1e1e] rounded-xl shadow-sm border border-gray-800 transition-colors overflow-x-hidden pb-3 relative">
                     <table class="w-full text-left text-xs">
                         <thead id="table-head" class="bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors relative">
                             <tr>
-                                <th class="p-3 font-bold w-[40%]">Perusahaan / Posisi</th>
-                                <th class="p-3 font-bold hidden md:table-cell md:w-[15%]">Tgl Lamar</th>
-                                <th class="p-3 font-bold hidden md:table-cell md:w-[15%]">Follow Up</th>
-                                <th class="p-3 font-bold w-[40%]">Status & Link</th>
-                                <th class="p-3 font-bold w-[15%] text-center">Aksi</th>
+                                <th class="p-3 font-bold w-[45%]">Perusahaan / Posisi</th>
+                                <th class="p-3 font-bold hidden md:table-cell md:w-[20%]">Tgl Lamar</th>
+                                <th class="p-3 font-bold hidden md:table-cell md:w-[20%]">Follow Up</th>
+                                <th class="p-3 font-bold w-[35%]">Status & Link</th>
                             </tr>
                         </thead>
                         <tbody id="body-tabel"></tbody>
@@ -263,7 +262,7 @@
             <div class="text-themed-modal">
                 <p class="font-bold text-[#ff5ca0] mb-1">1. Sinkronisasi Cloud</p>
                 <p>Data lamaranmu otomatis tersimpan di server Firebase Realtime Database. Kamu bisa login dengan email yang sama di perangkat lain.</p>
-                <p class="font-bold text-gray-400 mt-2 mb-1">2. Simpan Tautan Cepat</p>
+                <p class="font-bold text-gray-400 mt-2 mb-1 label-themed">2. Simpan Tautan Cepat</p>
                 <p>Gunakan fitur <b>Simpan Tautan Cepat</b> di bawah catatan harian untuk menyimpan link lowongan secara instan.</p>
             </div>
             <button onclick="tutupModalPanduan()" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs">Mengerti!</button>
@@ -284,12 +283,12 @@
     <!-- MODAL TEMPLATE PESAN & SURAT LAMARAN -->
     <div id="modal-template" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
         <div id="modal-template-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-3">
                 <h2 id="modal-template-title" class="text-sm font-bold text-white header-text">Atur Template</h2>
                 <button onclick="tutupModalTemplate()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold btn-close-modal">&times;</button>
             </div>
             <div class="space-y-4">
-                <div class="flex gap-2 border-b border-gray-700 pb-2 flex-wrap tab-container">
+                <div class="flex gap-2 pb-2 flex-wrap tab-container">
                     <button type="button" onclick="gantiTabTemplate('surat')" id="tab-btn-surat" class="px-3 py-1.5 rounded text-xs font-bold bg-[#ff5ca0] text-white transition-colors">Surat</button>
                     <button type="button" onclick="gantiTabTemplate('email')" id="tab-btn-email" class="px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors btn-tab-inactive">Email</button>
                     <button type="button" onclick="gantiTabTemplate('tanya')" id="tab-btn-tanya" class="px-3 py-1.5 rounded text-xs font-bold bg-gray-800 text-gray-300 transition-colors btn-tab-inactive">WA (Tanya)</button>
@@ -318,7 +317,7 @@
     <!-- PANDA MASCCOT -->
     <div id="panda-container" class="fixed bottom-6 left-6 z-30 flex items-end gap-3 pb-2 select-none touch-none cursor-grab" title="Geser panda!">
         <div id="panda-avatar" class="relative w-[48px] h-[48px] cursor-pointer select-none shrink-0 transition-all duration-300 animate-breathe drop-shadow-lg" onclick="handlePandaClick(event)">
-            <div id="speech-bubble" class="absolute bottom-[120%] left-[-10px] w-[220px] max-h-[220px] overflow-y-auto bg-white text-black p-3 rounded-2xl shadow-xl opacity-0 translate-y-2 transition-all duration-300 pointer-events-auto z-50 border border-gray-200">
+            <div id="speech-bubble" class="absolute bottom-[120%] left-[-10px] w-[220px] max-h-[220px] overflow-y-auto bg-white text-gray-900 p-3 rounded-2xl shadow-xl opacity-0 translate-y-2 transition-all duration-300 pointer-events-auto z-50 border border-gray-200">
                 <p id="panda-pesan" class="text-xs font-bold leading-tight">"Halo bos!"</p>
                 <div class="absolute top-full left-[30px] w-0 h-0 border-l-[8px] border-l-transparent border-t-[10px] border-t-white border-r-[8px] border-r-transparent"></div>
             </div>
@@ -823,20 +822,11 @@
             }
             if (!e.target.closest('.dropdown-aksi-container')) {
                 document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden'));
-                resetTableZIndex();
             }
             if (!e.target.closest('.dropdown-status-container')) {
                 document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
-                resetTableZIndex();
             }
         });
-
-        function resetTableZIndex() {
-            document.querySelectorAll('#body-tabel tr').forEach(tr => {
-                tr.style.zIndex = '1';
-                tr.style.position = 'relative';
-            });
-        }
 
         function toggleMenuTitikTiga(event) {
             event.stopPropagation();
@@ -849,19 +839,9 @@
             document.querySelectorAll('.dropdown-aksi-menu').forEach(m => {
                 if (m.id !== `dropdown-aksi-${id}`) m.classList.add('hidden');
             });
-            resetTableZIndex();
             
             const menu = document.getElementById(`dropdown-aksi-${id}`);
-            if (menu) {
-                menu.classList.toggle('hidden');
-                if(!menu.classList.contains('hidden')) {
-                    const parentTr = menu.closest('tr');
-                    if(parentTr) {
-                        parentTr.style.position = 'relative';
-                        parentTr.style.zIndex = '50';
-                    }
-                }
-            }
+            if (menu) menu.classList.toggle('hidden');
         }
 
         function toggleDropdownStatus(event, id) {
@@ -870,24 +850,13 @@
             document.querySelectorAll('.dropdown-status-menu').forEach(m => {
                 if (m.id !== `dropdown-status-${id}`) m.classList.add('hidden');
             });
-            resetTableZIndex();
             
             const menu = document.getElementById(`dropdown-status-${id}`);
-            if (menu) {
-                menu.classList.toggle('hidden');
-                if(!menu.classList.contains('hidden')) {
-                    const parentTr = menu.closest('tr');
-                    if(parentTr) {
-                        parentTr.style.position = 'relative';
-                        parentTr.style.zIndex = '50';
-                    }
-                }
-            }
+            if (menu) menu.classList.toggle('hidden');
         }
 
         function pilihStatus(id, statusBaru) {
             document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
-            resetTableZIndex();
             ubahStatus(id, statusBaru);
         }
 
@@ -1024,7 +993,6 @@
                     ? "bg-white border border-gray-200 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto"
                     : "bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto";
             });
-            // Fix modal-panduan and modal-template width specifics
             document.getElementById('modal-panduan-box').classList.add('max-w-lg');
             document.getElementById('modal-template-box').classList.add('max-w-lg');
 
@@ -1147,14 +1115,23 @@
                 }
             });
 
-            // Fix filter cards background
+            // Stat Cards Colors
             document.querySelectorAll('.stat-card').forEach(card => {
+                const numberEl = card.querySelector('.stat-number');
                 if (isLight) {
-                    card.classList.remove('bg-[#1e1e1e]', 'border-gray-800', 'hover:bg-black/5');
-                    card.classList.add('bg-white', 'border-gray-200', 'hover:bg-gray-50');
+                    card.classList.remove('bg-[#1e1e1e]', 'border-gray-700');
+                    card.classList.add('bg-white', 'border-gray-200');
+                    if(numberEl) {
+                        numberEl.classList.remove('text-white');
+                        numberEl.classList.add('text-gray-900');
+                    }
                 } else {
-                    card.classList.remove('bg-white', 'border-gray-200', 'hover:bg-gray-50');
-                    card.classList.add('bg-[#1e1e1e]', 'border-gray-800', 'hover:bg-black/5');
+                    card.classList.remove('bg-white', 'border-gray-200');
+                    card.classList.add('bg-[#1e1e1e]', 'border-gray-700');
+                    if(numberEl) {
+                        numberEl.classList.remove('text-gray-900');
+                        numberEl.classList.add('text-white');
+                    }
                 }
             });
 
@@ -1164,26 +1141,18 @@
             renderQuickLinks();
         }
 
+        // FUNGSI FILTER YANG DIKEMBALIKAN KE KODE LAMA AGAR TIDAK MACET
         function setFilterStatus(status) {
             currentFilterStatus = status;
-            const isLight = currentTheme === 'light';
-
             ['Semua', 'Favorit', 'Proses', 'Interview', 'Diterima', 'Arsip'].forEach(s => {
                 const cardId = s === 'Semua' ? 'card-total' : (s === 'Favorit' ? 'card-favorit' : (s === 'Arsip' ? 'card-ditolak' : `card-${s.toLowerCase()}`));
                 const card = document.getElementById(cardId);
                 if (!card) return;
                 
-                const label = card.querySelector('p:first-child');
-                const number = card.querySelector('p:last-child');
-                
                 if(s === status) {
                     card.classList.add('ring-2', 'ring-[#ff5ca0]');
-                    if (label) label.className = `text-[9px] md:text-[10px] font-bold mb-1 text-[#ff5ca0]`;
-                    if (number) number.className = `text-sm md:text-2xl font-bold ${isLight ? 'text-gray-900' : 'text-white'}`;
                 } else {
                     card.classList.remove('ring-2', 'ring-[#ff5ca0]');
-                    if (label) label.className = `text-[9px] md:text-[10px] font-bold mb-1 ${isLight ? 'text-gray-500' : 'text-gray-400'}`;
-                    if (number) number.className = `text-sm md:text-2xl font-bold ${isLight ? 'text-gray-900' : 'text-white'}`;
                 }
             });
             renderTampilan(true);
@@ -1425,7 +1394,6 @@
             const viewCard = document.getElementById('view-card');
             const viewTabel = document.getElementById('view-tabel');
 
-            // Style Table container
             if (isLight) {
                 viewTabel.classList.remove('bg-[#1e1e1e]', 'border-gray-800');
                 viewTabel.classList.add('bg-white', 'border-gray-200');
@@ -1577,7 +1545,7 @@
             if (totalFiltered === 0) {
                 const kosong = statTotal === 0 ? 'Belum ada info loker. Tekan tombol + di bawah.' : 'Pencarian tidak ditemukan.';
                 if(containerCard) containerCard.innerHTML = `<p class="text-center text-gray-500 py-10 text-xs">${kosong}</p>`;
-                if(containerTabel) containerTabel.innerHTML = `<tr><td colspan="5" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
+                if(containerTabel) containerTabel.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
             }
 
             const daftarStatus = ["Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Interview HR", "Interview User", "Final Interview", "Medical Check Up", "Offering", "Diterima", "Ditolak", "Tidak Ada Kabar"];
@@ -1586,8 +1554,8 @@
             dataToRender.forEach(lamaran => {
                 const status = lamaran.status;
                 
-                // Desain monokrom / tidak warna-warni untuk status
-                let warnaStatus = isLight 
+                // ---- KONFIGURASI VIEW CARD (DETAIL) ---- //
+                let warnaStatusCard = isLight 
                     ? 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200' 
                     : 'bg-[#2d2d2d] text-gray-300 border-gray-600 hover:bg-gray-700';
                 
@@ -1595,7 +1563,7 @@
 
                 const dropdownStatusHTML = `
                     <div class="relative dropdown-status-container inline-block w-auto">
-                        <button onclick="toggleDropdownStatus(event, '${lamaran.id}')" class="text-xs border rounded-lg px-2.5 py-1.5 font-semibold outline-none flex items-center justify-between gap-1.5 whitespace-nowrap transition-colors ${warnaStatus}">
+                        <button onclick="toggleDropdownStatus(event, '${lamaran.id}')" class="text-xs border rounded-lg px-2.5 py-1.5 font-semibold outline-none flex items-center justify-between gap-1.5 whitespace-nowrap transition-colors ${warnaStatusCard}">
                             <span>${status}</span> <span class="text-[10px]">▾</span>
                         </button>
                         <div id="dropdown-status-${lamaran.id}" class="dropdown-status-menu absolute left-0 top-full mt-1 w-44 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 max-h-52 overflow-y-auto">
@@ -1608,16 +1576,12 @@
                     </div>
                 `;
 
-                // Desain monokrom untuk tombol link (tanpa ikon emoji)
                 let linkStyle = isLight ? 'border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-200' : 'border-gray-600 bg-[#2d2d2d] text-gray-300 hover:bg-gray-700';
                 const linkButtonHTML = lamaran.link ? `
                     <a href="${lamaran.link}" target="_blank" class="px-2.5 py-1.5 rounded-lg text-xs font-bold border transition-all flex items-center shrink-0 ${linkStyle}" title="Buka Link Lowongan">
                         <span>Link</span>
                     </a>
                 ` : '';
-
-                const teksFollowUp = lamaran.tanggalFollowUp ? formatTanggal(lamaran.tanggalFollowUp) : '-';
-                const teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-';
 
                 let menuAksiItems = '';
                 const itemClass = isLight ? 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-gray-100 text-gray-800' : 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/15 text-gray-200';
@@ -1640,8 +1604,6 @@
                 menuAksiItems += `<button onclick="bukaModalEdit('${lamaran.id}')" class="${itemClass} block w-full text-left">Edit Data</button>`;
                 menuAksiItems += `<button onclick="hapusLamaran('${lamaran.id}')" class="${itemClass} block w-full text-left">Hapus Lamaran</button>`;
 
-                const bintangi = `<button onclick="toggleFavorit('${lamaran.id}')" class="text-base text-gray-400 hover:scale-125 transition-transform ${lamaran.isFavorit ? '!text-yellow-400' : ''}" title="Favorit">★</button>`;
-
                 const dropdownAksiHTML = `
                     <div class="relative dropdown-aksi-container inline-block">
                         <button onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold border transition-all flex items-center gap-1 whitespace-nowrap ${linkStyle}">
@@ -1653,7 +1615,12 @@
                     </div>
                 `;
 
-                // --- VIEW CARD ---
+                // Common variables
+                const teksFollowUp = lamaran.tanggalFollowUp ? formatTanggal(lamaran.tanggalFollowUp) : '-';
+                const teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-';
+                const bintangi = `<button onclick="toggleFavorit('${lamaran.id}')" class="text-base text-gray-400 hover:scale-125 transition-transform ${lamaran.isFavorit ? '!text-yellow-400' : ''}" title="Favorit">★</button>`;
+
+                // RENDER VIEW CARD
                 const kartu = document.createElement('div');
                 kartu.className = isLight 
                     ? 'bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-col gap-3 transition-all' 
@@ -1672,7 +1639,7 @@
                     <div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] ${isLight ? 'text-gray-500' : 'text-gray-400'} pt-1 border-t ${isLight ? 'border-gray-100' : 'border-gray-800/40'}">
                         <span>Lamar: ${formatTanggal(lamaran.tanggal)}</span>
                         <span>•</span>
-                        <span class="${lamaran.tanggalFollowUp ? (isLight ? 'text-gray-900 font-bold' : 'text-gray-200 font-bold') : ''}">FU: ${teksFollowUp}</span>
+                        <span class="${lamaran.tanggalFollowUp ? (isLight ? 'text-blue-600 font-bold' : 'text-yellow-400 font-bold') : ''}">FU: ${teksFollowUp}</span>
                         <span>•</span>
                         <span>Sumber: ${lamaran.metode || 'Email'}</span>
                     </div>
@@ -1686,9 +1653,11 @@
                 `;
                 if(containerCard) containerCard.appendChild(kartu);
 
-                // --- VIEW TABEL ---
+                // ---- KONFIGURASI VIEW TABEL (SEDERHANA, TANPA AKSI DROPDOWN) ---- //
+                const tableStatusBadge = `<span class="px-2.5 py-1 text-[10px] font-bold rounded border ${isLight ? 'bg-gray-100 text-gray-800 border-gray-300' : 'bg-[#2d2d2d] text-gray-300 border-gray-600'}">${status}</span>`;
+
                 const baris = document.createElement('tr');
-                baris.className = `border-b relative ${isLight ? 'border-gray-200 hover:bg-gray-50' : 'border-gray-800 hover:bg-white/5'}`;
+                baris.className = `border-b ${isLight ? 'border-gray-200 hover:bg-gray-50' : 'border-gray-800 hover:bg-white/5'}`;
                 baris.innerHTML = `
                     <td class="p-3">
                         <div class="flex items-center gap-2">
@@ -1700,15 +1669,12 @@
                         </div>
                     </td>
                     <td class="p-3 hidden md:table-cell ${isLight ? 'text-gray-600' : 'text-gray-400'}">${formatTanggal(lamaran.tanggal)}</td>
-                    <td class="p-3 hidden md:table-cell ${isLight ? 'text-gray-800 font-semibold' : 'text-gray-200 font-semibold'}">${teksFollowUp}</td>
+                    <td class="p-3 hidden md:table-cell ${lamaran.tanggalFollowUp ? (isLight ? 'text-blue-600 font-bold' : 'text-yellow-400 font-bold') : (isLight ? 'text-gray-600' : 'text-gray-400')}">${teksFollowUp}</td>
                     <td class="p-3">
-                        <div class="flex flex-col gap-2 items-start">
-                            ${dropdownStatusHTML}
+                        <div class="flex flex-col md:flex-row gap-2 items-start md:items-center">
+                            ${tableStatusBadge}
                             ${linkButtonHTML}
                         </div>
-                    </td>
-                    <td class="p-3 text-center">
-                        ${dropdownAksiHTML}
                     </td>
                 `;
                 if(containerTabel) containerTabel.appendChild(baris);
