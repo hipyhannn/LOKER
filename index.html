@@ -230,15 +230,6 @@
 
                 <div id="view-tabel" class="hidden bg-[#1e1e1e] rounded-xl shadow-sm border border-gray-800 transition-colors overflow-hidden pb-2">
                     <table class="w-full text-left text-xs table-auto">
-                        <thead id="table-head" class="bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors">
-                            <tr>
-                                <th class="p-2.5 font-bold w-[30px] text-center">★</th>
-                                <th class="p-2.5 font-bold">Perusahaan / Posisi</th>
-                                <th class="p-2.5 font-bold w-[22%]">Tanggal</th>
-                                <th class="p-2.5 font-bold w-[26%]">Status</th>
-                                <th class="p-2.5 font-bold w-[16%] text-center">Link</th>
-                            </tr>
-                        </thead>
                         <tbody id="body-tabel"></tbody>
                     </table>
                 </div>
@@ -1389,11 +1380,9 @@
             if (isLight) {
                 viewTabel.classList.remove('bg-[#1e1e1e]', 'border-gray-800');
                 viewTabel.classList.add('bg-white', 'border-gray-200');
-                document.getElementById('table-head').className = "bg-gray-50 text-gray-700 border-b border-gray-200 transition-colors";
             } else {
                 viewTabel.classList.remove('bg-white', 'border-gray-200');
                 viewTabel.classList.add('bg-[#1e1e1e]', 'border-gray-800');
-                document.getElementById('table-head').className = "bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors";
             }
 
             if(mode === 'card') {
@@ -1554,7 +1543,7 @@
 
                 let linkStyle = isLight ? 'border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-200' : 'border-gray-600 bg-[#2d2d2d] text-gray-300 hover:bg-gray-700';
                 const linkButtonHTML = lamaran.link ? `
-                    <a href="${lamaran.link}" target="_blank" class="px-2 py-1 rounded text-[10px] font-bold border transition-all inline-flex items-center ${linkStyle}" title="Buka Link">
+                    <a href="${lamaran.link}" target="_blank" class="px-2.5 py-1 rounded text-[11px] font-bold border transition-all inline-flex items-center shrink-0 ${linkStyle}" title="Buka Link">
                         Link
                     </a>
                 ` : `<span class="text-gray-500">-</span>`;
@@ -1597,22 +1586,22 @@
                 `;
                 if(containerCard) containerCard.appendChild(kartu);
 
-                // Baris Tabel: Perusahaan/Posisi, Tanggal Lamar, Status, Link
+                // Baris Tabel tanpa header
                 const baris = document.createElement('tr');
                 baris.className = `border-b ${isLight ? 'border-gray-200 hover:bg-gray-50' : 'border-gray-800 hover:bg-white/5'} transition-colors`;
                 baris.innerHTML = `
-                    <td class="p-2.5 text-center align-top">${bintangi}</td>
-                    <td class="p-2.5 align-top">
+                    <td class="p-2.5 text-center align-middle w-[32px]">${bintangi}</td>
+                    <td class="p-2.5 align-middle">
                         <div class="font-bold ${isLight ? 'text-gray-900' : 'text-white'} leading-tight">${lamaran.perusahaan}</div>
                         <div class="text-[#ff5ca0] font-semibold text-[11px] mt-0.5 leading-tight">${lamaran.posisi}</div>
                     </td>
-                    <td class="p-2.5 align-top">
+                    <td class="p-2.5 align-middle whitespace-nowrap w-[22%]">
                         <span class="text-[11px] ${isLight ? 'text-gray-700' : 'text-gray-300'} block leading-tight">${formatTanggal(lamaran.tanggal)}</span>
                     </td>
-                    <td class="p-2.5 align-top">
+                    <td class="p-2.5 align-middle w-[28%]">
                         ${dropdownStatusHTML}
                     </td>
-                    <td class="p-2.5 text-center align-top">${linkButtonHTML}</td>
+                    <td class="p-2.5 text-center align-middle w-[16%]">${linkButtonHTML}</td>
                 `;
                 if(containerTabel) containerTabel.appendChild(baris);
             }); 
