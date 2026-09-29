@@ -232,10 +232,11 @@
                     <table class="w-full text-left text-xs table-auto">
                         <thead id="table-head" class="bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors">
                             <tr>
-                                <th class="p-2.5 font-bold w-[32px] text-center">★</th>
+                                <th class="p-2.5 font-bold w-[30px] text-center">★</th>
                                 <th class="p-2.5 font-bold">Perusahaan / Posisi</th>
-                                <th class="p-2.5 font-bold w-[28%]">Status</th>
-                                <th class="p-2.5 font-bold w-[18%] text-center">Link</th>
+                                <th class="p-2.5 font-bold w-[22%]">Tanggal</th>
+                                <th class="p-2.5 font-bold w-[26%]">Status</th>
+                                <th class="p-2.5 font-bold w-[16%] text-center">Link</th>
                             </tr>
                         </thead>
                         <tbody id="body-tabel"></tbody>
@@ -799,7 +800,6 @@
 
         function tutupModalRiwayatCatatan() { document.getElementById('modal-riwayat-catatan').classList.add('hidden'); }
 
-        // Fungsi Dropdown Status & Aksi yang dioptimalkan agar responsif di HP
         function toggleDropdownStatus(event, id) {
             event.stopPropagation();
             document.querySelectorAll('.dropdown-status-menu').forEach(m => {
@@ -973,7 +973,6 @@
             
             document.getElementById('menu-text-tema').innerText = isLight ? "Mode Gelap" : "Mode Terang";
 
-            // Speech Bubble Tema Panda
             const speechBubble = document.getElementById('speech-bubble');
             const bubbleArrow = document.getElementById('speech-bubble-arrow');
             if (isLight) {
@@ -1523,7 +1522,7 @@
             if (totalFiltered === 0) {
                 const kosong = statTotal === 0 ? 'Belum ada info loker. Tekan tombol + di bawah.' : 'Pencarian tidak ditemukan.';
                 if(containerCard) containerCard.innerHTML = `<p class="text-center text-gray-500 py-10 text-xs">${kosong}</p>`;
-                if(containerTabel) containerTabel.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
+                if(containerTabel) containerTabel.innerHTML = `<tr><td colspan="5" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
             }
 
             const daftarStatus = ["Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Interview HR", "Interview User", "Final Interview", "Medical Check Up", "Offering", "Diterima", "Ditolak", "Tidak Ada Kabar"];
@@ -1560,38 +1559,6 @@
                     </a>
                 ` : `<span class="text-gray-500">-</span>`;
 
-                let menuAksiItems = '';
-                const itemClass = isLight ? 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-gray-100 text-gray-800' : 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/15 text-gray-200';
-                
-                const emailTujuan = lamaran.kontak && lamaran.kontak.includes('@') ? lamaran.kontak : '';
-                menuAksiItems += `<a href="mailto:${emailTujuan}?subject=${encodeURIComponent('Lamaran - ' + lamaran.posisi)}&body=${encodeURIComponent(templateEmail.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}" class="${itemClass} block">Kirim Email</a>`;
-
-                let noWa = lamaran.kontak ? lamaran.kontak.replace(/[^0-9]/g, '') : '';
-                if (noWa.startsWith('0')) noWa = '62' + noWa.slice(1);
-                const waUrl = noWa.length > 5 ? `https://wa.me/${noWa}?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}` : `https://wa.me/?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}`;
-                
-                menuAksiItems += `<a href="${waUrl}" target="_blank" class="${itemClass} block">Konfirmasi Interview</a>`;
-                menuAksiItems += `<button type="button" onclick="downloadSuratWord('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass} block w-full text-left text-[#ff5ca0]">Download Surat (Word)</button>`;
-                
-                if (lamaran.tanggalFollowUp) {
-                    menuAksiItems += `<button type="button" onclick="bukaGoogleCalendar('${lamaran.perusahaan}', '${lamaran.posisi}', '${lamaran.tanggalFollowUp}')" class="${itemClass} block w-full text-left">Add Kalender (Follow Up)</button>`;
-                }
-
-                menuAksiItems += `<hr class="${isLight ? 'border-gray-200 my-1' : 'border-gray-700 my-1'}">`;
-                menuAksiItems += `<button type="button" onclick="bukaModalEdit('${lamaran.id}')" class="${itemClass} block w-full text-left">Edit Data</button>`;
-                menuAksiItems += `<button type="button" onclick="hapusLamaran('${lamaran.id}')" class="${itemClass} block w-full text-left">Hapus Lamaran</button>`;
-
-                const dropdownAksiHTML = `
-                    <div class="relative dropdown-aksi-container inline-block">
-                        <button type="button" onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="px-2.5 py-1 rounded text-[11px] font-bold border transition-all inline-flex items-center gap-1 ${linkStyle}">
-                            Aksi ▾
-                        </button>
-                        <div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 top-full mt-1 w-52 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
-                            ${menuAksiItems}
-                        </div>
-                    </div>
-                `;
-
                 const teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-';
                 const bintangi = `<button type="button" onclick="toggleFavorit('${lamaran.id}')" class="text-sm text-gray-400 hover:scale-125 transition-transform ${lamaran.isFavorit ? '!text-yellow-400' : ''}" title="Favorit">★</button>`;
 
@@ -1626,12 +1593,11 @@
                             ${dropdownStatusHTML}
                             ${linkButtonHTML}
                         </div>
-                        ${dropdownAksiHTML}
                     </div>
                 `;
                 if(containerCard) containerCard.appendChild(kartu);
 
-                // Baris Tabel: Perusahaan & Posisi full ke bawah, Status interaktif agar tombol status bisa diklik langsung dari tabel
+                // Baris Tabel: Perusahaan/Posisi, Tanggal Lamar, Status, Link
                 const baris = document.createElement('tr');
                 baris.className = `border-b ${isLight ? 'border-gray-200 hover:bg-gray-50' : 'border-gray-800 hover:bg-white/5'} transition-colors`;
                 baris.innerHTML = `
@@ -1639,6 +1605,9 @@
                     <td class="p-2.5 align-top">
                         <div class="font-bold ${isLight ? 'text-gray-900' : 'text-white'} leading-tight">${lamaran.perusahaan}</div>
                         <div class="text-[#ff5ca0] font-semibold text-[11px] mt-0.5 leading-tight">${lamaran.posisi}</div>
+                    </td>
+                    <td class="p-2.5 align-top">
+                        <span class="text-[11px] ${isLight ? 'text-gray-700' : 'text-gray-300'} block leading-tight">${formatTanggal(lamaran.tanggal)}</span>
                     </td>
                     <td class="p-2.5 align-top">
                         ${dropdownStatusHTML}
