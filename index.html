@@ -208,7 +208,7 @@
                     <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Diterima</p>
                     <p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-diterima">0</p>
                 </div>
-                <div onclick="setFilterStatus('Arsip')" id="card-ditolak" class="stat-card bg-[#1e1e1e] border-gray-700 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
+                <div onclick="setFilterStatus('Ditolak')" id="card-ditolak" class="stat-card bg-[#1e1e1e] border-gray-700 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
                     <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Ditolak</p>
                     <p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-ditolak">0</p>
                 </div>
@@ -591,7 +591,7 @@
             let pesanPeringatan = [];
 
             dataLamaran.forEach(l => {
-                if (["Ditolak", "Diterima", "Tidak Ada Kabar", "Arsip"].includes(l.status)) return;
+                if (["Ditolak", "Diterima", "Tidak Ada Kabar"].includes(l.status)) return;
                 
                 if (l.tanggalFollowUp && l.tanggalFollowUp <= hariIni) {
                     pesanPeringatan.push(`Janlup Boss Follow-Up ke <b>${l.perusahaan}</b> (${l.posisi}) Hari inii`);
@@ -1125,8 +1125,8 @@
 
         function setFilterStatus(status) {
             currentFilterStatus = status;
-            ['Semua', 'Favorit', 'Proses', 'Interview', 'Diterima', 'Arsip'].forEach(s => {
-                const cardId = s === 'Semua' ? 'card-total' : (s === 'Favorit' ? 'card-favorit' : (s === 'Arsip' ? 'card-ditolak' : `card-${s.toLowerCase()}`));
+            ['Semua', 'Favorit', 'Proses', 'Interview', 'Diterima', 'Ditolak'].forEach(s => {
+                const cardId = s === 'Semua' ? 'card-total' : (s === 'Favorit' ? 'card-favorit' : (s === 'Ditolak' ? 'card-ditolak' : `card-${s.toLowerCase()}`));
                 const card = document.getElementById(cardId);
                 if (!card) return;
                 
@@ -1505,7 +1505,7 @@
                 if (currentFilterStatus === 'Proses') return ["Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Medical Check Up", "Offering", "Rencana Daftar", "Terkirim"].includes(lamaran.status);
                 if (currentFilterStatus === 'Interview') return ["Interview HR", "Interview User", "Final Interview"].includes(lamaran.status);
                 if (currentFilterStatus === 'Diterima') return lamaran.status === 'Diterima';
-                if (currentFilterStatus === 'Arsip' || currentFilterStatus === 'Ditolak') return ["Ditolak", "Tidak Ada Kabar"].includes(lamaran.status);
+                if (currentFilterStatus === 'Ditolak') return ["Ditolak", "Tidak Ada Kabar"].includes(lamaran.status);
                 return true;
             });
 
