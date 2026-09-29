@@ -655,7 +655,7 @@
                 const chip = document.createElement('div');
                 chip.className = `flex items-center gap-1.5 border rounded-lg px-2.5 py-1 text-xs font-semibold shadow-sm ${chipBg}`;
                 chip.innerHTML = `
-                    <a href="${item.link}" target="_blank" class="hover:underline flex items-center gap-1 truncate max-w-[200px]" title="${item.link}">
+                    <a href="${item.link}" target="_blank" onclick="event.stopPropagation()" class="hover:underline flex items-center gap-1 truncate max-w-[200px]" title="${item.link}">
                         <span>${item.nama}</span>
                     </a>
                     <button onclick="hapusQuickLink('${item.id}')" class="text-gray-400 hover:text-red-500 font-bold ml-1 text-sm leading-none" title="Hapus">&times;</button>
@@ -804,19 +804,6 @@
             }
         }
 
-        function toggleDropdownAksi(event, id) {
-            event.stopPropagation();
-            document.querySelectorAll('.dropdown-aksi-menu').forEach(m => {
-                if (m.id !== 'dropdown-aksi-' + id) m.classList.add('hidden');
-            });
-            document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
-
-            const menu = document.getElementById('dropdown-aksi-' + id);
-            if (menu) {
-                menu.classList.toggle('hidden');
-            }
-        }
-
         function pilihStatus(id, statusBaru) {
             ubahStatus(id, statusBaru);
             document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
@@ -880,7 +867,8 @@
                 const item = document.createElement('div');
                 item.className = 'p-2.5 text-xs hover:bg-black/10 cursor-pointer font-semibold border-b border-gray-500/20 last:border-b-0 menu-item-themed';
                 item.innerText = pos;
-                item.onclick = function() {
+                item.onclick = function(e) {
+                    e.stopPropagation();
                     document.getElementById('input-posisi').value = pos;
                     dropdownPosisi.classList.add('hidden');
                 };
@@ -896,7 +884,8 @@
                 const item = document.createElement('div');
                 item.className = 'p-2.5 text-xs hover:bg-black/10 cursor-pointer font-semibold border-b border-gray-500/20 last:border-b-0 menu-item-themed';
                 item.innerText = met;
-                item.onclick = function() {
+                item.onclick = function(e) {
+                    e.stopPropagation();
                     document.getElementById('input-metode').value = met;
                     dropdownMetode.classList.add('hidden');
                 };
@@ -904,7 +893,8 @@
             });
         }
 
-        function toggleFavorit(id) {
+        function toggleFavorit(id, event) {
+            if (event) event.stopPropagation();
             const index = dataLamaran.findIndex(item => item.id == id);
             if (index !== -1) {
                 dataLamaran[index].isFavorit = !dataLamaran[index].isFavorit;
@@ -1527,7 +1517,7 @@
                 let menuDropdownBg = isLight ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200';
 
                 const dropdownStatusHTML = `
-                    <div class="relative dropdown-status-container inline-block w-auto">
+                    <div class="relative dropdown-status-container inline-block w-auto" onclick="event.stopPropagation()">
                         <button type="button" onclick="toggleDropdownStatus(event, '${lamaran.id}')" class="text-[11px] border rounded px-2 py-1 font-semibold outline-none flex items-center justify-between gap-1 whitespace-nowrap transition-colors ${warnaStatusCard}">
                             <span>${status}</span> <span class="text-[9px]">▾</span>
                         </button>
@@ -1543,13 +1533,13 @@
 
                 let linkStyle = isLight ? 'border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-200' : 'border-gray-600 bg-[#2d2d2d] text-gray-300 hover:bg-gray-700';
                 const linkButtonHTML = lamaran.link ? `
-                    <a href="${lamaran.link}" target="_blank" class="px-2.5 py-1 rounded text-[11px] font-bold border transition-all inline-flex items-center shrink-0 ${linkStyle}" title="Buka Link">
+                    <a href="${lamaran.link}" target="_blank" onclick="event.stopPropagation()" class="px-2.5 py-1 rounded text-[11px] font-bold border transition-all inline-flex items-center shrink-0 ${linkStyle}" title="Buka Link">
                         Link
                     </a>
                 ` : `<span class="text-gray-500">-</span>`;
 
                 const teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-';
-                const bintangi = `<button type="button" onclick="toggleFavorit('${lamaran.id}')" class="text-sm text-gray-400 hover:scale-125 transition-transform ${lamaran.isFavorit ? '!text-yellow-400' : ''}" title="Favorit">★</button>`;
+                const bintangi = `<button type="button" onclick="toggleFavorit('${lamaran.id}', event)" class="text-sm text-gray-400 hover:scale-125 transition-transform ${lamaran.isFavorit ? '!text-yellow-400' : ''}" title="Favorit">★</button>`;
 
                 const warnaFollowUpClass = lamaran.tanggalFollowUp 
                     ? (isLight ? 'text-gray-700 font-semibold' : 'text-gray-200 font-semibold') 
@@ -1557,8 +1547,9 @@
 
                 const kartu = document.createElement('div');
                 kartu.className = isLight 
-                    ? 'bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-col gap-3 transition-all' 
-                    : 'bg-[#1e1e1e] p-4 rounded-xl shadow-sm border border-gray-800 flex flex-col gap-3 transition-all';
+                    ? 'bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-col gap-3 transition-all cursor-pointer' 
+                    : 'bg-[#1e1e1e] p-4 rounded-xl shadow-sm border border-gray-800 flex flex-col gap-3 transition-all cursor-pointer';
+                kartu.onclick = () => bukaModalEdit(lamaran.id);
                 kartu.innerHTML = `
                     <div class="flex justify-between items-start gap-2">
                         <div class="flex items-center gap-2">
@@ -1586,22 +1577,23 @@
                 `;
                 if(containerCard) containerCard.appendChild(kartu);
 
-                // Baris Tabel tanpa header
+                // Baris Tabel tanpa header, klik baris membuka edit
                 const baris = document.createElement('tr');
-                baris.className = `border-b ${isLight ? 'border-gray-200 hover:bg-gray-50' : 'border-gray-800 hover:bg-white/5'} transition-colors`;
+                baris.className = `border-b ${isLight ? 'border-gray-200 hover:bg-gray-50' : 'border-gray-800 hover:bg-white/5'} transition-colors cursor-pointer`;
+                baris.onclick = () => bukaModalEdit(lamaran.id);
                 baris.innerHTML = `
                     <td class="p-2.5 text-center align-middle w-[32px]">${bintangi}</td>
                     <td class="p-2.5 align-middle">
                         <div class="font-bold ${isLight ? 'text-gray-900' : 'text-white'} leading-tight">${lamaran.perusahaan}</div>
                         <div class="text-[#ff5ca0] font-semibold text-[11px] mt-0.5 leading-tight">${lamaran.posisi}</div>
                     </td>
-                    <td class="p-2.5 align-middle whitespace-nowrap w-[22%]">
+                    <td class="p-2.5 align-middle whitespace-nowrap w-[22%]" onclick="event.stopPropagation()">
                         <span class="text-[11px] ${isLight ? 'text-gray-700' : 'text-gray-300'} block leading-tight">${formatTanggal(lamaran.tanggal)}</span>
                     </td>
-                    <td class="p-2.5 align-middle w-[28%]">
+                    <td class="p-2.5 align-middle w-[28%]" onclick="event.stopPropagation()">
                         ${dropdownStatusHTML}
                     </td>
-                    <td class="p-2.5 text-center align-middle w-[16%]">${linkButtonHTML}</td>
+                    <td class="p-2.5 text-center align-middle w-[16%]" onclick="event.stopPropagation()">${linkButtonHTML}</td>
                 `;
                 if(containerTabel) containerTabel.appendChild(baris);
             }); 
