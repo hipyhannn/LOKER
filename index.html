@@ -228,15 +228,14 @@
                 
                 <div id="view-card" class="space-y-3"></div>
 
-                <div id="view-tabel" class="hidden bg-[#1e1e1e] rounded-xl shadow-sm border border-gray-800 transition-colors overflow-x-auto pb-2 relative">
-                    <table class="w-full text-left text-xs whitespace-nowrap">
+                <div id="view-tabel" class="hidden bg-[#1e1e1e] rounded-xl shadow-sm border border-gray-800 transition-colors overflow-hidden pb-2">
+                    <table class="w-full text-left text-xs table-auto">
                         <thead id="table-head" class="bg-[#1a1a1a] text-gray-400 border-b border-gray-800 transition-colors">
                             <tr>
-                                <th class="p-3 font-bold">★</th>
-                                <th class="p-3 font-bold">Perusahaan</th>
-                                <th class="p-3 font-bold">Posisi</th>
-                                <th class="p-3 font-bold">Tgl Lamar</th>
-                                <th class="p-3 font-bold">Status & Link</th>
+                                <th class="p-2.5 font-bold w-[32px] text-center">★</th>
+                                <th class="p-2.5 font-bold">Perusahaan / Posisi</th>
+                                <th class="p-2.5 font-bold w-[28%]">Status</th>
+                                <th class="p-2.5 font-bold w-[18%] text-center">Link</th>
                             </tr>
                         </thead>
                         <tbody id="body-tabel"></tbody>
@@ -818,41 +817,11 @@
             if (!e.target.closest('.dropdown-aksi-container')) {
                 document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden'));
             }
-            if (!e.target.closest('.dropdown-status-container')) {
-                document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
-            }
         });
 
         function toggleMenuTitikTiga(event) {
             event.stopPropagation();
             document.getElementById('dropdown-titiktiga').classList.toggle('hidden');
-        }
-
-        function toggleDropdownAksi(event, id) {
-            event.stopPropagation();
-            document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
-            document.querySelectorAll('.dropdown-aksi-menu').forEach(m => {
-                if (m.id !== `dropdown-aksi-${id}`) m.classList.add('hidden');
-            });
-            
-            const menu = document.getElementById(`dropdown-aksi-${id}`);
-            if (menu) menu.classList.toggle('hidden');
-        }
-
-        function toggleDropdownStatus(event, id) {
-            event.stopPropagation();
-            document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden'));
-            document.querySelectorAll('.dropdown-status-menu').forEach(m => {
-                if (m.id !== `dropdown-status-${id}`) m.classList.add('hidden');
-            });
-            
-            const menu = document.getElementById(`dropdown-status-${id}`);
-            if (menu) menu.classList.toggle('hidden');
-        }
-
-        function pilihStatus(id, statusBaru) {
-            document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
-            ubahStatus(id, statusBaru);
         }
 
         function toggleDropdownPosisi(event) {
@@ -1517,7 +1486,7 @@
             if (totalFiltered === 0) {
                 const kosong = statTotal === 0 ? 'Belum ada info loker. Tekan tombol + di bawah.' : 'Pencarian tidak ditemukan.';
                 if(containerCard) containerCard.innerHTML = `<p class="text-center text-gray-500 py-10 text-xs">${kosong}</p>`;
-                if(containerTabel) containerTabel.innerHTML = `<tr><td colspan="5" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
+                if(containerTabel) containerTabel.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
             }
 
             const daftarStatus = ["Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Interview HR", "Interview User", "Final Interview", "Medical Check Up", "Offering", "Diterima", "Ditolak", "Tidak Ada Kabar"];
@@ -1549,10 +1518,10 @@
 
                 let linkStyle = isLight ? 'border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-200' : 'border-gray-600 bg-[#2d2d2d] text-gray-300 hover:bg-gray-700';
                 const linkButtonHTML = lamaran.link ? `
-                    <a href="${lamaran.link}" target="_blank" class="px-2.5 py-1 rounded text-[11px] font-bold border transition-all inline-flex items-center ${linkStyle}" title="Buka Link">
+                    <a href="${lamaran.link}" target="_blank" class="px-2 py-1 rounded text-[10px] font-bold border transition-all inline-flex items-center ${linkStyle}" title="Buka Link">
                         Link
                     </a>
-                ` : '';
+                ` : `<span class="text-gray-500">-</span>`;
 
                 let menuAksiItems = '';
                 const itemClass = isLight ? 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-gray-100 text-gray-800' : 'w-full text-left px-3 py-2 text-xs font-semibold hover:bg-white/15 text-gray-200';
@@ -1625,22 +1594,19 @@
                 `;
                 if(containerCard) containerCard.appendChild(kartu);
 
-                // Baris Tabel Diringkas (Status berupa teks biasa, Link berupa tombol link)
-                const statusTeksHTML = `<span class="text-[11px] font-semibold ${isLight ? 'text-gray-700' : 'text-gray-300'}">${status}</span>`;
-
+                // Baris Tabel: Perusahaan & Posisi digabung jadi satu kolom agar teks full tidak terpotong (multi-line), Status dan Link dipisah
                 const baris = document.createElement('tr');
                 baris.className = `border-b ${isLight ? 'border-gray-200 hover:bg-gray-50' : 'border-gray-800 hover:bg-white/5'} transition-colors`;
                 baris.innerHTML = `
-                    <td class="p-2.5 text-center">${bintangi}</td>
-                    <td class="p-2.5 font-bold ${isLight ? 'text-gray-900' : 'text-white'} truncate max-w-[130px]">${lamaran.perusahaan}</td>
-                    <td class="p-2.5 text-[#ff5ca0] font-semibold truncate max-w-[130px]">${lamaran.posisi}</td>
-                    <td class="p-2.5 ${isLight ? 'text-gray-600' : 'text-gray-400'}">${formatTanggal(lamaran.tanggal)}</td>
-                    <td class="p-2.5">
-                        <div class="flex items-center gap-2 flex-wrap">
-                            ${statusTeksHTML}
-                            ${linkButtonHTML ? `<span>•</span>${linkButtonHTML}` : ''}
-                        </div>
+                    <td class="p-2.5 text-center align-top">${bintangi}</td>
+                    <td class="p-2.5 align-top">
+                        <div class="font-bold ${isLight ? 'text-gray-900' : 'text-white'} leading-tight">${lamaran.perusahaan}</div>
+                        <div class="text-[#ff5ca0] font-semibold text-[11px] mt-0.5 leading-tight">${lamaran.posisi}</div>
                     </td>
+                    <td class="p-2.5 align-top">
+                        <span class="text-[11px] font-semibold ${isLight ? 'text-gray-800' : 'text-gray-200'} block leading-tight">${status}</span>
+                    </td>
+                    <td class="p-2.5 text-center align-top">${linkButtonHTML}</td>
                 `;
                 if(containerTabel) containerTabel.appendChild(baris);
             }); 
