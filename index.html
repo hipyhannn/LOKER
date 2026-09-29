@@ -236,8 +236,7 @@
                                 <th class="p-3 font-bold">Perusahaan</th>
                                 <th class="p-3 font-bold">Posisi</th>
                                 <th class="p-3 font-bold">Tgl Lamar</th>
-                                <th class="p-3 font-bold">Status</th>
-                                <th class="p-3 font-bold">Aksi</th>
+                                <th class="p-3 font-bold">Status & Link</th>
                             </tr>
                         </thead>
                         <tbody id="body-tabel"></tbody>
@@ -1518,7 +1517,7 @@
             if (totalFiltered === 0) {
                 const kosong = statTotal === 0 ? 'Belum ada info loker. Tekan tombol + di bawah.' : 'Pencarian tidak ditemukan.';
                 if(containerCard) containerCard.innerHTML = `<p class="text-center text-gray-500 py-10 text-xs">${kosong}</p>`;
-                if(containerTabel) containerTabel.innerHTML = `<tr><td colspan="6" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
+                if(containerTabel) containerTabel.innerHTML = `<tr><td colspan="5" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
             }
 
             const daftarStatus = ["Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Interview HR", "Interview User", "Final Interview", "Medical Check Up", "Offering", "Diterima", "Ditolak", "Tidak Ada Kabar"];
@@ -1626,6 +1625,9 @@
                 `;
                 if(containerCard) containerCard.appendChild(kartu);
 
+                // Baris Tabel Diringkas (Status berupa teks biasa, Link berupa tombol link)
+                const statusTeksHTML = `<span class="text-[11px] font-semibold ${isLight ? 'text-gray-700' : 'text-gray-300'}">${status}</span>`;
+
                 const baris = document.createElement('tr');
                 baris.className = `border-b ${isLight ? 'border-gray-200 hover:bg-gray-50' : 'border-gray-800 hover:bg-white/5'} transition-colors`;
                 baris.innerHTML = `
@@ -1633,11 +1635,10 @@
                     <td class="p-2.5 font-bold ${isLight ? 'text-gray-900' : 'text-white'} truncate max-w-[130px]">${lamaran.perusahaan}</td>
                     <td class="p-2.5 text-[#ff5ca0] font-semibold truncate max-w-[130px]">${lamaran.posisi}</td>
                     <td class="p-2.5 ${isLight ? 'text-gray-600' : 'text-gray-400'}">${formatTanggal(lamaran.tanggal)}</td>
-                    <td class="p-2.5">${dropdownStatusHTML}</td>
                     <td class="p-2.5">
-                        <div class="flex items-center gap-1.5">
-                            ${linkButtonHTML}
-                            ${dropdownAksiHTML}
+                        <div class="flex items-center gap-2 flex-wrap">
+                            ${statusTeksHTML}
+                            ${linkButtonHTML ? `<span>•</span>${linkButtonHTML}` : ''}
                         </div>
                     </td>
                 `;
