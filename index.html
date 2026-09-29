@@ -32,7 +32,7 @@
         }
 
         #speech-bubble {
-            bottom: calc(100% + 8px);
+            bottom: calc(100% + 12px);
             left: 0px;
             width: 220px;
         }
@@ -44,11 +44,7 @@
     <div id="auth-screen" class="fixed inset-0 bg-[#0d0d0d] z-50 flex items-center justify-center p-4">
         <div class="bg-[#181818] border-4 border-[#ff5ca0] rounded-none shadow-[8px_8px_0px_0px_rgba(255,92,160,0.3)] w-full max-w-sm p-6 space-y-6 relative">
             <div class="flex flex-col items-center justify-center space-y-2 pt-2">
-                
-                <!-- GAMBAR / GIF DARI GOOGLE DRIVE -->
-                <img src="https://lh3.googleusercontent.com/d/1p2RFy5H1fyq5dccr437WOmjAneF97VAd" alt="Maskot" class="w-32 h-32
- object-contain animate-breathe rounded-xl">
-                
+                <img src="https://lh3.googleusercontent.com/d/1p2RFy5H1fyq5dccr437WOmjAneF97VAd" alt="Maskot" class="w-32 h-32 object-contain animate-breathe rounded-xl">
                 <h2 class="text-sm font-pixel text-white tracking-wider text-center">APPLY LOKER</h2>
                 <p id="auth-subtitle" class="text-[10px] text-gray-400 font-pixel text-center leading-relaxed">SILAKAN MASUK AKUN</p>
             </div>
@@ -59,12 +55,11 @@
                     <label class="block text-[10px] font-pixel text-[#ff5ca0] mb-1">EMAIL:</label>
                     <input type="email" id="auth-email" required placeholder="nama@email.com" class="w-full bg-[#121212] border-2 border-gray-600 rounded-none p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors">
                 </div>
-<div id="password-field-container">
+                <div id="password-field-container">
                     <label class="block text-[10px] font-pixel text-[#ff5ca0] mb-1">PASSWORD:</label>
                     <div class="relative">
                         <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-[#121212] border-2 border-gray-600 rounded-none p-3 pr-10 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors">
                         <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none p-1" title="Lihat/Sembunyikan Password">
-                            <!-- Ikon Garis Mata Simpel (SVG) -->
                             <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -297,21 +292,22 @@
         </div>
     </div>
 
-    <!-- ================= 5. UI: MASKOT PANDA & FAB ================= -->
-    <div id="panda-container" class="fixed bottom-6 left-6 z-30 select-none touch-none">
-        <div id="panda-avatar" class="relative w-[104px] h-[104px] select-none shrink-0 transition-all duration-300 animate-breathe drop-shadow-lg">
-            
-            <!-- SPEECH BUBBLE DENGAN GRADASI & BORDER PINK -->
-            <div id="speech-bubble" onclick="event.stopPropagation()" class="absolute left-0 max-h-[220px] overflow-y-auto p-3 pixel-bubble bg-[#1e1e1e] text-gray-200 opacity-0 translate-y-2 transition-all duration-300 pointer-events-auto z-50">
-                <p id="panda-pesan" class="text-xs font-bold leading-tight">"Halo bos!"</p>
-            </div>
-            
-            <!-- GAMBAR MASKOT -->
-            <img id="panda-img" src="https://lh3.googleusercontent.com/d/1u4cVB-Kou8TX0HDxb5EJ7Rhz6HInkto6" alt="Maskot" class="w-full h-full object-contain rounded-full cursor-grab active:cursor-grabbing pointer-events-auto" title="Geser atau klik maskot!" onclick="handlePandaClick(event)">
-
+<!-- ================= 5. FLOATING MASKOT & TOMBOL TAMBAH ================= -->
+<div id="panda-container" class="fixed bottom-6 left-6 z-30 select-none touch-none cursor-grab" title="Geser panda!">
+    <div id="panda-avatar" class="relative w-32 h-32 cursor-pointer select-none transition-all duration-300 animate-breathe drop-shadow-lg" onclick="handlePandaClick(event)">
+        
+        <!-- SPEECH BUBBLE -->
+        <div id="speech-bubble" onclick="event.stopPropagation()" class="absolute left-0 bottom-full mb-3 max-h-[220px] overflow-y-auto p-3 pixel-bubble bg-[#1e1e1e] text-gray-200 opacity-0 translate-y-2 transition-all duration-300 pointer-events-auto z-50">
+            <p id="panda-pesan" class="text-xs font-bold leading-tight">"Halo bos!"</p>
         </div>
+        
+       <!-- Maskot GIF Baru dengan Direct Drag Event -->
+            <img src="https://lh3.googleusercontent.com/d/1bjSzoxhktQ0bHf-fHu2uE0jVn_EM_QJK" alt="Maskot GIF" class="w-15 h-54 object-contain animate-breathe rounded-xl cursor-grab" draggable="false" onmousedown="dragPandaStart(event)" ontouchstart="dragPandaStart(event)">
+        
     </div>
-    <button onclick="bukaModalTambah()" class="fixed bottom-6 right-6 bg-[#ff5ca0] hover:bg-[#ff4081] text-white w-14 h-14 rounded-full text-3xl font-bold shadow-lg flex items-center justify-center transition-transform hover:scale-110 z-20">+</button>
+</div>
+
+<button onclick="bukaModalTambah()" class="fixed bottom-6 right-6 bg-[#ff5ca0] hover:bg-[#ff4081] text-white w-14 h-14 rounded-full text-3xl font-bold shadow-lg flex items-center justify-center transition-transform hover:scale-110 z-20">+</button>
 
     <!-- ================= 6. JAVASCRIPT ================= -->
     <script>
@@ -377,23 +373,16 @@
         }
         function togglePasswordVisibility() {
             const passwordInput = document.getElementById('auth-password');
-            const eyeOpen = document.getElementById('eye-icon-open');
-            const eyeClosed = document.getElementById('eye-icon-closed');
-            
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                eyeOpen.classList.add('hidden');
-                eyeClosed.classList.remove('hidden');
             } else {
                 passwordInput.type = 'password';
-                eyeOpen.classList.remove('hidden');
-                eyeClosed.classList.add('hidden');
             }
         }
         function logoutUser() { auth.signOut(); }
         function muatDataRealtimeDB() {
             if (!currentUser) return; const uid = currentUser.uid;
-            rtdb.ref('users/' + uid + '/lamaran').on('value', (snapshot) => { dataLamaran = []; const val = snapshot.val(); if (val) { Object.keys(val).forEach(key => { dataLamaran.push({ id: key, ...val[key] }); }); dataLamaran.sort((a, b) => { const dateDiff = new Date(b.tanggal || 0) - new Date(a.tanggal || 0); return dateDiff !== 0 ? dateDiff : b.id - a.id; }); } updatePandaMoodAndCheck(); renderTampilan(); });
+            rtdb.ref('users/' + uid + '/lamaran').on('value', (snapshot) => { dataLamaran = []; const val = snapshot.val(); if (val) { Object.keys(val).forEach(key => { dataLamaran.push({ id: key, ...val[key] }); }); dataLamaran.sort((a, b) => { const dateDiff = new Date(b.tanggal || 0) - new Date(a.tanggal || 0); return dateDiff !== 0 ? dateDiff : b.id - id; }); } updatePandaMoodAndCheck(); renderTampilan(); });
         }
         function simpanKeRealtimeDB(lamaranBaru) { if (!currentUser) return; const idDoc = lamaranBaru.id ? lamaranBaru.id.toString() : Date.now().toString(); rtdb.ref('users/' + currentUser.uid + '/lamaran/' + idDoc).set(lamaranBaru); }
         function hapusDariRealtimeDB(id) { if (!currentUser) return; rtdb.ref('users/' + currentUser.uid + '/lamaran/' + id.toString()).remove(); }
@@ -476,7 +465,6 @@
         function applyTheme(theme) {
             currentTheme = theme; const isLight = theme === 'light'; document.getElementById('meta-theme-color').setAttribute('content', isLight ? '#ffffff' : '#1a1a1a'); document.getElementById('body-app').className = isLight ? "bg-gray-100 text-gray-900 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden" : "bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden"; document.getElementById('header-app').className = isLight ? "bg-white px-4 py-5 md:px-6 shadow-md border-b border-gray-200 transition-colors duration-300" : "bg-[#1a1a1a] px-4 py-5 md:px-6 shadow-md border-b border-gray-800 transition-colors duration-300"; document.getElementById('header-title').className = isLight ? "text-lg md:text-2xl text-gray-900 font-pixel tracking-wide leading-none" : "text-lg md:text-2xl text-white font-pixel tracking-wide leading-none"; document.getElementById('menu-text-tema').innerText = isLight ? "Mode Gelap" : "Mode Terang";
             
-            // Atur warna & gradasi speech bubble sesuai tema
             const speechBubble = document.getElementById('speech-bubble');
             if (isLight) {
                 speechBubble.classList.remove('bg-[#1e1e1e]', 'text-gray-200');
@@ -520,18 +508,83 @@
         function downloadSuratWord(perusahaan, posisi) { let teks = templateSurat.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi), teksHTML = teks.replace(/\n/g, '<br>'), preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Surat Lamaran</title></head><body><div style='font-family: Arial, sans-serif; font-size: 12pt;'>", postHtml = "</div></body></html>", html = preHtml + teksHTML + postHtml, blob = new Blob(['\ufeff', html], { type: 'application/msword' }), namaFile = `Surat_Lamaran_${perusahaan.replace(/\s+/g, '_')}_${posisi.replace(/\s+/g, '_')}.doc`, downloadLink = document.createElement("a"); document.body.appendChild(downloadLink); if (navigator.msSaveOrOpenBlob) navigator.msSaveOrOpenBlob(blob, namaFile); else { downloadLink.href = URL.createObjectURL(blob); downloadLink.download = namaFile; downloadLink.click(); } document.body.removeChild(downloadLink); alert(`File Word untuk ${perusahaan} berhasil didownload!`); }
 
         // --- 6G. LOGIKA PANDA DRAG & CHAT ---
-        function showBubble(teks) { const bubble = document.getElementById('speech-bubble'); document.getElementById('panda-pesan').innerHTML = teks; bubble.classList.remove('opacity-0', 'translate-y-2'); bubble.classList.add('opacity-100', 'translate-y-0'); clearTimeout(pesanTimer); if (!isPandaPersistent) { pesanTimer = setTimeout(() => { bubble.classList.remove('opacity-100', 'translate-y-0'); bubble.classList.add('opacity-0', 'translate-y-2'); }, 3500); } }
-        function showPersistentBubble(teks) { isPandaPersistent = true; const bubble = document.getElementById('speech-bubble'); document.getElementById('panda-pesan').innerHTML = teks; bubble.classList.remove('opacity-0', 'translate-y-2'); bubble.classList.add('opacity-100', 'translate-y-0'); }
-        function updatePandaMoodAndCheck() { const hariIni = new Date().toISOString().split('T')[0]; if (localStorage.getItem('lokertrack_reminder_dismissed') === hariIni) return; let pesanPeringatan = []; dataLamaran.forEach(l => { if (["Ditolak", "Diterima", "Tidak Ada Kabar"].includes(l.status)) return; if (l.tanggalFollowUp && l.tanggalFollowUp <= hariIni) pesanPeringatan.push(`Janlup Boss Follow-Up ke <b>${l.perusahaan}</b> (${l.posisi}) Hari inii`); if (l.deadline && l.deadline <= hariIni) pesanPeringatan.push(`Deadline Lamar ke <b>${l.perusahaan}</b> (${l.posisi}) Hari ini banget lho boss!!`); }); if (pesanPeringatan.length > 0) { const isLight = currentTheme === 'light', btnStyle = isLight ? 'bg-gray-200 text-gray-800 border-gray-400 hover:bg-gray-300' : 'bg-[#2d2d2d] text-gray-200 border-gray-600 hover:bg-gray-700', htmlPesan = pesanPeringatan.join('<br><br>') + `<br><br><button onclick="dismissReminderHariIni()" class="${btnStyle} font-bold px-3 py-1.5 rounded-lg text-[10px] w-full mt-1 border transition-colors uppercase tracking-wider">Cukup / Tutup Hari Ini</button>`; showPersistentBubble(htmlPesan); } }
-        function dismissReminderHariIni() { const hariIni = new Date().toISOString().split('T')[0]; localStorage.setItem('lokertrack_reminder_dismissed', hariIni); isPandaPersistent = false; const bubble = document.getElementById('speech-bubble'); bubble.classList.remove('opacity-100', 'translate-y-0'); bubble.classList.add('opacity-0', 'translate-y-2'); }
-        let isDraggingPanda = false, hasMoved = false;
-        function handlePandaClick() { if (!hasMoved) { if (isPandaPersistent) { isPandaPersistent = false; const bubble = document.getElementById('speech-bubble'); bubble.classList.remove('opacity-100', 'translate-y-0'); bubble.classList.add('opacity-0', 'translate-y-2'); } else { const kutipanSemangat = [ "Ditolak itu biasa bos, berarti perusahaannya aja yang kurang beruntung belum dapet talenta hebat kayak lu!", "Pelan-pelan asal konsisten, satu CV hari ini mendekatkan ke hasil akhir.", "Udah ngopi belum? Jangan lupa istirahat biar gak burn out.", "Tetap semangat! Rezeki gak bakal tertukar kalau kita terus berusaha.", "Gak apa-apa capek, yang penting jangan nyerah ya bos!", "CV di-ghosting HRD emang bikin darah tinggi, tapi santai aja, mereka aja yang rugi!", "Kirim lamaran hari ini bukan berarti langsung dapet panggilan besok, yang penting konsisten nyebar jaring!", "Lamaran ditolak? Anggap aja latihan mental buat nyambut perusahaan yang jauh lebih keren di depan sana!", "Inget ya bosku, yang sudah tertakar tidak akan pernah tertukar!" ]; const randomQuote = kutipanSemangat[Math.floor(Math.random() * kutipanSemangat.length)]; showBubble(randomQuote); } } }
+        function showBubble(teks) { 
+            const bubble = document.getElementById('speech-bubble'); 
+            document.getElementById('panda-pesan').innerHTML = teks; 
+            bubble.classList.remove('opacity-0', 'translate-y-2'); 
+            bubble.classList.add('opacity-100', 'translate-y-0'); 
+            clearTimeout(pesanTimer); 
+            if (!isPandaPersistent) { 
+                pesanTimer = setTimeout(() => { 
+                    bubble.classList.remove('opacity-100', 'translate-y-0'); 
+                    bubble.classList.add('opacity-0', 'translate-y-2'); 
+                }, 3500); 
+            } 
+        }
+        function showPersistentBubble(teks) { 
+            isPandaPersistent = true; 
+            const bubble = document.getElementById('speech-bubble'); 
+            document.getElementById('panda-pesan').innerHTML = teks; 
+            bubble.classList.remove('opacity-0', 'translate-y-2'); 
+            bubble.classList.add('opacity-100', 'translate-y-0'); 
+        }
+        function updatePandaMoodAndCheck() { 
+            const hariIni = new Date().toISOString().split('T')[0]; 
+            if (localStorage.getItem('lokertrack_reminder_dismissed') === hariIni) return; 
+            let pesanPeringatan = []; 
+            dataLamaran.forEach(l => { 
+                if (["Ditolak", "Diterima", "Tidak Ada Kabar"].includes(l.status)) return; 
+                if (l.tanggalFollowUp && l.tanggalFollowUp <= hariIni) pesanPeringatan.push(`Janlup Boss Follow-Up ke <b>${l.perusahaan}</b> (${l.posisi}) Hari inii`); 
+                if (l.deadline && l.deadline <= hariIni) pesanPeringatan.push(`Deadline Lamar ke <b>${l.perusahaan}</b> (${l.posisi}) Hari ini banget lho boss!!`); 
+            }); 
+            if (pesanPeringatan.length > 0) { 
+                const isLight = currentTheme === 'light', btnStyle = isLight ? 'bg-gray-200 text-gray-800 border-gray-400 hover:bg-gray-300' : 'bg-[#2d2d2d] text-gray-200 border-gray-600 hover:bg-gray-700', htmlPesan = pesanPeringatan.join('<br><br>') + `<br><br><button onclick="dismissReminderHariIni()" class="${btnStyle} font-bold px-3 py-1.5 rounded-lg text-[10px] w-full mt-1 border transition-colors uppercase tracking-wider">Cukup / Tutup Hari Ini</button>`; 
+                showPersistentBubble(htmlPesan); 
+            } 
+        }
+        function dismissReminderHariIni() { 
+            const hariIni = new Date().toISOString().split('T')[0]; 
+            localStorage.setItem('lokertrack_reminder_dismissed', hariIni); 
+            isPandaPersistent = false; 
+            const bubble = document.getElementById('speech-bubble'); 
+            bubble.classList.remove('opacity-100', 'translate-y-0'); 
+            bubble.classList.add('opacity-0', 'translate-y-2'); 
+        }
         
+        let isDraggingPanda = false, hasMoved = false;
+        function handlePandaClick() { 
+            if (!hasMoved) { 
+                if (isPandaPersistent) { 
+                    isPandaPersistent = false; 
+                    const bubble = document.getElementById('speech-bubble'); 
+                    bubble.classList.remove('opacity-100', 'translate-y-0'); 
+                    bubble.classList.add('opacity-0', 'translate-y-2'); 
+                } else { 
+                    const kutipanSemangat = [ 
+                        "Ditolak itu biasa bos, berarti perusahaannya aja yang kurang beruntung belum dapet talenta hebat kayak lu!", 
+                        "Pelan-pelan asal konsisten, satu CV hari ini mendekatkan ke hasil akhir.", 
+                        "Udah ngopi belum? Jangan lupa istirahat biar gak burn out.", 
+                        "Tetap semangat! Rezeki gak bakal tertukar kalau kita terus berusaha.", 
+                        "Gak apa-apa capek, yang penting jangan nyerah ya bos!", 
+                        "CV di-ghosting HRD emang bikin darah tinggi, tapi santai aja, mereka aja yang rugi!", 
+                        "Kirim lamaran hari ini bukan berarti langsung dapet panggilan besok, yang penting konsisten nyebar jaring!", 
+                        "Lamaran ditolak? Anggap aja latihan mental buat nyambut perusahaan yang jauh lebih keren di depan sana!", 
+                        "Inget ya bosku, yang sudah tertakar tidak akan pernah tertukar!" 
+                    ]; 
+                    const randomQuote = kutipanSemangat[Math.floor(Math.random() * kutipanSemangat.length)]; 
+                    showBubble(randomQuote); 
+                } 
+            } 
+        }
+        
+        // --- DRAG SYSTEM DENGAN PENGECUALIAN SPEECH BUBBLE ---
         const pandaContainer = document.getElementById('panda-container');
-        const pandaImg = document.getElementById('panda-img');
         let startX = 0, startY = 0, initialX = 0, initialY = 0;
         
         function dragPandaStart(e) { 
+            // JIKA MENYENTUH SPEECH BUBBLE, JANGAN AKTIFKAN DRAG
+            if (e.target.closest('#speech-bubble')) return;
+
             isDraggingPanda = true; 
             hasMoved = false; 
             pandaContainer.classList.add('is-moving'); 
@@ -573,8 +626,10 @@
             window.removeEventListener('touchend', dragPandaEnd); 
         }
         
-        pandaImg.addEventListener('mousedown', dragPandaStart); 
-        pandaImg.addEventListener('touchstart', dragPandaStart, {passive: false});
+        if (pandaContainer) {
+            pandaContainer.addEventListener('mousedown', dragPandaStart); 
+            pandaContainer.addEventListener('touchstart', dragPandaStart, {passive: false});
+        }
     </script>
 </body>
 </html>
