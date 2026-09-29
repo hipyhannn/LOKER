@@ -1501,7 +1501,7 @@
             if (totalFiltered === 0) {
                 const kosong = statTotal === 0 ? 'Belum ada info loker. Tekan tombol + di bawah.' : 'Pencarian tidak ditemukan.';
                 if(containerCard) containerCard.innerHTML = `<p class="text-center text-gray-500 py-10 text-xs">${kosong}</p>`;
-                if(containerTabel) containerTabel.innerHTML = `<tr><td colspan="5" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
+                if(containerTabel) containerTabel.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`;
             }
 
             const daftarStatus = ["Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Interview HR", "Interview User", "Final Interview", "Medical Check Up", "Offering", "Diterima", "Ditolak", "Tidak Ada Kabar"];
@@ -1531,12 +1531,11 @@
                     </div>
                 `;
 
-                let linkStyle = isLight ? 'border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-200' : 'border-gray-600 bg-[#2d2d2d] text-gray-300 hover:bg-gray-700';
-                const linkButtonHTML = lamaran.link ? `
-                    <a href="${lamaran.link}" target="_blank" onclick="event.stopPropagation()" class="px-2.5 py-1 rounded text-[11px] font-bold border transition-all inline-flex items-center shrink-0 ${linkStyle}" title="Buka Link">
-                        Link
+                const linkTextHTML = lamaran.link ? `
+                    <a href="${lamaran.link}" target="_blank" onclick="event.stopPropagation()" class="text-[#ff5ca0] hover:underline font-semibold ml-1 inline-flex items-center gap-0.5">
+                        [Link ↗]
                     </a>
-                ` : `<span class="text-gray-500">-</span>`;
+                ` : '';
 
                 const teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-';
                 const bintangi = `<button type="button" onclick="toggleFavorit('${lamaran.id}', event)" class="text-sm text-gray-400 hover:scale-125 transition-transform ${lamaran.isFavorit ? '!text-yellow-400' : ''}" title="Favorit">★</button>`;
@@ -1562,7 +1561,7 @@
                         ${teksGaji !== '-' ? `<span class="text-[11px] font-bold text-[#ff5ca0] bg-[#ff5ca0]/10 border border-[#ff5ca0]/30 px-2 py-0.5 rounded">${teksGaji}</span>` : ''}
                     </div>
                     <div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] ${isLight ? 'text-gray-500' : 'text-gray-400'} pt-1 border-t ${isLight ? 'border-gray-100' : 'border-gray-800/40'}">
-                        <span>Lamar: ${formatTanggal(lamaran.tanggal)}</span>
+                        <span>Lamar: ${formatTanggal(lamaran.tanggal)} ${linkTextHTML}</span>
                         <span>•</span>
                         <span class="${warnaFollowUpClass}">FU: ${lamaran.tanggalFollowUp ? formatTanggal(lamaran.tanggalFollowUp) : '-'}</span>
                         <span>•</span>
@@ -1571,13 +1570,12 @@
                     <div class="flex items-center justify-between gap-2 pt-2 border-t ${isLight ? 'border-gray-100' : 'border-gray-800/40'}">
                         <div class="flex items-center gap-2">
                             ${dropdownStatusHTML}
-                            ${linkButtonHTML}
                         </div>
                     </div>
                 `;
                 if(containerCard) containerCard.appendChild(kartu);
 
-                // Baris Tabel tanpa header, klik baris membuka edit
+                // Baris Tabel tanpa header, 4 kolom: Bintang, Perusahaan/Posisi, Tanggal+Link, Status
                 const baris = document.createElement('tr');
                 baris.className = `border-b ${isLight ? 'border-gray-200 hover:bg-gray-50' : 'border-gray-800 hover:bg-white/5'} transition-colors cursor-pointer`;
                 baris.onclick = () => bukaModalEdit(lamaran.id);
@@ -1587,13 +1585,14 @@
                         <div class="font-bold ${isLight ? 'text-gray-900' : 'text-white'} leading-tight">${lamaran.perusahaan}</div>
                         <div class="text-[#ff5ca0] font-semibold text-[11px] mt-0.5 leading-tight">${lamaran.posisi}</div>
                     </td>
-                    <td class="p-2.5 align-middle whitespace-nowrap w-[22%]" onclick="event.stopPropagation()">
-                        <span class="text-[11px] ${isLight ? 'text-gray-700' : 'text-gray-300'} block leading-tight">${formatTanggal(lamaran.tanggal)}</span>
+                    <td class="p-2.5 align-middle w-[35%]" onclick="event.stopPropagation()">
+                        <span class="text-[11px] ${isLight ? 'text-gray-700' : 'text-gray-300'} block leading-tight">
+                            ${formatTanggal(lamaran.tanggal)} ${linkTextHTML}
+                        </span>
                     </td>
-                    <td class="p-2.5 align-middle w-[28%]" onclick="event.stopPropagation()">
+                    <td class="p-2.5 align-middle w-[32%]" onclick="event.stopPropagation()">
                         ${dropdownStatusHTML}
                     </td>
-                    <td class="p-2.5 text-center align-middle w-[16%]" onclick="event.stopPropagation()">${linkButtonHTML}</td>
                 `;
                 if(containerTabel) containerTabel.appendChild(baris);
             }); 
