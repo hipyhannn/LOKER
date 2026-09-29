@@ -23,65 +23,60 @@
         @keyframes fall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
         .confetti-piece { position: fixed; top: -20px; width: 10px; height: 10px; z-index: 9999; animation: fall 2.5s ease-in-out forwards; }
         
-        /* Gaya Pixel Bubble */
+        /* Gaya Pixel Bubble dengan Border Pink & Gradasi Kece */
         .pixel-bubble {
-            border: 3px solid #000000;
-            box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.9);
+            border: 3px solid #ff5ca0;
+            box-shadow: 4px 4px 0px 0px rgba(255, 92, 160, 0.4);
             border-radius: 0px !important;
+            background-image: linear-gradient(135deg, rgba(255, 92, 160, 0.08) 0%, rgba(255, 92, 160, 0.02) 100%);
+        }
+
+        #speech-bubble {
+            bottom: calc(100% + 8px);
+            left: 0px;
+            width: 220px;
         }
     </style>
 </head>
 <body id="body-app" class="bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden">
     
-    <!-- ================= 2. UI: LOGIN & AUTH ================= -->
+<!-- ================= 2. UI: LOGIN & AUTH ================= -->
     <div id="auth-screen" class="fixed inset-0 bg-[#0d0d0d] z-50 flex items-center justify-center p-4">
         <div class="bg-[#181818] border-4 border-[#ff5ca0] rounded-none shadow-[8px_8px_0px_0px_rgba(255,92,160,0.3)] w-full max-w-sm p-6 space-y-6 relative">
             <div class="flex flex-col items-center justify-center space-y-2 pt-2">
-                <div class="relative w-[52px] h-[52px] animate-breathe">
-                    <div class="absolute w-[12px] h-[12px] bg-[#111] rounded-none top-[3px] left-[5px]"></div><div class="absolute w-[12px] h-[12px] bg-[#111] rounded-none top-[3px] right-[5px]"></div>
-                    <div class="absolute w-[10px] h-[16px] bg-[#111] rounded-none top-[20px] left-[2px] -rotate-45 z-10"></div><div class="absolute w-[10px] h-[16px] bg-[#111] rounded-none top-[20px] right-[2px] rotate-45 z-10"></div>
-                    <div class="absolute w-[40px] h-[26px] bg-white rounded-none bottom-[2px] left-[4px] z-0"></div><div class="absolute w-[12px] h-[14px] bg-[#111] rounded-none bottom-[0px] left-[1px] z-20"></div>
-                    <div class="absolute w-[12px] h-[14px] bg-[#111] rounded-none bottom-[0px] right-[1px] z-20"></div><div class="absolute w-[44px] h-[30px] bg-white rounded-none top-[5px] left-[2px] z-10"></div>
-                    <div class="absolute w-[10px] h-[14px] bg-[#111] top-[14px] left-[9px] z-20"></div><div class="absolute w-[10px] h-[14px] bg-[#111] top-[14px] right-[9px] z-20"></div>
-                    <div class="absolute w-[4px] h-[4px] bg-white rounded-none top-[17px] left-[12px] z-30"></div><div class="absolute w-[4px] h-[4px] bg-white rounded-none top-[17px] right-[12px] z-30"></div>
-                    <div class="absolute w-[6px] h-[4px] bg-[#111] rounded-none top-[22px] left-[23px] z-20"></div>
-                </div>
+                
+                <!-- GAMBAR / GIF DARI GOOGLE DRIVE -->
+                <img src="https://lh3.googleusercontent.com/d/1p2RFy5H1fyq5dccr437WOmjAneF97VAd" alt="Maskot" class="w-32 h-32
+ object-contain animate-breathe rounded-xl">
+                
                 <h2 class="text-sm font-pixel text-white tracking-wider text-center">APPLY LOKER</h2>
                 <p id="auth-subtitle" class="text-[10px] text-gray-400 font-pixel text-center leading-relaxed">SILAKAN MASUK AKUN</p>
             </div>
-            
             <div id="auth-error" class="bg-red-500/20 border-2 border-red-500 text-red-300 text-[11px] p-2.5 rounded-none hidden"></div>
             <div id="auth-success" class="bg-green-500/20 border-2 border-green-500 text-green-300 text-[11px] p-2.5 rounded-none hidden"></div>
-            
             <form id="form-auth" onsubmit="handleAuthSubmit(event)" class="space-y-4">
                 <div>
                     <label class="block text-[10px] font-pixel text-[#ff5ca0] mb-1">EMAIL:</label>
                     <input type="email" id="auth-email" required placeholder="nama@email.com" class="w-full bg-[#121212] border-2 border-gray-600 rounded-none p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors">
                 </div>
-                
-                <div id="password-field-container">
+<div id="password-field-container">
                     <label class="block text-[10px] font-pixel text-[#ff5ca0] mb-1">PASSWORD:</label>
                     <div class="relative">
                         <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-[#121212] border-2 border-gray-600 rounded-none p-3 pr-10 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors">
                         <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none p-1" title="Lihat/Sembunyikan Password">
-                            <svg id="eye-icon-open" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                            </svg>
-                            <svg id="eye-icon-closed" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.03 10.03 0 012.042-3.35m3.111-2.428A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.027 10.027 0 01-4.132 5.411m0 0L21 21"></path>
+                            <!-- Ikon Garis Mata Simpel (SVG) -->
+                            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
                         </button>
                     </div>
                 </div>
-
                 <div id="forgot-password-container" class="text-right">
                     <button type="button" onclick="handleForgotPassword()" class="text-[9px] font-pixel text-gray-400 hover:text-[#ff5ca0] transition-colors">Lupa sandi?</button>
                 </div>
-                
                 <button type="submit" id="btn-auth-submit" class="w-full bg-[#ff5ca0] hover:bg-[#ff4081] text-white font-pixel text-[11px] py-3.5 rounded-none transition-colors pixel-btn uppercase tracking-widest">Masuk</button>
             </form>
-            
             <div class="text-center pt-2 border-t border-gray-800">
                 <button onclick="toggleAuthMode()" id="btn-toggle-auth" class="text-[10px] font-pixel text-[#ff5ca0] hover:underline">Belum punya akun? Daftar</button>
             </div>
@@ -303,17 +298,16 @@
     </div>
 
     <!-- ================= 5. UI: MASKOT PANDA & FAB ================= -->
-    <div id="panda-container" class="fixed bottom-6 left-6 z-30 flex items-end gap-3 pb-2 select-none touch-none cursor-grab" title="Geser maskot!">
-        <div id="panda-avatar" class="relative w-[104px] h-[104px] cursor-pointer select-none shrink-0 transition-all duration-300 animate-breathe drop-shadow-lg" onclick="handlePandaClick(event)">
-            <div id="speech-bubble" onclick="event.stopPropagation()" class="absolute bottom-[120%] left-[-10px] w-[220px] max-h-[220px] overflow-y-auto bg-white text-gray-900 p-3 pixel-bubble opacity-0 translate-y-2 transition-all duration-300 pointer-events-auto z-50">
+    <div id="panda-container" class="fixed bottom-6 left-6 z-30 select-none touch-none">
+        <div id="panda-avatar" class="relative w-[104px] h-[104px] select-none shrink-0 transition-all duration-300 animate-breathe drop-shadow-lg">
+            
+            <!-- SPEECH BUBBLE DENGAN GRADASI & BORDER PINK -->
+            <div id="speech-bubble" onclick="event.stopPropagation()" class="absolute left-0 max-h-[220px] overflow-y-auto p-3 pixel-bubble bg-[#1e1e1e] text-gray-200 opacity-0 translate-y-2 transition-all duration-300 pointer-events-auto z-50">
                 <p id="panda-pesan" class="text-xs font-bold leading-tight">"Halo bos!"</p>
-                <!-- Ekor bubble gaya piksel -->
-                <div class="absolute top-full left-[25px] w-0 h-0 border-l-[6px] border-l-transparent border-t-[8px] border-t-black border-r-[6px] border-r-transparent"></div>
-                <div class="absolute top-full left-[27px] w-0 h-0 border-l-[4px] border-l-transparent border-t-[6px] border-t-white border-r-[4px] border-r-transparent -mt-[2px] z-10"></div>
             </div>
             
-            <!-- GAMBAR MASKOT DARI GOOGLE DRIVE -->
-            <img src="https://lh3.googleusercontent.com/d/1u4cVB-Kou8TX0HDxb5EJ7Rhz6HInkto6" alt="Maskot" class="w-full h-full object-contain rounded-full">
+            <!-- GAMBAR MASKOT -->
+            <img id="panda-img" src="https://lh3.googleusercontent.com/d/1u4cVB-Kou8TX0HDxb5EJ7Rhz6HInkto6" alt="Maskot" class="w-full h-full object-contain rounded-full cursor-grab active:cursor-grabbing pointer-events-auto" title="Geser atau klik maskot!" onclick="handlePandaClick(event)">
 
         </div>
     </div>
@@ -481,6 +475,17 @@
         function toggleTemaManual() { document.getElementById('dropdown-titiktiga').classList.add('hidden'); const newTheme = currentTheme === 'dark' ? 'light' : 'dark'; localStorage.setItem('lokertrack_theme', newTheme); applyTheme(newTheme); }
         function applyTheme(theme) {
             currentTheme = theme; const isLight = theme === 'light'; document.getElementById('meta-theme-color').setAttribute('content', isLight ? '#ffffff' : '#1a1a1a'); document.getElementById('body-app').className = isLight ? "bg-gray-100 text-gray-900 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden" : "bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden"; document.getElementById('header-app').className = isLight ? "bg-white px-4 py-5 md:px-6 shadow-md border-b border-gray-200 transition-colors duration-300" : "bg-[#1a1a1a] px-4 py-5 md:px-6 shadow-md border-b border-gray-800 transition-colors duration-300"; document.getElementById('header-title').className = isLight ? "text-lg md:text-2xl text-gray-900 font-pixel tracking-wide leading-none" : "text-lg md:text-2xl text-white font-pixel tracking-wide leading-none"; document.getElementById('menu-text-tema').innerText = isLight ? "Mode Gelap" : "Mode Terang";
+            
+            // Atur warna & gradasi speech bubble sesuai tema
+            const speechBubble = document.getElementById('speech-bubble');
+            if (isLight) {
+                speechBubble.classList.remove('bg-[#1e1e1e]', 'text-gray-200');
+                speechBubble.classList.add('bg-white', 'text-gray-900');
+            } else {
+                speechBubble.classList.remove('bg-white', 'text-gray-900');
+                speechBubble.classList.add('bg-[#1e1e1e]', 'text-gray-200');
+            }
+
             document.getElementById('btn-menu-titiktiga').className = isLight ? "w-9 h-9 rounded-xl text-sm font-bold border border-gray-300 bg-gray-50 text-gray-700 shadow-sm hover:bg-gray-100 transition-all flex items-center justify-center shrink-0" : "w-9 h-9 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0";
             document.getElementById('dropdown-titiktiga').className = isLight ? "absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300" : "absolute right-0 mt-2 w-64 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
             document.querySelectorAll('#modal-box, #modal-panduan-box, #modal-template-box').forEach(el => { el.className = isLight ? "bg-white border border-gray-200 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto" : "bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto"; }); document.getElementById('modal-panduan-box').classList.add('max-w-lg'); document.getElementById('modal-template-box').classList.add('max-w-lg');
@@ -521,11 +526,55 @@
         function dismissReminderHariIni() { const hariIni = new Date().toISOString().split('T')[0]; localStorage.setItem('lokertrack_reminder_dismissed', hariIni); isPandaPersistent = false; const bubble = document.getElementById('speech-bubble'); bubble.classList.remove('opacity-100', 'translate-y-0'); bubble.classList.add('opacity-0', 'translate-y-2'); }
         let isDraggingPanda = false, hasMoved = false;
         function handlePandaClick() { if (!hasMoved) { if (isPandaPersistent) { isPandaPersistent = false; const bubble = document.getElementById('speech-bubble'); bubble.classList.remove('opacity-100', 'translate-y-0'); bubble.classList.add('opacity-0', 'translate-y-2'); } else { const kutipanSemangat = [ "Ditolak itu biasa bos, berarti perusahaannya aja yang kurang beruntung belum dapet talenta hebat kayak lu!", "Pelan-pelan asal konsisten, satu CV hari ini mendekatkan ke hasil akhir.", "Udah ngopi belum? Jangan lupa istirahat biar gak burn out.", "Tetap semangat! Rezeki gak bakal tertukar kalau kita terus berusaha.", "Gak apa-apa capek, yang penting jangan nyerah ya bos!", "CV di-ghosting HRD emang bikin darah tinggi, tapi santai aja, mereka aja yang rugi!", "Kirim lamaran hari ini bukan berarti langsung dapet panggilan besok, yang penting konsisten nyebar jaring!", "Lamaran ditolak? Anggap aja latihan mental buat nyambut perusahaan yang jauh lebih keren di depan sana!", "Inget ya bosku, yang sudah tertakar tidak akan pernah tertukar!" ]; const randomQuote = kutipanSemangat[Math.floor(Math.random() * kutipanSemangat.length)]; showBubble(randomQuote); } } }
-        const pandaContainer = document.getElementById('panda-container'); let startX = 0, startY = 0, initialX = 0, initialY = 0;
-        function dragPandaStart(e) { isDraggingPanda = true; hasMoved = false; pandaContainer.classList.add('is-moving'); const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX, clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY; startX = clientX; startY = clientY; const rect = pandaContainer.getBoundingClientRect(); initialX = rect.left; initialY = rect.top; pandaContainer.style.bottom = 'auto'; pandaContainer.style.left = initialX + 'px'; pandaContainer.style.top = initialY + 'px'; if (e.type.includes('touch')) { window.addEventListener('touchmove', dragPandaMove, {passive: false}); window.addEventListener('touchend', dragPandaEnd); } else { window.addEventListener('mousemove', dragPandaMove); window.addEventListener('mouseup', dragPandaEnd); } }
-        function dragPandaMove(e) { if (!isDraggingPanda) return; if (e.type.includes('touch')) e.preventDefault(); const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX, clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY, dx = clientX - startX, dy = clientY - startY; if (Math.abs(dx) > 5 || Math.abs(dy) > 5) hasMoved = true; pandaContainer.style.top = (initialY + dy) + 'px'; pandaContainer.style.left = (initialX + dx) + 'px'; }
-        function dragPandaEnd() { isDraggingPanda = false; pandaContainer.classList.remove('is-moving'); window.removeEventListener('mousemove', dragPandaMove); window.removeEventListener('mouseup', dragPandaEnd); window.removeEventListener('touchmove', dragPandaMove); window.removeEventListener('touchend', dragPandaEnd); }
-        pandaContainer.addEventListener('mousedown', dragPandaStart); pandaContainer.addEventListener('touchstart', dragPandaStart, {passive: false});
+        
+        const pandaContainer = document.getElementById('panda-container');
+        const pandaImg = document.getElementById('panda-img');
+        let startX = 0, startY = 0, initialX = 0, initialY = 0;
+        
+        function dragPandaStart(e) { 
+            isDraggingPanda = true; 
+            hasMoved = false; 
+            pandaContainer.classList.add('is-moving'); 
+            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX, 
+                  clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY; 
+            startX = clientX; 
+            startY = clientY; 
+            const rect = pandaContainer.getBoundingClientRect(); 
+            initialX = rect.left; 
+            initialY = rect.top; 
+            pandaContainer.style.bottom = 'auto'; 
+            pandaContainer.style.left = initialX + 'px'; 
+            pandaContainer.style.top = initialY + 'px'; 
+            if (e.type.includes('touch')) { 
+                window.addEventListener('touchmove', dragPandaMove, {passive: false}); 
+                window.addEventListener('touchend', dragPandaEnd); 
+            } else { 
+                window.addEventListener('mousemove', dragPandaMove); 
+                window.addEventListener('mouseup', dragPandaEnd); 
+            } 
+        }
+        function dragPandaMove(e) { 
+            if (!isDraggingPanda) return; 
+            if (e.type.includes('touch')) e.preventDefault(); 
+            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX, 
+                  clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY, 
+                  dx = clientX - startX, 
+                  dy = clientY - startY; 
+            if (Math.abs(dx) > 3 || Math.abs(dy) > 3) hasMoved = true; 
+            pandaContainer.style.top = (initialY + dy) + 'px'; 
+            pandaContainer.style.left = (initialX + dx) + 'px'; 
+        }
+        function dragPandaEnd() { 
+            isDraggingPanda = false; 
+            pandaContainer.classList.remove('is-moving'); 
+            window.removeEventListener('mousemove', dragPandaMove); 
+            window.removeEventListener('mouseup', dragPandaEnd); 
+            window.removeEventListener('touchmove', dragPandaMove); 
+            window.removeEventListener('touchend', dragPandaEnd); 
+        }
+        
+        pandaImg.addEventListener('mousedown', dragPandaStart); 
+        pandaImg.addEventListener('touchstart', dragPandaStart, {passive: false});
     </script>
 </body>
 </html>
