@@ -241,13 +241,6 @@
                         <tbody id="body-tabel"></tbody>
                     </table>
                 </div>
-
-                <!-- TOMBOL LOAD MORE -->
-                <div id="load-more-container" class="hidden flex justify-center pt-2 relative z-0">
-                    <button id="btn-load-more" onclick="muatLebihBanyak()" class="bg-[#2d2d2d] hover:bg-gray-700 text-gray-300 font-bold py-2.5 px-6 rounded-xl text-xs border border-gray-700 transition-colors shadow-sm btn-themed">
-                        Muat Lebih Banyak...
-                    </button>
-                </div>
             </div>
         </main>
     </div>
@@ -477,8 +470,6 @@
         let pesanTimer = null;
         let isPandaPersistent = false;
         
-        let currentPage = 1;
-        const itemsPerPage = 1000;
         let notifikasiSudahMuncul = false;
 
         const todayKey = new Date().toISOString().split('T')[0];
@@ -561,7 +552,7 @@
                     });
                 }
                 updatePandaMoodAndCheck();
-                renderTampilan(true);
+                renderTampilan();
             });
 
             rtdb.ref('users/' + uid + '/catatan/' + todayKey).on('value', (snapshot) => {
@@ -1119,7 +1110,7 @@
 
             setFilterStatus(currentFilterStatus);
             setModeTampilan(currentMode);
-            renderTampilan(false);
+            renderTampilan();
             renderQuickLinks();
         }
 
@@ -1136,7 +1127,7 @@
                     card.classList.remove('ring-2', 'ring-[#ff5ca0]');
                 }
             });
-            renderTampilan(true);
+            renderTampilan();
         }
 
         function gantiTabTemplate(tab) {
@@ -1471,14 +1462,7 @@
             window.open(url, '_blank');
         }
 
-        function muatLebihBanyak() {
-            currentPage++;
-            renderTampilan(false);
-        }
-
-        function renderTampilan(resetPaging = true) {
-            if (resetPaging) currentPage = 1;
-
+        function renderTampilan() {
             const containerCard = document.getElementById('view-card');
             const containerTabel = document.getElementById('body-tabel');
             const keywordInput = document.getElementById('input-pencarian');
@@ -1509,19 +1493,11 @@
                 return true;
             });
 
-            if(resetPaging && Notification.permission === "granted") {
+            if(Notification.permission === "granted") {
                 cekNotifikasiFollowUp(dataFiltered);
             }
 
             const totalFiltered = dataFiltered.length;
-            const dataToRender = dataFiltered.slice(0, currentPage * itemsPerPage);
-
-            const loadMoreContainer = document.getElementById('load-more-container');
-            if (totalFiltered > currentPage * itemsPerPage) {
-                if(loadMoreContainer) loadMoreContainer.classList.remove('hidden');
-            } else {
-                if(loadMoreContainer) loadMoreContainer.classList.add('hidden');
-            }
 
             if (totalFiltered === 0) {
                 const kosong = statTotal === 0 ? 'Belum ada info loker. Tekan tombol + di bawah.' : 'Pencarian tidak ditemukan.';
@@ -1532,7 +1508,7 @@
             const daftarStatus = ["Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Interview HR", "Interview User", "Final Interview", "Medical Check Up", "Offering", "Diterima", "Ditolak", "Tidak Ada Kabar"];
             const isLight = currentTheme === 'light';
 
-            dataToRender.forEach(lamaran => {
+            dataFiltered.forEach(lamaran => {
                 const status = lamaran.status;
                 
                 let warnaStatusCard = isLight 
@@ -1662,7 +1638,7 @@
             }); 
 
             const teksInfo = document.getElementById('teks-jumlah-lamaran');
-            if (teksInfo) teksInfo.innerText = `Menampilkan ${dataToRender.length} dari ${totalFiltered} lamaran (${statTotal} Total)`;
+            if (teksInfo) teksInfo.innerText = `Menampilkan ${totalFiltered} dari ${totalFiltered} lamaran (${statTotal} Total)`;
 
             document.getElementById('stat-total').innerText = statTotal;
             document.getElementById('stat-favorit').innerText = statFavorit;
