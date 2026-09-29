@@ -809,6 +809,19 @@
             document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
         }
 
+        function toggleDropdownAksi(event, id) {
+            event.stopPropagation();
+            document.querySelectorAll('.dropdown-aksi-menu').forEach(m => {
+                if (m.id !== 'dropdown-aksi-' + id) m.classList.add('hidden');
+            });
+            document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
+
+            const menu = document.getElementById('dropdown-aksi-' + id);
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
+        }
+
         window.addEventListener('click', function(e) {
             if (!e.target.closest('.dropdown-status-container') && !e.target.closest('.dropdown-status-menu')) {
                 document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
@@ -1531,6 +1544,31 @@
                     </div>
                 `;
 
+                // Tombol aksi titik tiga untuk card & tabel
+                const dropdownAksiHTML = `
+                    <div class="relative dropdown-aksi-container inline-block" onclick="event.stopPropagation()">
+                        <button type="button" onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="w-7 h-7 rounded-lg text-xs font-bold border border-gray-600 bg-transparent text-gray-300 hover:bg-gray-700 flex items-center justify-center transition-colors">
+                            ⋮
+                        </button>
+                        <div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 top-full mt-1 w-44 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
+                            <button onclick="bukaModalEdit('${lamaran.id}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">
+                                Edit Data
+                            </button>
+                            <button onclick="downloadSuratWord('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">
+                                Download Surat (.doc)
+                            </button>
+                            ${lamaran.tanggalFollowUp ? `
+                            <button onclick="bukaGoogleCalendar('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${lamaran.tanggalFollowUp}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors text-blue-400">
+                                📅 Google Calendar
+                            </button>` : ''}
+                            <hr class="border-gray-700 my-1">
+                            <button onclick="hapusLamaran('${lamaran.id}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-red-500/20 text-red-400 transition-colors">
+                                Hapus Lamaran
+                            </button>
+                        </div>
+                    </div>
+                `;
+
                 const linkTextHTML = lamaran.link ? `
                     <a href="${lamaran.link}" target="_blank" onclick="event.stopPropagation()" class="text-[#ff5ca0] hover:underline font-semibold ml-1 inline-flex items-center gap-0.5">
                         [Link ↗]
@@ -1558,7 +1596,10 @@
                                 <p class="text-xs text-[#ff5ca0] font-semibold">${lamaran.posisi}</p>
                             </div>
                         </div>
-                        ${teksGaji !== '-' ? `<span class="text-[11px] font-bold text-[#ff5ca0] bg-[#ff5ca0]/10 border border-[#ff5ca0]/30 px-2 py-0.5 rounded">${teksGaji}</span>` : ''}
+                        <div class="flex items-center gap-2">
+                            ${teksGaji !== '-' ? `<span class="text-[11px] font-bold text-[#ff5ca0] bg-[#ff5ca0]/10 border border-[#ff5ca0]/30 px-2 py-0.5 rounded">${teksGaji}</span>` : ''}
+                            ${dropdownAksiHTML}
+                        </div>
                     </div>
                     <div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] ${isLight ? 'text-gray-500' : 'text-gray-400'} pt-1 border-t ${isLight ? 'border-gray-100' : 'border-gray-800/40'}">
                         <span>Lamar: ${formatTanggal(lamaran.tanggal)} ${linkTextHTML}</span>
@@ -1575,7 +1616,7 @@
                 `;
                 if(containerCard) containerCard.appendChild(kartu);
 
-                // Baris Tabel tanpa header, 4 kolom: Bintang, Perusahaan/Posisi, Tanggal+Link, Status
+                // Baris Tabel: 4 kolom + tombol aksi di ujung
                 const baris = document.createElement('tr');
                 baris.className = `border-b ${isLight ? 'border-gray-200 hover:bg-gray-50' : 'border-gray-800 hover:bg-white/5'} transition-colors cursor-pointer`;
                 baris.onclick = () => bukaModalEdit(lamaran.id);
@@ -1585,13 +1626,16 @@
                         <div class="font-bold ${isLight ? 'text-gray-900' : 'text-white'} leading-tight">${lamaran.perusahaan}</div>
                         <div class="text-[#ff5ca0] font-semibold text-[11px] mt-0.5 leading-tight">${lamaran.posisi}</div>
                     </td>
-                    <td class="p-2.5 align-middle w-[35%]" onclick="event.stopPropagation()">
+                    <td class="p-2.5 align-middle w-[32%]" onclick="event.stopPropagation()">
                         <span class="text-[11px] ${isLight ? 'text-gray-700' : 'text-gray-300'} block leading-tight">
                             ${formatTanggal(lamaran.tanggal)} ${linkTextHTML}
                         </span>
                     </td>
-                    <td class="p-2.5 align-middle w-[32%]" onclick="event.stopPropagation()">
+                    <td class="p-2.5 align-middle w-[28%]" onclick="event.stopPropagation()">
                         ${dropdownStatusHTML}
+                    </td>
+                    <td class="p-2.5 text-center align-middle w-[40px]" onclick="event.stopPropagation()">
+                        ${dropdownAksiHTML}
                     </td>
                 `;
                 if(containerTabel) containerTabel.appendChild(baris);
