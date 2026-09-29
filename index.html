@@ -799,23 +799,60 @@
 
         function tutupModalRiwayatCatatan() { document.getElementById('modal-riwayat-catatan').classList.add('hidden'); }
 
+        // Fungsi Dropdown Status & Aksi yang dioptimalkan agar responsif di HP
+        function toggleDropdownStatus(event, id) {
+            event.stopPropagation();
+            document.querySelectorAll('.dropdown-status-menu').forEach(m => {
+                if (m.id !== 'dropdown-status-' + id) m.classList.add('hidden');
+            });
+            document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden'));
+
+            const menu = document.getElementById('dropdown-status-' + id);
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
+        }
+
+        function toggleDropdownAksi(event, id) {
+            event.stopPropagation();
+            document.querySelectorAll('.dropdown-aksi-menu').forEach(m => {
+                if (m.id !== 'dropdown-aksi-' + id) m.classList.add('hidden');
+            });
+            document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
+
+            const menu = document.getElementById('dropdown-aksi-' + id);
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
+        }
+
+        function pilihStatus(id, statusBaru) {
+            ubahStatus(id, statusBaru);
+            document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
+        }
+
         window.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown-status-container') && !e.target.closest('.dropdown-status-menu')) {
+                document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden'));
+            }
+            if (!e.target.closest('.dropdown-aksi-container') && !e.target.closest('.dropdown-aksi-menu')) {
+                document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden'));
+            }
+
             const dropdown = document.getElementById('dropdown-titiktiga');
             const btnTitikTiga = document.getElementById('btn-menu-titiktiga');
-            const dropdownPosisi = document.getElementById('dropdown-posisi-list');
-            const dropdownMetode = document.getElementById('dropdown-metode-list');
-            
             if (btnTitikTiga && !btnTitikTiga.contains(e.target) && !dropdown.contains(e.target)) {
                 dropdown.classList.add('hidden');
             }
-            if (!e.target.closest('#input-posisi') && !e.target.closest('button[onclick*="toggleDropdownPosisi"]')) {
+            
+            const dropdownPosisi = document.getElementById('dropdown-posisi-list');
+            if (dropdownPosisi && !e.target.closest('#input-posisi') && !e.target.closest('button[onclick*="toggleDropdownPosisi"]')) {
                 dropdownPosisi.classList.add('hidden');
             }
-            if (!e.target.closest('#input-metode') && !e.target.closest('button[onclick*="toggleDropdownMetode"]')) {
+            
+            const dropdownMetode = document.getElementById('dropdown-metode-list');
+            if (dropdownMetode && !e.target.closest('#input-metode') && !e.target.closest('button[onclick*="toggleDropdownMetode"]')) {
                 dropdownMetode.classList.add('hidden');
-            }
-            if (!e.target.closest('.dropdown-aksi-container')) {
-                document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden'));
             }
         });
 
@@ -1503,12 +1540,12 @@
 
                 const dropdownStatusHTML = `
                     <div class="relative dropdown-status-container inline-block w-auto">
-                        <button onclick="toggleDropdownStatus(event, '${lamaran.id}')" class="text-[11px] border rounded px-2 py-1 font-semibold outline-none flex items-center justify-between gap-1 whitespace-nowrap transition-colors ${warnaStatusCard}">
+                        <button type="button" onclick="toggleDropdownStatus(event, '${lamaran.id}')" class="text-[11px] border rounded px-2 py-1 font-semibold outline-none flex items-center justify-between gap-1 whitespace-nowrap transition-colors ${warnaStatusCard}">
                             <span>${status}</span> <span class="text-[9px]">▾</span>
                         </button>
                         <div id="dropdown-status-${lamaran.id}" class="dropdown-status-menu absolute left-0 top-full mt-1 w-44 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 max-h-52 overflow-y-auto">
                             ${daftarStatus.map(s => `
-                                <button onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 ${s === status ? 'text-[#ff5ca0] border-l-[3px] border-[#ff5ca0]' : ''}">
+                                <button type="button" onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 ${s === status ? 'text-[#ff5ca0] border-l-[3px] border-[#ff5ca0]' : ''}">
                                     ${s}
                                 </button>
                             `).join('')}
@@ -1534,19 +1571,19 @@
                 const waUrl = noWa.length > 5 ? `https://wa.me/${noWa}?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}` : `https://wa.me/?text=${encodeURIComponent(templateInterview.replace(/{perusahaan}/g, lamaran.perusahaan).replace(/{posisi}/g, lamaran.posisi))}`;
                 
                 menuAksiItems += `<a href="${waUrl}" target="_blank" class="${itemClass} block">Konfirmasi Interview</a>`;
-                menuAksiItems += `<button onclick="downloadSuratWord('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass} block w-full text-left text-[#ff5ca0]">Download Surat (Word)</button>`;
+                menuAksiItems += `<button type="button" onclick="downloadSuratWord('${lamaran.perusahaan}', '${lamaran.posisi}')" class="${itemClass} block w-full text-left text-[#ff5ca0]">Download Surat (Word)</button>`;
                 
                 if (lamaran.tanggalFollowUp) {
-                    menuAksiItems += `<button onclick="bukaGoogleCalendar('${lamaran.perusahaan}', '${lamaran.posisi}', '${lamaran.tanggalFollowUp}')" class="${itemClass} block w-full text-left">Add Kalender (Follow Up)</button>`;
+                    menuAksiItems += `<button type="button" onclick="bukaGoogleCalendar('${lamaran.perusahaan}', '${lamaran.posisi}', '${lamaran.tanggalFollowUp}')" class="${itemClass} block w-full text-left">Add Kalender (Follow Up)</button>`;
                 }
 
                 menuAksiItems += `<hr class="${isLight ? 'border-gray-200 my-1' : 'border-gray-700 my-1'}">`;
-                menuAksiItems += `<button onclick="bukaModalEdit('${lamaran.id}')" class="${itemClass} block w-full text-left">Edit Data</button>`;
-                menuAksiItems += `<button onclick="hapusLamaran('${lamaran.id}')" class="${itemClass} block w-full text-left">Hapus Lamaran</button>`;
+                menuAksiItems += `<button type="button" onclick="bukaModalEdit('${lamaran.id}')" class="${itemClass} block w-full text-left">Edit Data</button>`;
+                menuAksiItems += `<button type="button" onclick="hapusLamaran('${lamaran.id}')" class="${itemClass} block w-full text-left">Hapus Lamaran</button>`;
 
                 const dropdownAksiHTML = `
                     <div class="relative dropdown-aksi-container inline-block">
-                        <button onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="px-2.5 py-1 rounded text-[11px] font-bold border transition-all inline-flex items-center gap-1 ${linkStyle}">
+                        <button type="button" onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="px-2.5 py-1 rounded text-[11px] font-bold border transition-all inline-flex items-center gap-1 ${linkStyle}">
                             Aksi ▾
                         </button>
                         <div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 top-full mt-1 w-52 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1">
@@ -1556,7 +1593,7 @@
                 `;
 
                 const teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-';
-                const bintangi = `<button onclick="toggleFavorit('${lamaran.id}')" class="text-sm text-gray-400 hover:scale-125 transition-transform ${lamaran.isFavorit ? '!text-yellow-400' : ''}" title="Favorit">★</button>`;
+                const bintangi = `<button type="button" onclick="toggleFavorit('${lamaran.id}')" class="text-sm text-gray-400 hover:scale-125 transition-transform ${lamaran.isFavorit ? '!text-yellow-400' : ''}" title="Favorit">★</button>`;
 
                 const warnaFollowUpClass = lamaran.tanggalFollowUp 
                     ? (isLight ? 'text-gray-700 font-semibold' : 'text-gray-200 font-semibold') 
@@ -1594,7 +1631,7 @@
                 `;
                 if(containerCard) containerCard.appendChild(kartu);
 
-                // Baris Tabel: Perusahaan & Posisi digabung jadi satu kolom agar teks full tidak terpotong (multi-line), Status dan Link dipisah
+                // Baris Tabel: Perusahaan & Posisi full ke bawah, Status interaktif agar tombol status bisa diklik langsung dari tabel
                 const baris = document.createElement('tr');
                 baris.className = `border-b ${isLight ? 'border-gray-200 hover:bg-gray-50' : 'border-gray-800 hover:bg-white/5'} transition-colors`;
                 baris.innerHTML = `
@@ -1604,7 +1641,7 @@
                         <div class="text-[#ff5ca0] font-semibold text-[11px] mt-0.5 leading-tight">${lamaran.posisi}</div>
                     </td>
                     <td class="p-2.5 align-top">
-                        <span class="text-[11px] font-semibold ${isLight ? 'text-gray-800' : 'text-gray-200'} block leading-tight">${status}</span>
+                        ${dropdownStatusHTML}
                     </td>
                     <td class="p-2.5 text-center align-top">${linkButtonHTML}</td>
                 `;
