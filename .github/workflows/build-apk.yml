@@ -1,23 +1,44 @@
 name: Build HTML to APK
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
-  convert:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '20'
 
-      - name: Convert HTML to APK
-        uses: kimhuilim/html-to-apk-action@v1
+      - uses: actions/setup-java@v4
         with:
-          build-folder-path: '.'
-          app-name: 'InfoL'
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Siapkan folder web
+        run: |
+          mkdir www
+          rsync -a --exclude='.git' --exclude='.github' --exclude='www' ./ www/
+
+      - name: Install Capacitor
+        run: |
+          npm init -y
+          npm i @capacitor/core @capacitor/cli @capacitor/android
+          npx cap init InfoL com.farhan.infol --web-dir=www
+          npx cap add android
+          npx cap sync android
+
+      - name: Build APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: InfoL-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
