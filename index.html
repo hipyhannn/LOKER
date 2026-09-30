@@ -498,7 +498,7 @@
         function bukaModalPanduan() { document.getElementById('dropdown-titiktiga').classList.add('hidden'); document.getElementById('modal-panduan').classList.remove('hidden'); }
         function tutupModalPanduan() { document.getElementById('modal-panduan').classList.add('hidden'); }
         function aktifkanNotifikasi() { document.getElementById('dropdown-titiktiga').classList.add('hidden'); if (!("Notification" in window)) alert("Browser ini tidak mendukung fitur notifikasi desktop."); else if (Notification.permission === "granted") { alert("Notifikasi sudah aktif!"); cekNotifikasiFollowUp(dataLamaran, true); } else if (Notification.permission !== "denied") { Notification.requestPermission().then(permission => { if (permission === "granted") { alert("Notifikasi berhasil diaktifkan!"); cekNotifikasiFollowUp(dataLamaran, true); } }); } else alert("Notifikasi diblokir. Harap izinkan situs ini memunculkan notifikasi dari pengaturan browser."); }
-        function cekNotifikasiFollowUp(data, force = false) { if (!("Notification" in window) || Notification.permission !== "granted") return; if (notifikasiSudahMuncul && !force) return; const hariIni = new Date().toISOString().split('T')[0]; let listFollowUp = data.filter(l => l.tanggalFollowUp === hariIni && !["Ditolak", "Diterima"].includes(l.status)); if (listFollowUp.length > 0) { new Notification("Pengingat Apply LOKER", { body: `Hei! Hari ini kamu punya ${listFollowUp.length} lamaran yang harus di-follow up.`, icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png" }); notifikasiSudahMuncul = true; } else if (force) { new Notification("Apply LOKER", { body: "Notifikasi aktif! Kami akan mengingatkanmu jika ada jadwal follow-up hari ini.", icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png" }); } }
+        function cekNotifikasiFollowUp(data, force = false) { if (!("Notification" in window) || Notification.permission !== "granted") return; if (notifikasiSudahMuncul && !force) return; const d = new Date(); const hariIni = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); let listFollowUp = data.filter(l => l.tanggalFollowUp === hariIni && !["Ditolak", "Diterima"].includes(l.status)); if (listFollowUp.length > 0) { new Notification("Pengingat Apply LOKER", { body: `Hei! Hari ini kamu punya ${listFollowUp.length} lamaran yang harus di-follow up.`, icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png" }); notifikasiSudahMuncul = true; } else if (force) { new Notification("Apply LOKER", { body: "Notifikasi aktif! Kami akan mengingatkanmu jika ada jadwal follow-up hari ini.", icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png" }); } }
         function triggerConfetti() { const colors = ['#ff5ca0', '#ffd700', '#00ffcc', '#ffffff', '#ff4081', '#3b82f6']; for (let i = 0; i < 60; i++) { const confetti = document.createElement('div'); confetti.className = 'confetti-piece'; confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; confetti.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's'; confetti.style.animationDelay = (Math.random() * 0.5) + 's'; if (Math.random() > 0.5) confetti.style.borderRadius = '50%'; document.body.appendChild(confetti); setTimeout(() => { confetti.remove(); }, 3000); } }
         function bukaModalTemplateGlobal() { document.getElementById('dropdown-titiktiga').classList.add('hidden'); document.getElementById('text-template-surat').value = templateSurat; document.getElementById('text-template-email').value = templateEmail; document.getElementById('text-template-tanya').value = templateTanya; document.getElementById('text-template-interview').value = templateInterview; gantiTabTemplate('surat'); document.getElementById('modal-template').classList.remove('hidden'); }
         function tutupModalTemplate() { document.getElementById('modal-template').classList.add('hidden'); }
@@ -529,24 +529,46 @@
             bubble.classList.remove('opacity-0', 'translate-y-2'); 
             bubble.classList.add('opacity-100', 'translate-y-0'); 
         }
+
+        // PERBAIKAN LOGIKA PANDA (Akurat Tanggal & ID Lamaran)
         function updatePandaMoodAndCheck() { 
-            const hariIni = new Date().toISOString().split('T')[0]; 
-            if (localStorage.getItem('lokertrack_reminder_dismissed') === hariIni) return; 
+            const d = new Date();
+            const hariIni = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+            
             let pesanPeringatan = []; 
+            let idYangDiingatkan = []; 
+
             dataLamaran.forEach(l => { 
                 if (["Ditolak", "Diterima", "Tidak Ada Kabar"].includes(l.status)) return; 
-                // PERBAIKAN LOGIKA: Hanya mengecek HARI INI SAJA (===) 
-                if (l.tanggalFollowUp && l.tanggalFollowUp === hariIni) pesanPeringatan.push(`Janlup Boss Follow-Up ke <b>${l.perusahaan}</b> (${l.posisi}) Hari inii`); 
-                if (l.deadline && l.deadline === hariIni) pesanPeringatan.push(`Deadline Lamar ke <b>${l.perusahaan}</b> (${l.posisi}) Hari ini banget lho boss!!`); 
+                
+                let butuhIngat = false;
+                if (l.tanggalFollowUp && l.tanggalFollowUp === hariIni) {
+                    pesanPeringatan.push(`Janlup Boss Follow-Up ke <b>${l.perusahaan}</b> (${l.posisi}) Hari inii`); 
+                    butuhIngat = true;
+                }
+                if (l.deadline && l.deadline === hariIni) {
+                    pesanPeringatan.push(`Deadline Lamar ke <b>${l.perusahaan}</b> (${l.posisi}) Hari ini banget lho boss!!`); 
+                    butuhIngat = true;
+                }
+
+                if (butuhIngat) {
+                    idYangDiingatkan.push(l.id); 
+                }
             }); 
+
+            const reminderKey = hariIni + '_' + idYangDiingatkan.sort().join('_');
+
+            if (idYangDiingatkan.length === 0 || localStorage.getItem('lokertrack_reminder_dismissed') === reminderKey) return; 
+            
             if (pesanPeringatan.length > 0) { 
-                const isLight = currentTheme === 'light', btnStyle = isLight ? 'bg-gray-200 text-gray-800 border-gray-400 hover:bg-gray-300' : 'bg-[#2d2d2d] text-gray-200 border-gray-600 hover:bg-gray-700', htmlPesan = pesanPeringatan.join('<br><br>') + `<br><br><button onclick="dismissReminderHariIni()" class="${btnStyle} font-bold px-3 py-1.5 rounded-lg text-[10px] w-full mt-1 border transition-colors uppercase tracking-wider">Cukup / Tutup Hari Ini</button>`; 
+                const isLight = currentTheme === 'light', btnStyle = isLight ? 'bg-gray-200 text-gray-800 border-gray-400 hover:bg-gray-300' : 'bg-[#2d2d2d] text-gray-200 border-gray-600 hover:bg-gray-700'; 
+                const htmlPesan = pesanPeringatan.join('<br><br>') + `<br><br><button onclick="dismissReminderHariIni('${reminderKey}')" class="${btnStyle} font-bold px-3 py-1.5 rounded-lg text-[10px] w-full mt-1 border transition-colors uppercase tracking-wider">Cukup / Tutup Hari Ini</button>`; 
                 showPersistentBubble(htmlPesan); 
             } 
         }
-        function dismissReminderHariIni() { 
-            const hariIni = new Date().toISOString().split('T')[0]; 
-            localStorage.setItem('lokertrack_reminder_dismissed', hariIni); 
+
+        function dismissReminderHariIni(reminderKey) { 
+            localStorage.setItem('lokertrack_reminder_dismissed', reminderKey); 
             isPandaPersistent = false; 
             const bubble = document.getElementById('speech-bubble'); 
             bubble.classList.remove('opacity-100', 'translate-y-0'); 
@@ -584,7 +606,6 @@
         let startX = 0, startY = 0, initialX = 0, initialY = 0;
         
         function dragPandaStart(e) { 
-            // JIKA MENYENTUH SPEECH BUBBLE, JANGAN AKTIFKAN DRAG
             if (e.target.closest('#speech-bubble')) return;
 
             isDraggingPanda = true; 
