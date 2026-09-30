@@ -34,12 +34,11 @@
 
         #speech-bubble {
             bottom: calc(100% + 12px);
-            left: -15px; /* Geser agar ekornya pas di tengah badan panda */
-            width: 240px; /* Sedikit diperlebar agar teks nyaman dibaca */
+            left: -15px;
+            width: 240px;
             transform-origin: bottom left;
         }
 
-        /* Tambahan ekor panah untuk bubble */
         #speech-bubble::after {
             content: '';
             position: absolute;
@@ -310,15 +309,13 @@
 <!-- ================= 5. FLOATING MASKOT & TOMBOL TAMBAH ================= -->
 <div id="panda-container" class="fixed bottom-6 left-4 z-30 select-none touch-none cursor-grab flex flex-col items-center" title="Geser panda!">
     
-    <!-- Kontainer dibuat pas (w-24 h-24) agar hitbox sentuhan akurat -->
     <div id="panda-avatar" class="relative w-24 h-24 md:w-28 md:h-28 cursor-pointer select-none transition-all duration-300 drop-shadow-2xl flex justify-center" onclick="handlePandaClick(event)">
         
-        <!-- SPEECH BUBBLE -->
-        <div id="speech-bubble" onclick="event.stopPropagation()" class="absolute max-h-[220px] overflow-y-auto p-3.5 pixel-bubble bg-[#1e1e1e] text-gray-200 opacity-0 translate-y-2 transition-all duration-300 pointer-events-auto z-50">
+        <!-- SPEECH BUBBLE DITAMBAHKAN pointer-events-none AGAR TIDAK MENGHALANGI KLIK KETIKA TUTUP -->
+        <div id="speech-bubble" onclick="event.stopPropagation()" class="absolute max-h-[220px] overflow-y-auto p-3.5 pixel-bubble bg-[#1e1e1e] text-gray-200 opacity-0 translate-y-2 pointer-events-none transition-all duration-300 z-50">
             <p id="panda-pesan" class="text-[11px] font-bold leading-relaxed">"Halo bos!"</p>
         </div>
         
-       <!-- Maskot GIF (w-full h-full agar tidak kekecilan, animasi nafas ditaruh di sini agar bubble tidak ikut goyang) -->
         <img src="https://lh3.googleusercontent.com/d/1bjSzoxhktQ0bHf-fHu2uE0jVn_EM_QJK" alt="Maskot GIF" class="w-full h-full object-contain animate-breathe cursor-grab" draggable="false">
         
     </div>
@@ -430,7 +427,7 @@
         function hapusLamaran(id) { if(confirm('Hapus data ini?')) hapusDariRealtimeDB(id); }
         function ubahStatus(id, statusBaru) {
             const index = dataLamaran.findIndex(item => item.id == id); if (index !== -1) { const statusLama = dataLamaran[index].status; dataLamaran[index].status = statusBaru; simpanKeRealtimeDB(dataLamaran[index]);
-                if ((statusBaru === 'Diterima' || statusLama === 'Offering') && statusLama !== statusBaru) { triggerConfetti(); showPersistentBubble(`🎉 Wihh mantap boskuu! Alhamdulillah keterima di <b>${dataLamaran[index].perusahaan}</b>! Traktiran dong!`); } else if ((statusBaru === 'Ditolak' || statusBaru === 'Tidak Ada Kabar') && statusLama !== statusBaru) { showBubble(`💪 Semangat bos! Ditolak di <b>${dataLamaran[index].perusahaan}</b> bukan berarti akhir segalanya!`); } }
+                if ((statusBaru === 'Diterima' || statusBaru === 'Offering') && statusLama !== statusBaru) { triggerConfetti(); showPersistentBubble(`🎉 Wihh mantap boskuu! Alhamdulillah keterima di <b>${dataLamaran[index].perusahaan}</b>! Traktiran dong!`); } else if ((statusBaru === 'Ditolak' || statusBaru === 'Tidak Ada Kabar') && statusLama !== statusBaru) { showBubble(`💪 Semangat bos! Ditolak di <b>${dataLamaran[index].perusahaan}</b> bukan berarti akhir segalanya!`); } }
         }
         function toggleFavorit(id, event) { if (event) event.stopPropagation(); const index = dataLamaran.findIndex(item => item.id == id); if (index !== -1) { dataLamaran[index].isFavorit = !dataLamaran[index].isFavorit; simpanKeRealtimeDB(dataLamaran[index]); } }
         
@@ -459,13 +456,11 @@
                 const dropdownAksiHTML = `<div class="relative dropdown-aksi-container inline-block" onclick="event.stopPropagation()"><button type="button" onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="w-7 h-7 rounded-lg text-xs font-bold border border-gray-600 bg-transparent text-gray-300 hover:bg-gray-700 flex items-center justify-center transition-colors">⋮</button><div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 top-full mt-1 w-52 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1"><button onclick="bukaModalEdit('${lamaran.id}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Edit Data</button><button onclick="salinSuratLamaran('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Salin Surat Lamaran</button><button onclick="downloadSuratWord('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Download Surat (.doc)</button>${lamaran.tanggalFollowUp ? `<button onclick="bukaGoogleCalendar('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${lamaran.tanggalFollowUp}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Google Calendar</button>` : ''}${kontakAksiHTML ? '<hr class="border-gray-700 my-1">' + kontakAksiHTML : ''}<hr class="border-gray-700 my-1"><button onclick="hapusLamaran('${lamaran.id}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-red-500/20 text-red-400 transition-colors">Hapus Lamaran</button></div></div>`;
                 const linkTextHTML = lamaran.link ? `<a href="${lamaran.link}" target="_blank" onclick="event.stopPropagation()" class="text-[#ff5ca0] hover:underline font-semibold ml-1 inline-flex items-center gap-0.5">[Link ↗]</a>` : '', teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-', bintangi = `<button type="button" onclick="toggleFavorit('${lamaran.id}', event)" class="text-sm text-gray-400 hover:scale-125 transition-transform ${lamaran.isFavorit ? '!text-yellow-400' : ''}" title="Favorit">★</button>`, warnaFollowUpClass = lamaran.tanggalFollowUp ? (isLight ? 'text-gray-700 font-semibold' : 'text-gray-200 font-semibold') : (isLight ? 'text-gray-500' : 'text-gray-400');
                 
-                // CARD LAMARAN
                 const kartu = document.createElement('div'); 
                 kartu.className = isLight ? 'bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-col gap-3 transition-all' : 'bg-[#1e1e1e] p-4 rounded-xl shadow-sm border border-gray-800 flex flex-col gap-3 transition-all'; 
                 kartu.innerHTML = `<div class="flex justify-between items-start gap-2"><div class="flex items-center gap-2">${bintangi}<div><h4 class="text-base font-bold ${isLight ? 'text-gray-900' : 'text-white'}">${lamaran.perusahaan}</h4><p class="text-xs text-[#ff5ca0] font-semibold">${lamaran.posisi}</p></div></div><div class="flex items-center gap-2">${teksGaji !== '-' ? `<span class="text-[11px] font-bold text-[#ff5ca0] bg-[#ff5ca0]/10 border border-[#ff5ca0]/30 px-2 py-0.5 rounded">${teksGaji}</span>` : ''} ${dropdownAksiHTML}</div></div><div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] ${isLight ? 'text-gray-500' : 'text-gray-400'} pt-1 border-t ${isLight ? 'border-gray-100' : 'border-gray-800/40'}"><span>Lamar: ${formatTanggal(lamaran.tanggal)} ${linkTextHTML}</span><span>•</span><span class="${warnaFollowUpClass}">FU: ${lamaran.tanggalFollowUp ? formatTanggal(lamaran.tanggalFollowUp) : '-'}</span><span>•</span><span>Sumber: ${lamaran.metode || 'Email'}</span></div><div class="flex items-center justify-between gap-2 pt-2 border-t ${isLight ? 'border-gray-100' : 'border-gray-800/40'}"><div class="flex items-center gap-2">${dropdownStatusHTML}</div></div>`;
                 if(containerCard) containerCard.appendChild(kartu);
 
-                // TABEL ROW
                 const baris = document.createElement('tr'); 
                 baris.className = `border-b ${isLight ? 'border-gray-200 hover:bg-gray-50' : 'border-gray-800 hover:bg-white/5'} transition-colors`; 
                 baris.innerHTML = `<td class="py-3 px-2 text-center align-middle w-[40px]" onclick="event.stopPropagation()">${bintangi}</td><td class="py-3 px-3 align-middle"><div class="font-bold ${isLight ? 'text-gray-900' : 'text-white'} leading-snug">${lamaran.perusahaan}</div><div class="text-[#ff5ca0] font-semibold text-[11px] mt-0.5 leading-snug">${lamaran.posisi}</div></td><td class="py-3 px-3 align-middle"><span class="text-[12px] ${isLight ? 'text-gray-700' : 'text-gray-300'} flex items-center gap-1.5">${formatTanggal(lamaran.tanggal)} ${linkTextHTML}</span></td><td class="py-3 px-3 align-middle text-right"><span class="text-xs font-medium ${isLight ? 'text-gray-600' : 'text-gray-400'}">${lamaran.status}</span></td>`;
@@ -545,13 +540,13 @@
         function showBubble(teks) { 
             const bubble = document.getElementById('speech-bubble'); 
             document.getElementById('panda-pesan').innerHTML = teks; 
-            bubble.classList.remove('opacity-0', 'translate-y-2'); 
-            bubble.classList.add('opacity-100', 'translate-y-0'); 
+            bubble.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none'); 
+            bubble.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto'); 
             clearTimeout(pesanTimer); 
             if (!isPandaPersistent) { 
                 pesanTimer = setTimeout(() => { 
-                    bubble.classList.remove('opacity-100', 'translate-y-0'); 
-                    bubble.classList.add('opacity-0', 'translate-y-2'); 
+                    bubble.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto'); 
+                    bubble.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none'); 
                 }, 3500); 
             } 
         }
@@ -559,11 +554,10 @@
             isPandaPersistent = true; 
             const bubble = document.getElementById('speech-bubble'); 
             document.getElementById('panda-pesan').innerHTML = teks; 
-            bubble.classList.remove('opacity-0', 'translate-y-2'); 
-            bubble.classList.add('opacity-100', 'translate-y-0'); 
+            bubble.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none'); 
+            bubble.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto'); 
         }
 
-        // PERBAIKAN LOGIKA PANDA (Akurat Tanggal & ID Lamaran)
         function updatePandaMoodAndCheck() { 
             const d = new Date();
             const hariIni = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
@@ -604,8 +598,8 @@
             localStorage.setItem('lokertrack_reminder_dismissed', reminderKey); 
             isPandaPersistent = false; 
             const bubble = document.getElementById('speech-bubble'); 
-            bubble.classList.remove('opacity-100', 'translate-y-0'); 
-            bubble.classList.add('opacity-0', 'translate-y-2'); 
+            bubble.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto'); 
+            bubble.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none'); 
         }
         
         let isDraggingPanda = false, hasMoved = false;
@@ -614,8 +608,8 @@
                 if (isPandaPersistent) { 
                     isPandaPersistent = false; 
                     const bubble = document.getElementById('speech-bubble'); 
-                    bubble.classList.remove('opacity-100', 'translate-y-0'); 
-                    bubble.classList.add('opacity-0', 'translate-y-2'); 
+                    bubble.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto'); 
+                    bubble.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none'); 
                 } else { 
                     const kutipanSemangat = [ 
                         "Ditolak itu biasa bos, berarti perusahaannya aja yang kurang beruntung belum dapet talenta hebat kayak lu!", 
@@ -634,7 +628,6 @@
             } 
         }
         
-        // --- DRAG SYSTEM DENGAN PENGECUALIAN SPEECH BUBBLE ---
         const pandaContainer = document.getElementById('panda-container');
         let startX = 0, startY = 0, initialX = 0, initialY = 0;
         
@@ -687,7 +680,6 @@
             pandaContainer.addEventListener('touchstart', dragPandaStart, {passive: false});
         }
 
-        // Pendaftaran Service Worker untuk PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
