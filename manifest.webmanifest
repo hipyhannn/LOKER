@@ -1,6 +1,6 @@
 {
   "name": "LOKER Tracker",
-  "short_name": "LOKER",
+  "short_name": "InfoL",
   "description": "Tracker lamaran kerja untuk mencatat dan memantau proses lamaran.",
   "start_url": "./",
   "scope": "./",
