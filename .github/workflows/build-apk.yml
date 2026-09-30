@@ -1,0 +1,6 @@
+      - name: Convert HTML to APK
+        uses: marketplace/actions/html-to-apk-action@v1
+        with:
+          input-path: '.' # TANDA TITIK (.) artinya mengambil seluruh file di halaman utama repositori Anda
+          app-name: 'InfoL'
+          package-name: 'com.hipyhan.InfoL'
