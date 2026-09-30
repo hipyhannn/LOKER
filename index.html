@@ -111,7 +111,6 @@
                                 <button onclick="bukaModalPanduan()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit"><span>Panduan & Cara Pakai</span></button>
                                 <button onclick="aktifkanNotifikasi()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit"><span>Aktifkan Notif Follow-Up</span></button>
                                 <button onclick="bukaModalTemplateGlobal()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit"><span>Atur Template</span></button>
-                                <button onclick="perbaruiAplikasi()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit"><span>Perbarui Aplikasi</span></button>
                                 <hr id="menu-divider" class="border-gray-700 my-1">
                                 <button onclick="toggleTemaManual()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit"><span id="menu-text-tema">Mode Terang</span></button>
                                 <hr class="border-gray-700 my-1">
@@ -488,29 +487,7 @@
         function toggleDropdownAksi(event, id) { event.stopPropagation(); document.querySelectorAll('.dropdown-aksi-menu').forEach(m => { if (m.id !== 'dropdown-aksi-' + id) m.classList.add('hidden'); }); document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden')); const menu = document.getElementById('dropdown-aksi-' + id); if (menu) menu.classList.toggle('hidden'); }
         window.addEventListener('click', function(e) { if (!e.target.closest('.dropdown-status-container') && !e.target.closest('.dropdown-status-menu')) document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden')); if (!e.target.closest('.dropdown-aksi-container') && !e.target.closest('.dropdown-aksi-menu')) document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden')); const dropdown = document.getElementById('dropdown-titiktiga'), btnTitikTiga = document.getElementById('btn-menu-titiktiga'); if (btnTitikTiga && !btnTitikTiga.contains(e.target) && !dropdown.contains(e.target)) dropdown.classList.add('hidden'); const dropdownPosisi = document.getElementById('dropdown-posisi-list'); if (dropdownPosisi && !e.target.closest('#input-posisi') && !e.target.closest('button[onclick*="toggleDropdownPosisi"]')) dropdownPosisi.classList.add('hidden'); const dropdownMetode = document.getElementById('dropdown-metode-list'); if (dropdownMetode && !e.target.closest('#input-metode') && !e.target.closest('button[onclick*="toggleDropdownMetode"]')) dropdownMetode.classList.add('hidden'); });
 
-        // --- 6F. FITUR LAIN (TEMA, KALENDER, WA/EMAIL, TEMPLATE, NOTIF, CONFETTI, UPDATE) ---
-        function perbaruiAplikasi() {
-            if (confirm("Ingin memperbarui aplikasi ke versi terbaru?")) {
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                        for(let registration of registrations) {
-                            registration.unregister();
-                        }
-                    });
-                }
-                if ('caches' in window) {
-                    caches.keys().then(function(names) {
-                        for (let name of names) {
-                            caches.delete(name);
-                        }
-                    });
-                }
-                setTimeout(() => {
-                    window.location.reload(true);
-                }, 500);
-            }
-        }
-
+        // --- 6F. FITUR LAIN (TEMA, KALENDER, WA/EMAIL, TEMPLATE, NOTIF, CONFETTI) ---
         function inisialisasiTemaOtomatis() { const savedTheme = localStorage.getItem('lokertrack_theme'); if (savedTheme === 'light' || savedTheme === 'dark') applyTheme(savedTheme); else { const jam = new Date().getHours(); applyTheme((jam >= 6 && jam < 18) ? 'light' : 'dark'); } }
         function toggleTemaManual() { document.getElementById('dropdown-titiktiga').classList.add('hidden'); const newTheme = currentTheme === 'dark' ? 'light' : 'dark'; localStorage.setItem('lokertrack_theme', newTheme); applyTheme(newTheme); }
         function applyTheme(theme) {
@@ -644,9 +621,9 @@
                         "Kirim lamaran hari ini bukan berarti langsung dapet panggilan besok, yang penting konsisten nyebar jaring!", 
                         "Lamaran ditolak? Anggap aja latihan mental buat nyambut perusahaan yang jauh lebih keren di depan sana!", 
                         "Inget ya bosku, yang sudah tertakar tidak akan pernah tertukar!" 
-                    ]; 
-                    const randomQuote = kutipanSemangat[Math.floor(Math.random() * kutipanSemangat.length)]; 
-                    showBubble(randomQuote); 
+                  ]; 
+                  const randomQuote = kutipanSemangat[Math.floor(Math.random() * kutipanSemangat.length)]; 
+                  showBubble(randomQuote); 
                 } 
             } 
         }
