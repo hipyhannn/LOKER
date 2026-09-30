@@ -1,5 +1,4 @@
 name: Build HTML to APK
-
 on:
   push:
     branches:
