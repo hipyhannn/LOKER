@@ -589,7 +589,7 @@
             
             if (pesanPeringatan.length > 0) { 
                 const isLight = currentTheme === 'light', btnStyle = isLight ? 'bg-gray-200 text-gray-800 border-gray-400 hover:bg-gray-300' : 'bg-[#2d2d2d] text-gray-200 border-gray-600 hover:bg-gray-700'; 
-                const htmlPesan = pesanPeringatan.join('<br><br>') + `<br><br><button onclick="dismissReminderHariIni('${reminderKey}')" class="${btnStyle} font-bold px-3 py-1.5 rounded-lg text-[10px] w-full mt-1 border transition-colors uppercase tracking-wider">Cukup / Tutup Hari Ini</button>`; 
+                const htmlPesan = pesanPeringatan.join('<br><br>') + `<br><br><button onclick="dismissReminderHariIni('${reminderKey}')" class="${btnStyle} font-bold px-3 py-1.5 rounded-lg text-[10px] w-full mt-1 border transition-colors uppercase tracking-wider">Cukup</button>`; 
                 showPersistentBubble(htmlPesan); 
             } 
         }
