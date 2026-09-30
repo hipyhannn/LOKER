@@ -535,8 +535,9 @@
             let pesanPeringatan = []; 
             dataLamaran.forEach(l => { 
                 if (["Ditolak", "Diterima", "Tidak Ada Kabar"].includes(l.status)) return; 
-                if (l.tanggalFollowUp && l.tanggalFollowUp <= hariIni) pesanPeringatan.push(`Janlup Boss Follow-Up ke <b>${l.perusahaan}</b> (${l.posisi}) Hari inii`); 
-                if (l.deadline && l.deadline <= hariIni) pesanPeringatan.push(`Deadline Lamar ke <b>${l.perusahaan}</b> (${l.posisi}) Hari ini banget lho boss!!`); 
+                // PERBAIKAN LOGIKA: Hanya mengecek HARI INI SAJA (===) 
+                if (l.tanggalFollowUp && l.tanggalFollowUp === hariIni) pesanPeringatan.push(`Janlup Boss Follow-Up ke <b>${l.perusahaan}</b> (${l.posisi}) Hari inii`); 
+                if (l.deadline && l.deadline === hariIni) pesanPeringatan.push(`Deadline Lamar ke <b>${l.perusahaan}</b> (${l.posisi}) Hari ini banget lho boss!!`); 
             }); 
             if (pesanPeringatan.length > 0) { 
                 const isLight = currentTheme === 'light', btnStyle = isLight ? 'bg-gray-200 text-gray-800 border-gray-400 hover:bg-gray-300' : 'bg-[#2d2d2d] text-gray-200 border-gray-600 hover:bg-gray-700', htmlPesan = pesanPeringatan.join('<br><br>') + `<br><br><button onclick="dismissReminderHariIni()" class="${btnStyle} font-bold px-3 py-1.5 rounded-lg text-[10px] w-full mt-1 border transition-colors uppercase tracking-wider">Cukup / Tutup Hari Ini</button>`; 
