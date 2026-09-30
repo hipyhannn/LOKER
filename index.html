@@ -4,6 +4,7 @@
     <!-- ================= 1. META & SETUP ================= -->
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta id="meta-theme-color" name="theme-color" content="#1a1a1a"><title>LOKER - Cloud Edition</title>
+    <link rel="manifest" href="manifest.webmanifest">
     <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Apply LOKER">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -429,7 +430,7 @@
         function hapusLamaran(id) { if(confirm('Hapus data ini?')) hapusDariRealtimeDB(id); }
         function ubahStatus(id, statusBaru) {
             const index = dataLamaran.findIndex(item => item.id == id); if (index !== -1) { const statusLama = dataLamaran[index].status; dataLamaran[index].status = statusBaru; simpanKeRealtimeDB(dataLamaran[index]);
-                if ((statusBaru === 'Diterima' || statusBaru === 'Offering') && statusLama !== statusBaru) { triggerConfetti(); showPersistentBubble(`🎉 Wihh mantap boskuu! Alhamdulillah keterima di <b>${dataLamaran[index].perusahaan}</b>! Traktiran dong!`); } else if ((statusBaru === 'Ditolak' || statusBaru === 'Tidak Ada Kabar') && statusLama !== statusBaru) { showBubble(`💪 Semangat bos! Ditolak di <b>${dataLamaran[index].perusahaan}</b> bukan berarti akhir segalanya!`); } }
+                if ((statusBaru === 'Diterima' || statusLama === 'Offering') && statusLama !== statusBaru) { triggerConfetti(); showPersistentBubble(`🎉 Wihh mantap boskuu! Alhamdulillah keterima di <b>${dataLamaran[index].perusahaan}</b>! Traktiran dong!`); } else if ((statusBaru === 'Ditolak' || statusBaru === 'Tidak Ada Kabar') && statusLama !== statusBaru) { showBubble(`💪 Semangat bos! Ditolak di <b>${dataLamaran[index].perusahaan}</b> bukan berarti akhir segalanya!`); } }
         }
         function toggleFavorit(id, event) { if (event) event.stopPropagation(); const index = dataLamaran.findIndex(item => item.id == id); if (index !== -1) { dataLamaran[index].isFavorit = !dataLamaran[index].isFavorit; simpanKeRealtimeDB(dataLamaran[index]); } }
         
@@ -685,6 +686,16 @@
             pandaContainer.addEventListener('mousedown', dragPandaStart); 
             pandaContainer.addEventListener('touchstart', dragPandaStart, {passive: false});
         }
+
+        // Pendaftaran Service Worker untuk PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker terdaftar!', reg))
+                    .catch(err => console.log('Gagal daftar Service Worker:', err));
+            });
+        }
     </script>
 </body>
 </html>
+```[cite: 2, 3, 4, 6]
