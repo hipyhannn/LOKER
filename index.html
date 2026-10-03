@@ -463,7 +463,6 @@
                 if (currentFilterStatus === 'Interview') return ["Interview HR", "Interview User", "Final Interview"].includes(lamaran.status); 
                 if (currentFilterStatus === 'Diterima') return lamaran.status === 'Diterima'; 
                 if (currentFilterStatus === 'Ditolak') return lamaran.status === 'Ditolak'; 
-                if (currentFilterStatus === 'Arsip') return ["Ditolak", "Tidak Ada Kabar"].includes(lamaran.status);
                 
                 return true; 
             });
