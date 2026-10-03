@@ -43,15 +43,12 @@
         #speech-bubble { bottom: calc(100% + 12px); left: -15px; width: 240px; transform-origin: bottom left; }
         #speech-bubble::after { content: ''; position: absolute; bottom: -9px; left: 45px; border-width: 9px 9px 0; border-style: solid; border-color: #ff5ca0 transparent transparent transparent; display: block; width: 0; }
 
-        /* Animasi Flashcard Accordion */
         .flashcard-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
         .flashcard-content.open { max-height: 500px; transition: max-height 0.4s ease-in; }
 
-        /* Kanban Drag Effect & 2 Kolom Nyaman di Layar HP */
         .kanban-col { transition: background-color 0.2s ease, border-color 0.2s ease; }
         .kanban-col.drag-over { background-color: rgba(255, 92, 160, 0.08) !important; border-color: #ff5ca0 !important; }
 
-        /* Styling Menu Melayang ala iPhone & Tombol Putar Plus */
         .fab-menu-item {
             transform: translateY(20px) scale(0.8);
             opacity: 0;
@@ -135,7 +132,7 @@
                                 </button>
                                 <hr id="menu-divider" class="border-gray-700 my-1">
                                 <button onclick="toggleTemaManual()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit">
-                                    <span id="menu-text-tema">Mode Terang</span>
+                                    <span id="menu-text-tema">Mode Sistem (Otomatis)</span>
                                 </button>
                                 <hr class="border-gray-700 my-1">
                                 <button onclick="logoutUser()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-red-500/20 text-red-400 transition-colors flex items-center gap-2">
@@ -251,12 +248,12 @@
             </div>
             <div class="text-themed-modal space-y-3">
                 <div>
-                    <p class="font-bold text-[#ff5ca0] mb-0.5">1. Tampilan Kanban Board & Timeline</p>
-                    <p>Kamu bisa melihat progres lamaran di menu "Board" dan menyeret kartunya untuk mengubah status. Semua perubahan status kini tercatat di "Riwayat Status" saat kamu mengedit data.</p>
+                    <p class="font-bold text-[#ff5ca0] mb-0.5">1. Sinkronisasi Tema Otomatis</p>
+                    <p>Aplikasi otomatis mendeteksi mode gelap/terang dari pengaturan perangkatmu secara real-time. Kamu juga bisa mengaturnya manual melalui menu titik tiga di kanan atas.</p>
                 </div>
                 <div>
-                    <p class="font-bold text-[#ff5ca0] mb-0.5">2. Bank Latihan Interview</p>
-                    <p>Simpan pertanyaan yang sering muncul saat wawancara beserta draf jawabanmu di menu "Latihan Interview" agar kamu bisa me-review-nya sebelum Google Meet dimulai.</p>
+                    <p class="font-bold text-[#ff5ca0] mb-0.5">2. Notifikasi & Pengingat Follow-Up</p>
+                    <p>Aktifkan izin notifikasi browser untuk mendapatkan pengingat harian otomatis jika ada jadwal follow-up atau deadline lamaran kerja hari ini.</p>
                 </div>
                 <div>
                     <p class="font-bold text-[#ff5ca0] mb-0.5">3. Sinkronisasi Cloud (Realtime Database)</p>
@@ -410,7 +407,7 @@
             <div id="speech-bubble" onclick="event.stopPropagation()" class="absolute max-h-[220px] overflow-y-auto p-3.5 pixel-bubble bg-[#1e1e1e] text-gray-200 opacity-0 translate-y-2 pointer-events-none transition-all duration-300 z-50">
                 <p id="panda-pesan" class="text-[11px] font-bold leading-relaxed">"Halo bos!"</p>
             </div>
-            <img src="https://lh3.googleusercontent.com/d/1bjSzoxhktQ0bHf-fHu2uE0jVn_EM_QJK" alt="Maskot GIF" class="w-full h-full object-contain animate-breathe cursor-grab" draggable="false">
+            <img src="https://lh3.googleusercontent.com/d/1p2RFy5H1fyq5dccr437WOmjAneF97VAd" alt="Maskot" class="w-full h-full object-contain animate-breathe cursor-grab rounded-xl" draggable="false">
         </div>
     </div>
 
@@ -438,7 +435,7 @@
         const auth = firebase.auth(); 
         const rtdb = firebase.database();
         let currentUser = null, dataLamaran = [], dataFlashcards = [], isSignUpMode = false;
-        let currentTheme = localStorage.getItem('lokertrack_theme') || 'auto', currentMode = localStorage.getItem('lokertrack_mode') || 'card', currentFilterStatus = 'Semua', pesanTimer = null, isPandaPersistent = false, notifikasiSudahMuncul = false;
+        let currentTheme = localStorage.getItem('lokertrack_theme') || 'system', currentMode = localStorage.getItem('lokertrack_mode') || 'card', currentFilterStatus = 'Semua', pesanTimer = null, isPandaPersistent = false, notifikasiSudahMuncul = false;
 
         const defaultTemplateSurat = `Kepada Yth. Tim Rekrutmen / HRD {perusahaan},\nDi Tempat\n\nDengan hormat,\n\nMelalui pesan ini, saya bermaksud untuk menyampaikan ketertarikan saya untuk melamar posisi {posisi} di {perusahaan}.\n\nBerikut saya lampirkan berkas pendukung serta portofolio untuk menjadi bahan pertimbangan Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap seleksi selanjutnya.\n\nAtas waktu dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Lengkap Anda]`;
         const defaultTemplateEmail = `Yth. Tim Rekrutmen / HRD {perusahaan},\n\nMelalui email ini, saya bermaksud mengajukan diri untuk melamar posisi {posisi} di {perusahaan}.\n\nBersama email ini, saya telah melampirkan berkas lamaran serta CV terbaru untuk dapat ditinjau oleh Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap wawancara.\n\nDemikian permohonan ini saya sampaikan. Terima kasih atas perhatian dan kesempatan yang diberikan.\n\nHormat saya,\n[Nama Lengkap Anda]`;
@@ -789,7 +786,6 @@
                 return true; 
             });
 
-            if(Notification.permission === "granted") cekNotifikasiFollowUp(dataFiltered);
             const totalFiltered = dataFiltered.length;
             const isLight = currentTheme === 'light';
 
@@ -1213,20 +1209,49 @@
             }
         });
 
-        function inisialisasiTemaOtomatis() { 
-            const savedTheme = localStorage.getItem('lokertrack_theme'); 
-            if (savedTheme === 'light' || savedTheme === 'dark') applyTheme(savedTheme); 
-            else { 
-                const jam = new Date().getHours(); 
-                applyTheme((jam >= 6 && jam < 18) ? 'light' : 'dark'); 
-            } 
+        // ----------------------------------------------------
+        // LOGIKA TEMA OTOMATIS BERDASARKAN SISTEM OPERASI (OS)
+        // ----------------------------------------------------
+        function inisialisasiTemaOtomatis() {
+            const savedTheme = localStorage.getItem('lokertrack_theme');
+            
+            if (savedTheme === 'light' || savedTheme === 'dark') {
+                applyTheme(savedTheme);
+                document.getElementById('menu-text-tema').innerText = savedTheme === 'dark' ? "Mode Terang (Manual)" : "Mode Gelap (Manual)";
+            } else {
+                deteksiTemaSistem();
+            }
+
+            // Real-time listener jika sistem perangkat mengubah mode (terang/gelap) secara otomatis
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                if (localStorage.getItem('lokertrack_theme') === 'system' || !localStorage.getItem('lokertrack_theme')) {
+                    deteksiTemaSistem();
+                }
+            });
         }
 
-        function toggleTemaManual() { 
-            document.getElementById('dropdown-titiktiga').classList.add('hidden'); 
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark'; 
-            localStorage.setItem('lokertrack_theme', newTheme); 
-            applyTheme(newTheme); 
+        function deteksiTemaSistem() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            applyTheme(prefersDark ? 'dark' : 'light');
+            localStorage.setItem('lokertrack_theme', 'system');
+            document.getElementById('menu-text-tema').innerText = "Mode Sistem (Otomatis)";
+        }
+
+        function toggleTemaManual() {
+            document.getElementById('dropdown-titiktiga').classList.add('hidden');
+            let nextTheme = '';
+            const currentSaved = localStorage.getItem('lokertrack_theme');
+            
+            if (currentSaved === 'system' || !currentSaved) {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                nextTheme = prefersDark ? 'light' : 'dark';
+            } else {
+                nextTheme = currentSaved === 'dark' ? 'light' : 'dark';
+            }
+            
+            localStorage.setItem('lokertrack_theme', nextTheme);
+            applyTheme(nextTheme);
+            document.getElementById('menu-text-tema').innerText = nextTheme === 'dark' ? "Mode Terang (Manual)" : "Mode Gelap (Manual)";
         }
 
         function applyTheme(theme) {
@@ -1235,8 +1260,7 @@
             document.getElementById('meta-theme-color').setAttribute('content', isLight ? '#ffffff' : '#1a1a1a'); 
             document.getElementById('body-app').className = isLight ? "bg-gray-100 text-gray-900 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden" : "bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden"; 
             document.getElementById('header-app').className = isLight ? "bg-white px-4 py-5 md:px-6 shadow-md border-b border-gray-200 transition-colors duration-300" : "bg-[#1a1a1a] px-4 py-5 md:px-6 shadow-md border-b border-gray-800 transition-colors duration-300"; 
-            document.getElementById('header-title').className = isLight ? "text-lg md:text-2xl text-gray-900 font-pixel tracking-wide leading-none" : "text-lg md:text-2xl text-white font-pixel tracking-wide leading-none"; 
-            document.getElementById('menu-text-tema').innerText = isLight ? "Mode Gelap" : "Mode Terang";
+            document.getElementById('header-title').className = isLight ? "text-lg md:text-2xl text-gray-900 font-pixel tracking-wide leading-none" : "text-lg md:text-2xl text-white font-pixel tracking-wide leading-none";
 
             const speechBubble = document.getElementById('speech-bubble');
             if (isLight) { 
@@ -1388,8 +1412,9 @@
 
         function aktiftkanNotifikasi() { 
             document.getElementById('dropdown-titiktiga').classList.add('hidden'); 
-            if (!("Notification" in window)) alert("Browser ini tidak mendukung fitur notifikasi desktop."); 
-            else if (Notification.permission === "granted") { 
+            if (!("Notification" in window)) {
+                alert("Browser ini tidak mendukung fitur notifikasi desktop."); 
+            } else if (Notification.permission === "granted") { 
                 alert("Notifikasi sudah aktif!"); 
                 cekNotifikasiFollowUp(dataLamaran, true); 
             } else if (Notification.permission !== "denied") { 
@@ -1397,24 +1422,43 @@
                     if (permission === "granted") { 
                         alert("Notifikasi berhasil diaktifkan!"); 
                         cekNotifikasiFollowUp(dataLamaran, true); 
-                    } 
+                    } else {
+                        alert("Izin notifikasi ditolak oleh browser.");
+                    }
                 }); 
-            } else alert("Notifikasi diblokir. Harap izinkan situs ini memunculkan notifikasi dari pengaturan browser."); 
+            } else {
+                alert("Notifikasi diblokir di setelan browser. Harap izinkan situs ini memunculkan notifikasi."); 
+            }
         }
 
         function cekNotifikasiFollowUp(data, force = false) { 
             if (!("Notification" in window) || Notification.permission !== "granted") return; 
-            if (notifikasiSudahMuncul && !force) return; 
             const d = new Date(); 
             const hariIni = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); 
             let listFollowUp = data.filter(l => l.tanggalFollowUp === hariIni && !["Ditolak", "Diterima"].includes(l.status)); 
+            
+            const reminderKey = hariIni + '_notif_sent';
+            if (localStorage.getItem(reminderKey) && !force) return;
+
             if (listFollowUp.length > 0) { 
-                new Notification("Pengingat Apply LOKER", { body: `Hei! Hari ini kamu punya ${listFollowUp.length} lamaran yang harus di-follow up.`, icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png" }); 
-                notifikasiSudahMuncul = true; 
+                new Notification("Pengingat Apply LOKER", { 
+                    body: `Halo! Hari ini ada ${listFollowUp.length} lamaran yang dijadwalkan untuk di-follow up.`, 
+                    icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png" 
+                }); 
+                localStorage.setItem(reminderKey, 'true');
             } else if (force) { 
-                new Notification("Apply LOKER", { body: "Notifikasi aktif! Kami akan mengingatkanmu jika ada jadwal follow-up hari ini.", icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png" }); 
+                new Notification("Apply LOKER", { 
+                    body: "Notifikasi aktif! Tidak ada jadwal follow-up mendesak untuk hari ini.", 
+                    icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png" 
+                }); 
             } 
         }
+
+        setInterval(() => {
+            if (dataLamaran.length > 0) {
+                cekNotifikasiFollowUp(dataLamaran);
+            }
+        }, 30 * 60 * 1000);
 
         function triggerConfetti() { 
             const colors = ['#ff5ca0', '#ffd700', '#00ffcc', '#ffffff', '#ff4081', '#3b82f6']; 
