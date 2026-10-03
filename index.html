@@ -2,29 +2,37 @@
 <html lang="id">
 <head>
     <!-- ================= 1. META & SETUP ================= -->
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta id="meta-theme-color" name="theme-color" content="#1a1a1a"><title>LOKER - Cloud Edition</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta id="meta-theme-color" name="theme-color" content="#1a1a1a">
+    <title>LOKER - Cloud Edition</title>
     <link rel="manifest" href="manifest.webmanifest">
-    <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Apply LOKER">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Apply LOKER">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; } .font-pixel { font-family: 'Press Start 2P', cursive; }
-        ::-webkit-scrollbar { height: 6px; width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #ff5ca0; border-radius: 4px; }
+        body { font-family: 'Inter', sans-serif; } 
+        .font-pixel { font-family: 'Press Start 2P', cursive; }
+        ::-webkit-scrollbar { height: 6px; width: 6px; } 
+        ::-webkit-scrollbar-track { background: transparent; } 
+        ::-webkit-scrollbar-thumb { background: #ff5ca0; border-radius: 4px; }
         @keyframes breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.03) translateY(-1px); } }
         .animate-breathe { animation: breathe 3s ease-in-out infinite; transform-origin: bottom; }
         .is-moving { transform: scale(1.1) rotate(8deg); transition: transform 0.1s ease; cursor: grabbing !important; }
-        .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        input[type=range] { accent-color: #ff5ca0; } .pixel-btn { box-shadow: 3px 3px 0px 0px #000000; transition: all 0.1s ease; }
+        .no-scrollbar::-webkit-scrollbar { display: none; } 
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        input[type=range] { accent-color: #ff5ca0; } 
+        .pixel-btn { box-shadow: 3px 3px 0px 0px #000000; transition: all 0.1s ease; }
         .pixel-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px 0px #000000; }
         @keyframes fall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
         .confetti-piece { position: fixed; top: -20px; width: 10px; height: 10px; z-index: 9999; animation: fall 2.5s ease-in-out forwards; }
-        
-        /* Gaya Pixel Bubble dengan Border Pink & Ekor */
+
         .pixel-bubble {
             border: 3px solid #ff5ca0;
             box-shadow: 4px 4px 0px 0px rgba(255, 92, 160, 0.4);
@@ -32,29 +40,40 @@
             background-image: linear-gradient(135deg, rgba(255, 92, 160, 0.08) 0%, rgba(255, 92, 160, 0.02) 100%);
         }
 
-        #speech-bubble {
-            bottom: calc(100% + 12px);
-            left: -15px;
-            width: 240px;
-            transform-origin: bottom left;
-        }
+        #speech-bubble { bottom: calc(100% + 12px); left: -15px; width: 240px; transform-origin: bottom left; }
+        #speech-bubble::after { content: ''; position: absolute; bottom: -9px; left: 45px; border-width: 9px 9px 0; border-style: solid; border-color: #ff5ca0 transparent transparent transparent; display: block; width: 0; }
 
-        #speech-bubble::after {
-            content: '';
-            position: absolute;
-            bottom: -9px;
-            left: 45px;
-            border-width: 9px 9px 0;
-            border-style: solid;
-            border-color: #ff5ca0 transparent transparent transparent;
-            display: block;
-            width: 0;
+        /* Animasi Flashcard Accordion */
+        .flashcard-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .flashcard-content.open { max-height: 500px; transition: max-height 0.4s ease-in; }
+
+        /* Kanban Drag Effect & 2 Kolom Nyaman di Layar HP */
+        .kanban-col { transition: background-color 0.2s ease, border-color 0.2s ease; }
+        .kanban-col.drag-over { background-color: rgba(255, 92, 160, 0.08) !important; border-color: #ff5ca0 !important; }
+
+        /* Styling Menu Melayang ala iPhone & Tombol Putar Plus */
+        .fab-menu-item {
+            transform: translateY(20px) scale(0.8);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .fab-menu-item.show {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .fab-main-btn {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .fab-main-btn.rotate {
+            transform: rotate(45deg);
         }
     </style>
 </head>
 <body id="body-app" class="bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden">
-    
-<!-- ================= 2. UI: LOGIN & AUTH ================= -->
+
+    <!-- ================= 2. UI: LOGIN & AUTH ================= -->
     <div id="auth-screen" class="fixed inset-0 bg-[#0d0d0d] z-50 flex items-center justify-center p-4">
         <div class="bg-[#181818] border-4 border-[#ff5ca0] rounded-none shadow-[8px_8px_0px_0px_rgba(255,92,160,0.3)] w-full max-w-sm p-6 space-y-6 relative">
             <div class="flex flex-col items-center justify-center space-y-2 pt-2">
@@ -73,7 +92,7 @@
                     <label class="block text-[10px] font-pixel text-[#ff5ca0] mb-1">PASSWORD:</label>
                     <div class="relative">
                         <input type="password" id="auth-password" required placeholder="••••••••" class="w-full bg-[#121212] border-2 border-gray-600 rounded-none p-3 pr-10 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors">
-                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none p-1" title="Lihat/Sembunyikan Password">
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none p-1">
                             <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -102,19 +121,26 @@
                     </div>
                     <div class="flex items-center gap-3">
                         <div class="relative">
-                            <button onclick="toggleMenuTitikTiga(event)" id="btn-menu-titiktiga" class="w-9 h-9 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0" title="Menu Lainnya">⋮</button>
+                            <button onclick="toggleMenuTitikTiga(event)" id="btn-menu-titiktiga" class="w-9 h-9 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0">⋮</button>
                             <div id="dropdown-titiktiga" class="absolute right-0 mt-2 w-64 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300">
                                 <div class="px-4 py-2.5 border-b border-gray-700/60 bg-black/20">
                                     <p class="text-[10px] text-gray-400 font-medium">Login sebagai:</p>
                                     <p id="user-email-label" class="text-xs text-[#ff5ca0] font-bold truncate"></p>
                                 </div>
-                                <button onclick="bukaModalPanduan()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit"><span>Panduan & Cara Pakai</span></button>
-                                <button onclick="aktifkanNotifikasi()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit"><span>Aktifkan Notif Follow-Up</span></button>
-                                <button onclick="bukaModalTemplateGlobal()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit"><span>Atur Template</span></button>
+                                <button onclick="bukaModalPanduan()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit">
+                                    <span>Panduan & Cara Pakai</span>
+                                </button>
+                                <button onclick="aktiftkanNotifikasi()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit">
+                                    <span>Aktifkan Notif Follow-Up</span>
+                                </button>
                                 <hr id="menu-divider" class="border-gray-700 my-1">
-                                <button onclick="toggleTemaManual()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit"><span id="menu-text-tema">Mode Terang</span></button>
+                                <button onclick="toggleTemaManual()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit">
+                                    <span id="menu-text-tema">Mode Terang</span>
+                                </button>
                                 <hr class="border-gray-700 my-1">
-                                <button onclick="logoutUser()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-red-500/20 text-red-400 transition-colors flex items-center gap-2"><span>Keluar Akun</span></button>
+                                <button onclick="logoutUser()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-red-500/20 text-red-400 transition-colors flex items-center gap-2">
+                                    <span>Keluar Akun</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -124,51 +150,98 @@
                 </div>
             </div>
         </header>
-        
+
         <main class="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
             <!-- TAB STATISTIK & FILTER -->
             <div class="grid grid-cols-6 gap-1.5 md:gap-3 text-center">
                 <div onclick="setFilterStatus('Semua')" id="card-total" class="stat-card bg-[#1e1e1e] border-gray-700 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all ring-2 ring-[#ff5ca0]">
-                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Total</p><p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-total">0</p>
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Total</p>
+                    <p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-total">0</p>
                 </div>
                 <div onclick="setFilterStatus('Favorit')" id="card-favorit" class="stat-card bg-[#1e1e1e] border-gray-700 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
-                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Favorit</p><p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-favorit">0</p>
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Favorit</p>
+                    <p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-favorit">0</p>
                 </div>
                 <div onclick="setFilterStatus('Proses')" id="card-proses" class="stat-card bg-[#1e1e1e] border-gray-700 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
-                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Proses</p><p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-proses">0</p>
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Proses</p>
+                    <p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-proses">0</p>
                 </div>
                 <div onclick="setFilterStatus('Interview')" id="card-interview" class="stat-card bg-[#1e1e1e] border-gray-700 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
-                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Interview</p><p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-interview">0</p>
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Interview</p>
+                    <p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-interview">0</p>
                 </div>
                 <div onclick="setFilterStatus('Diterima')" id="card-diterima" class="stat-card bg-[#1e1e1e] border-gray-700 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
-                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Diterima</p><p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-diterima">0</p>
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Diterima</p>
+                    <p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-diterima">0</p>
                 </div>
                 <div onclick="setFilterStatus('Ditolak')" id="card-ditolak" class="stat-card bg-[#1e1e1e] border-gray-700 border py-3 px-1 rounded-xl shadow-sm cursor-pointer hover:bg-black/5 transition-all">
-                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Ditolak</p><p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-ditolak">0</p>
+                    <p class="text-[9px] md:text-[10px] text-gray-400 font-bold mb-1 stat-label">Ditolak</p>
+                    <p class="text-sm md:text-2xl font-bold text-white stat-number" id="stat-ditolak">0</p>
                 </div>
             </div>
 
-            <!-- TAMPILAN LAMARAN (CARD / TABEL) -->
+            <!-- TAMPILAN LAMARAN -->
             <div class="space-y-4">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
                     <div>
                         <h3 id="label-info-lamaran" class="text-lg md:text-xl font-bold text-white">Info Lamaran</h3>
                         <p class="text-xs text-gray-400" id="teks-jumlah-lamaran">0 dari 0 lamaran</p>
                     </div>
-                    <div id="view-toggle-bg" class="flex gap-1 bg-[#1a1a1a] p-1 rounded-lg border border-gray-800 transition-colors">
-                        <button id="btn-view-card" onclick="setModeTampilan('card')" class="px-3.5 py-1.5 rounded font-bold text-xs text-white transition-all">Detail</button>
-                        <button id="btn-view-tabel" onclick="setModeTampilan('tabel')" class="px-3.5 py-1.5 rounded text-gray-400 font-bold text-xs hover:text-white transition-all">Tabel</button>
+
+                    <!-- TOMBOL VIEW (DETAIL, BOARD, TABEL) -->
+                    <div id="view-toggle-bg" class="flex gap-1 bg-[#1a1a1a] p-1.5 rounded-xl border border-gray-800 transition-colors items-center">
+                        <button id="btn-view-card" onclick="setModeTampilan('card')" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-bold text-xs transition-all">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                            Detail
+                        </button>
+                        <button id="btn-view-kanban" onclick="setModeTampilan('kanban')" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-bold text-xs transition-all">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
+                            Board
+                        </button>
+                        <button id="btn-view-tabel" onclick="setModeTampilan('tabel')" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-bold text-xs transition-all">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                            Tabel
+                        </button>
                     </div>
                 </div>
+
                 <div id="view-card" class="space-y-3"></div>
+                <!-- KANBAN CONTAINER -->
+                <div id="view-kanban" class="hidden flex gap-3 overflow-x-auto pb-6 no-scrollbar items-start min-h-[50vh]"></div>
                 <div id="view-tabel" class="hidden bg-[#1e1e1e] rounded-xl shadow-sm border border-gray-800 transition-colors overflow-hidden pb-2">
-                    <table class="w-full text-left text-xs table-auto"><tbody id="body-tabel"></tbody></table>
+                    <table class="w-full text-left text-xs table-auto">
+                        <tbody id="body-tabel"></tbody>
+                    </table>
                 </div>
             </div>
         </main>
     </div>
 
     <!-- ================= 4. UI: MODAL-MODAL ================= -->
+    <!-- MODAL BANK JAWABAN INTERVIEW -->
+    <div id="modal-flashcard" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
+        <div id="modal-flashcard-box" class="bg-[#1e1e1e] border-2 border-[#ff5ca0]/40 rounded-2xl shadow-2xl w-full max-w-lg p-6 max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-700/60 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-base">💡</span>
+                    <h2 class="text-sm font-bold text-white header-text tracking-wide">Bank Jawaban Interview</h2>
+                </div>
+                <button onclick="tutupModalFlashcard()" class="bg-gray-800 hover:bg-gray-700 rounded-lg text-gray-400 w-8 h-8 flex items-center justify-center font-bold btn-close-modal transition-colors">&times;</button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto pr-1 space-y-3.5 no-scrollbar" id="container-list-flashcard"></div>
+
+            <div class="mt-4 pt-4 border-t border-gray-700/60">
+                <p class="text-xs font-bold text-[#ff5ca0] mb-2.5 flex items-center gap-1.5"><span>✨</span> Tambah Pertanyaan Baru</p>
+                <form id="form-flashcard" onsubmit="simpanFlashcard(event)" class="space-y-2.5">
+                    <input type="text" id="input-fc-tanya" required placeholder="Contoh: Ceritakan tentang diri Anda..." class="input-themed w-full bg-[#121212] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors">
+                    <textarea id="input-fc-jawab" required rows="3" placeholder="Poin jawaban: 1. Latar belakang 2. Pengalaman magang 3. Skill yang relevan..." class="input-themed w-full bg-[#121212] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-[#ff5ca0] transition-colors resize-none"></textarea>
+                    <button type="submit" class="w-full bg-[#ff5ca0] hover:bg-[#ff4081] text-white font-bold py-2.5 rounded-xl transition-all text-xs shadow-md flex items-center justify-center gap-2"><span>Simpan ke Bank</span></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL PANDUAN -->
     <div id="modal-panduan" class="fixed inset-0 bg-black bg-opacity-70 hidden flex justify-center items-center p-4 z-50 backdrop-blur-sm">
         <div id="modal-panduan-box" class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-lg p-5 max-h-[85vh] overflow-y-auto text-gray-300 text-xs leading-relaxed space-y-4">
@@ -178,20 +251,16 @@
             </div>
             <div class="text-themed-modal space-y-3">
                 <div>
-                    <p class="font-bold text-[#ff5ca0] mb-0.5">1. Sinkronisasi Cloud (Realtime Database)</p>
-                    <p>Data lamaranmu otomatis tersimpan secara aman di server Firebase. Kamu bisa login dengan email yang sama di perangkat lain dan data akan langsung tersinkronisasi.</p>
+                    <p class="font-bold text-[#ff5ca0] mb-0.5">1. Tampilan Kanban Board & Timeline</p>
+                    <p>Kamu bisa melihat progres lamaran di menu "Board" dan menyeret kartunya untuk mengubah status. Semua perubahan status kini tercatat di "Riwayat Status" saat kamu mengedit data.</p>
                 </div>
                 <div>
-                    <p class="font-bold text-[#ff5ca0] mb-0.5">2. Tambah & Kelola Lamaran</p>
-                    <p>Tekan tombol <b>+</b> di pojok kanan bawah untuk menambah data perusahaan baru. Kamu juga bisa mengisi info detail opsional seperti tanggal <i>follow-up</i>, link loker, nomor kontak HRD/User, metode lamaran, hingga estimasi gaji.</p>
+                    <p class="font-bold text-[#ff5ca0] mb-0.5">2. Bank Latihan Interview</p>
+                    <p>Simpan pertanyaan yang sering muncul saat wawancara beserta draf jawabanmu di menu "Latihan Interview" agar kamu bisa me-review-nya sebelum Google Meet dimulai.</p>
                 </div>
                 <div>
-                    <p class="font-bold text-[#ff5ca0] mb-0.5">3. Template Surat & Pesan Cepat</p>
-                    <p>Buka menu titik tiga (<b>⋮</b>) di kanan atas lalu pilih <b>Atur Template</b> untuk mengatur template surat lamaran (.doc), format email, atau chat WhatsApp (tanya progress & konfirmasi interview) agar bisa langsung disalin atau dikirimkan ke HRD.</p>
-                </div>
-                <div>
-                    <p class="font-bold text-[#ff5ca0] mb-0.5">4. Pengingat & Maskot Panda</p>
-                    <p>Maskot panda di pojok kiri bawah bukan cuma hiasan! Panda akan mengingatkanmu jika ada jadwal <i>follow-up</i> atau deadline lamaran hari ini. Klik maskotnya kapan saja untuk membaca kutipan semangat random atau geser posisinya sesukamu.</p>
+                    <p class="font-bold text-[#ff5ca0] mb-0.5">3. Sinkronisasi Cloud (Realtime Database)</p>
+                    <p>Data lamaranmu otomatis tersimpan secara aman di server Firebase. Login dengan email yang sama di HP atau Laptop, datanya akan selalu tersinkronisasi.</p>
                 </div>
             </div>
             <button onclick="tutupModalPanduan()" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs">Mengerti!</button>
@@ -253,13 +322,20 @@
                     <div>
                         <label class="label-themed block text-xs font-bold text-gray-400 mb-1">STATUS</label>
                         <select id="input-status" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
-                            <option value="Rencana Daftar">Rencana Daftar</option><option value="Terkirim">Terkirim</option>
-                            <option value="Screening HR">Screening HR</option><option value="Psikotes">Psikotes</option>
-                            <option value="Tes Online">Tes Online</option><option value="Tes Teknis">Tes Teknis</option>
-                            <option value="Interview HR">Interview HR</option><option value="Interview User">Interview User</option>
-                            <option value="Final Interview">Final Interview</option><option value="Medical Check Up">Medical Check Up</option>
-                            <option value="Offering">Offering</option><option value="Diterima">Diterima</option>
-                            <option value="Ditolak">Ditolak</option><option value="Tidak Ada Kabar">Tidak Ada Kabar</option>
+                            <option value="Rencana Daftar">Rencana Daftar</option>
+                            <option value="Terkirim">Terkirim</option>
+                            <option value="Screening HR">Screening HR</option>
+                            <option value="Psikotes">Psikotes</option>
+                            <option value="Tes Online">Tes Online</option>
+                            <option value="Tes Teknis">Tes Teknis</option>
+                            <option value="Interview HR">Interview HR</option>
+                            <option value="Interview User">Interview User</option>
+                            <option value="Final Interview">Final Interview</option>
+                            <option value="Medical Check Up">Medical Check Up</option>
+                            <option value="Offering">Offering</option>
+                            <option value="Diterima">Diterima</option>
+                            <option value="Ditolak">Ditolak</option>
+                            <option value="Tidak Ada Kabar">Tidak Ada Kabar</option>
                         </select>
                     </div>
                 </div>
@@ -268,12 +344,24 @@
                 </div>
                 <div id="form-opsional-container" class="hidden space-y-3 mb-3 bg-black/20 p-3 rounded-xl border border-gray-800 transition-colors">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div><label class="label-themed block text-[11px] font-bold text-gray-400 mb-1">TGL FOLLOW UP</label><input type="date" id="input-followup" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></div>
-                        <div><label class="label-themed block text-[11px] font-bold text-gray-400 mb-1">DEADLINE LAMAR</label><input type="date" id="input-deadline" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></div>
+                        <div>
+                            <label class="label-themed block text-[11px] font-bold text-gray-400 mb-1">TGL FOLLOW UP</label>
+                            <input type="date" id="input-followup" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                        </div>
+                        <div>
+                            <label class="label-themed block text-[11px] font-bold text-gray-400 mb-1">DEADLINE LAMAR</label>
+                            <input type="date" id="input-deadline" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                        </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div><label class="label-themed block text-[11px] font-bold text-gray-400 mb-1">LINK LOWONGAN</label><input type="url" id="input-link" placeholder="https://..." class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></div>
-                        <div><label class="label-themed block text-[11px] font-bold text-gray-400 mb-1">KONTAK (WA / EMAIL)</label><input type="text" id="input-kontak" placeholder="Nama / No WA / Email" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></div>
+                        <div>
+                            <label class="label-themed block text-[11px] font-bold text-gray-400 mb-1">LINK LOWONGAN</label>
+                            <input type="url" id="input-link" placeholder="https://..." class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                        </div>
+                        <div>
+                            <label class="label-themed block text-[11px] font-bold text-gray-400 mb-1">KONTAK (WA / EMAIL)</label>
+                            <input type="text" id="input-kontak" placeholder="Nama / No WA / Email" class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+                        </div>
                     </div>
                     <div class="relative">
                         <label id="label-metode" class="label-themed block text-[11px] font-bold text-gray-400 mb-1">METODE LAMAR (Platform)</label>
@@ -284,7 +372,10 @@
                         <div id="dropdown-metode-list" class="menu-dropdown absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
                     </div>
                     <div class="p-3 rounded-xl border border-gray-700/60 bg-black/20" id="container-slider-gaji">
-                        <div class="flex justify-between items-center mb-1"><label class="text-[11px] font-bold text-gray-400 label-themed">ESTIMASI GAJI</label><span id="label-nominal-gaji" class="text-[11px] font-bold text-[#ff5ca0] bg-[#ff5ca0]/10 border border-[#ff5ca0]/30 px-2 py-0.5 rounded badge-themed">Rp 0</span></div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-[11px] font-bold text-gray-400 label-themed">ESTIMASI GAJI</label>
+                            <span id="label-nominal-gaji" class="text-[11px] font-bold text-[#ff5ca0] bg-[#ff5ca0]/10 border border-[#ff5ca0]/30 px-2 py-0.5 rounded badge-themed">Rp 0</span>
+                        </div>
                         <input type="range" id="input-gaji-slider" min="0" max="25000000" step="500000" value="0" oninput="updateGajiSlider(this.value)" class="w-full h-1.5 bg-gray-700 rounded-lg appearance-none cursor-pointer mb-2">
                         <div class="flex justify-between items-center gap-1 overflow-x-auto no-scrollbar pt-1 btn-gaji-cepat-container">
                             <button type="button" onclick="setGajiCepat(0)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded border border-gray-700">0</button>
@@ -301,109 +392,181 @@
                         <textarea id="input-keterangan" rows="2" placeholder="Tulis catatan..." class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]"></textarea>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs shadow-md mt-2">Simpan Perubahan</button>
+
+                <!-- WADAH TIMELINE RIWAYAT STATUS -->
+                <div id="container-riwayat-status" class="hidden mt-4 pt-3 border-t border-gray-800 border-themed">
+                    <label class="label-themed block text-xs font-bold text-gray-400 mb-2">RIWAYAT STATUS</label>
+                    <div id="list-riwayat" class="relative pl-3 border-l-2 border-[#ff5ca0]/50 space-y-3 ml-2"></div>
+                </div>
+
+                <button type="submit" class="w-full bg-[#ff5ca0] text-white font-bold py-2.5 rounded-lg hover:bg-[#ff4081] transition-colors text-xs shadow-md mt-4">Simpan Perubahan</button>
             </form>
         </div>
     </div>
 
-<!-- ================= 5. FLOATING MASKOT & TOMBOL TAMBAH ================= -->
-<div id="panda-container" class="fixed bottom-6 left-4 z-30 select-none touch-none cursor-grab flex flex-col items-center" title="Geser panda!">
-    
-    <div id="panda-avatar" class="relative w-24 h-24 md:w-28 md:h-28 cursor-pointer select-none transition-all duration-300 drop-shadow-2xl flex justify-center" onclick="handlePandaClick(event)">
-        
-        <!-- SPEECH BUBBLE DITAMBAHKAN pointer-events-none AGAR TIDAK MENGHALANGI KLIK KETIKA TUTUP -->
-        <div id="speech-bubble" onclick="event.stopPropagation()" class="absolute max-h-[220px] overflow-y-auto p-3.5 pixel-bubble bg-[#1e1e1e] text-gray-200 opacity-0 translate-y-2 pointer-events-none transition-all duration-300 z-50">
-            <p id="panda-pesan" class="text-[11px] font-bold leading-relaxed">"Halo bos!"</p>
+    <!-- ================= 5. FLOATING MASKOT & MENU TOMBOL PLUS ================= -->
+    <div id="panda-container" class="fixed bottom-6 left-4 z-30 select-none touch-none cursor-grab flex flex-col items-center" title="Geser panda!">
+        <div id="panda-avatar" class="relative w-24 h-24 md:w-28 md:h-28 cursor-pointer select-none transition-all duration-300 drop-shadow-2xl flex justify-center" onclick="handlePandaClick(event)">
+            <div id="speech-bubble" onclick="event.stopPropagation()" class="absolute max-h-[220px] overflow-y-auto p-3.5 pixel-bubble bg-[#1e1e1e] text-gray-200 opacity-0 translate-y-2 pointer-events-none transition-all duration-300 z-50">
+                <p id="panda-pesan" class="text-[11px] font-bold leading-relaxed">"Halo bos!"</p>
+            </div>
+            <img src="https://lh3.googleusercontent.com/d/1bjSzoxhktQ0bHf-fHu2uE0jVn_EM_QJK" alt="Maskot GIF" class="w-full h-full object-contain animate-breathe cursor-grab" draggable="false">
         </div>
-        
-        <img src="https://lh3.googleusercontent.com/d/1bjSzoxhktQ0bHf-fHu2uE0jVn_EM_QJK" alt="Maskot GIF" class="w-full h-full object-contain animate-breathe cursor-grab" draggable="false">
-        
     </div>
-</div>
 
-<button onclick="bukaModalTambah()" class="fixed bottom-6 right-6 bg-[#ff5ca0] hover:bg-[#ff4081] text-white w-14 h-14 rounded-full text-3xl font-bold shadow-lg flex items-center justify-center transition-transform hover:scale-110 z-20">+</button>
+    <!-- Menu Melayang Tombol Plus -->
+    <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2.5">
+        <div id="fab-menu-container" class="flex flex-col items-end gap-2 mb-1">
+            <button onclick="bukaModalFlashcard(); tutupFabMenu();" class="fab-menu-item flex items-center gap-2.5 bg-[#1e1e1e] hover:bg-[#2d2d2d] border border-gray-700 text-white px-3.5 py-2 rounded-full shadow-lg text-xs font-semibold">
+                <span>Latihan Interview</span>
+            </button>
+            <button onclick="bukaModalTemplateGlobal(); tutupFabMenu();" class="fab-menu-item flex items-center gap-2.5 bg-[#1e1e1e] hover:bg-[#2d2d2d] border border-gray-700 text-white px-3.5 py-2 rounded-full shadow-lg text-xs font-semibold">
+                <span>Atur Template</span>
+            </button>
+            <button onclick="bukaModalTambah(); tutupFabMenu();" class="fab-menu-item flex items-center gap-2.5 bg-[#ff5ca0] hover:bg-[#ff4081] text-white px-3.5 py-2 rounded-full shadow-lg text-xs font-semibold">
+                <span>➕ Tambah Loker</span>
+            </button>
+        </div>
+        <!-- Tombol Plus Utama -->
+        <button id="fab-main-btn" onclick="toggleFabMenu()" class="fab-main-btn bg-[#ff5ca0] hover:bg-[#ff4081] text-white w-14 h-14 rounded-full text-3xl font-bold shadow-xl flex items-center justify-center focus:outline-none">+</button>
+    </div>
 
     <!-- ================= 6. JAVASCRIPT ================= -->
     <script>
-        // --- 6A. CONFIG & VARIABLES ---
         const firebaseConfig = { apiKey: "AIzaSyDG5qmJD0EGEaJRGNtvd8U6jTQDj3cvXRA", authDomain: "infol-61428.firebaseapp.com", databaseURL: "https://infol-61428-default-rtdb.firebaseio.com", projectId: "infol-61428", storageBucket: "infol-61428.firebasestorage.app", messagingSenderId: "139934994775", appId: "1:139934994775:web:7ddf166a0e962c5c286e12", measurementId: "G-F04YS5MX1T" };
-        firebase.initializeApp(firebaseConfig); const auth = firebase.auth(); const rtdb = firebase.database();
-        let currentUser = null, dataLamaran = [], isSignUpMode = false;
+        firebase.initializeApp(firebaseConfig); 
+        const auth = firebase.auth(); 
+        const rtdb = firebase.database();
+        let currentUser = null, dataLamaran = [], dataFlashcards = [], isSignUpMode = false;
         let currentTheme = localStorage.getItem('lokertrack_theme') || 'auto', currentMode = localStorage.getItem('lokertrack_mode') || 'card', currentFilterStatus = 'Semua', pesanTimer = null, isPandaPersistent = false, notifikasiSudahMuncul = false;
-        
+
         const defaultTemplateSurat = `Kepada Yth. Tim Rekrutmen / HRD {perusahaan},\nDi Tempat\n\nDengan hormat,\n\nMelalui pesan ini, saya bermaksud untuk menyampaikan ketertarikan saya untuk melamar posisi {posisi} di {perusahaan}.\n\nBerikut saya lampirkan berkas pendukung serta portofolio untuk menjadi bahan pertimbangan Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap seleksi selanjutnya.\n\nAtas waktu dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Lengkap Anda]`;
         const defaultTemplateEmail = `Yth. Tim Rekrutmen / HRD {perusahaan},\n\nMelalui email ini, saya bermaksud mengajukan diri untuk melamar posisi {posisi} di {perusahaan}.\n\nBersama email ini, saya telah melampirkan berkas lamaran serta CV terbaru untuk dapat ditinjau oleh Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap wawancara.\n\nDemikian permohonan ini saya sampaikan. Terima kasih atas perhatian dan kesempatan yang diberikan.\n\nHormat saya,\n[Nama Lengkap Anda]`;
         const defaultTemplateTanya = `Yth. Bapak/Ibu HRD {perusahaan},\n\nSelamat pagi/siang. Mohon maaf mengganggu waktunya sebentar. Saya ingin menanyakan perkembangan atau status dari lamaran saya untuk posisi {posisi} yang telah saya kirimkan sebelumnya.\n\nBesar harapan saya untuk mendapatkan informasi lebih lanjut. Atas perhatian dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n[Nama Anda]`;
         const defaultTemplateInterview = `Yth. Bapak/Ibu HRD {perusahaan},\n\nTerima kasih banyak atas undangan serta kesempatan interview untuk posisi {posisi}. Melalui pesan ini, saya bermaksud mengonfirmasi bahwa saya akan hadir memenuhi undangan tersebut sesuai dengan jadwal yang telah ditentukan.\n\nSekali lagi terima kasih atas kesempatan yang diberikan.\n\nHormat saya,\n[Nama Anda]`;
-        let templateSurat = localStorage.getItem('lokertrack_template_surat') || defaultTemplateSurat, templateEmail = localStorage.getItem('lokertrack_template_email') || defaultTemplateEmail, templateTanya = localStorage.getItem('lokertrack_template_tanya') || defaultTemplateTanya, templateInterview = localStorage.getItem('lokertrack_template_interview') || defaultTemplateInterview;
+
+        let templateSurat = localStorage.getItem('lokertrack_template_surat') || defaultTemplateSurat;
+        let templateEmail = localStorage.getItem('lokertrack_template_email') || defaultTemplateEmail;
+        let templateTanya = localStorage.getItem('lokertrack_template_tanya') || defaultTemplateTanya;
+        let templateInterview = localStorage.getItem('lokertrack_template_interview') || defaultTemplateInterview;
+
         const modal = document.getElementById('modal-form'), form = document.getElementById('form-lamaran');
 
-        inisialisasiTemaOtomatis(); setModeTampilan(currentMode);
+        inisialisasiTemaOtomatis(); 
+        setModeTampilan(currentMode);
 
-        // --- 6B. AUTH & FIREBASE REALTIME DB ---
+        function toggleFabMenu() {
+            const items = document.querySelectorAll('.fab-menu-item');
+            const mainBtn = document.getElementById('fab-main-btn');
+
+            mainBtn.classList.toggle('rotate');
+            items.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.toggle('show');
+                }, index * 40);
+            });
+        }
+
+        function tutupFabMenu() {
+            const items = document.querySelectorAll('.fab-menu-item');
+            const mainBtn = document.getElementById('fab-main-btn');
+
+            mainBtn.classList.remove('rotate');
+            items.forEach(item => {
+                item.classList.remove('show');
+            });
+        }
+
+        function formatWaktu(isoString) {
+            if(!isoString) return "-";
+            const date = new Date(isoString);
+            return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + " " + date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function onDragStartKanban(e, id) { 
+            e.dataTransfer.setData("text/plain", id); 
+            setTimeout(() => { e.target.style.opacity = '0.4'; }, 0);
+        }
+        function onDragEndKanban(e) { e.target.style.opacity = '1'; }
+        function allowDropKanban(e, el) { e.preventDefault(); el.classList.add('drag-over'); }
+        function leaveDropKanban(e, el) { el.classList.remove('drag-over'); }
+        function onDropKanban(e, targetStatus, el) { 
+            e.preventDefault(); 
+            el.classList.remove('drag-over'); 
+            const id = e.dataTransfer.getData("text/plain"); 
+            if (id) ubahStatus(id, targetStatus); 
+        }
+
         auth.onAuthStateChanged((user) => {
-            if (user) { currentUser = user; document.getElementById('auth-screen').classList.add('hidden'); document.getElementById('app-content').classList.remove('hidden'); document.getElementById('user-email-label').innerText = user.email; muatDataRealtimeDB(); } 
-            else { currentUser = null; document.getElementById('app-content').classList.add('hidden'); document.getElementById('auth-screen').classList.remove('hidden'); }
+            if (user) { 
+                currentUser = user; 
+                document.getElementById('auth-screen').classList.add('hidden'); 
+                document.getElementById('app-content').classList.remove('hidden'); 
+                document.getElementById('user-email-label').innerText = user.email; 
+                muatDataRealtimeDB(); 
+                muatFlashcards(); 
+            } else { 
+                currentUser = null; 
+                document.getElementById('app-content').classList.add('hidden'); 
+                document.getElementById('auth-screen').classList.remove('hidden'); 
+            }
         });
+
         function toggleAuthMode() { 
             isSignUpMode = !isSignUpMode; 
             document.getElementById('btn-auth-submit').innerText = isSignUpMode ? "Daftar" : "Masuk"; 
             document.getElementById('auth-subtitle').innerText = isSignUpMode ? "BUAT AKUN BARU" : "SILAKAN MASUK AKUN"; 
             document.getElementById('btn-toggle-auth').innerText = isSignUpMode ? "Sudah punya akun? Masuk" : "Belum punya akun? Daftar"; 
-            document.getElementById('forgot-password-container').style.display = isSignUpMode ? "none" : "block";
-            document.getElementById('auth-error').classList.add('hidden');
-            document.getElementById('auth-success').classList.add('hidden');
+            document.getElementById('forgot-password-container').style.display = isSignUpMode ? "none" : "block"; 
+            document.getElementById('auth-error').classList.add('hidden'); 
+            document.getElementById('auth-success').classList.add('hidden'); 
         }
+
         function handleAuthSubmit(e) { 
             e.preventDefault(); 
             const email = document.getElementById('auth-email').value, pass = document.getElementById('auth-password').value, errBox = document.getElementById('auth-error'), succBox = document.getElementById('auth-success'); 
-            errBox.classList.add('hidden'); succBox.classList.add('hidden');
+            errBox.classList.add('hidden'); 
+            succBox.classList.add('hidden'); 
             if (isSignUpMode) {
                 auth.createUserWithEmailAndPassword(email, pass).catch(err => { errBox.innerText = err.message; errBox.classList.remove('hidden'); }); 
-            } else { 
+            } else {
                 auth.signInWithEmailAndPassword(email, pass).catch(err => { errBox.innerText = err.message; errBox.classList.remove('hidden'); }); 
             }
         }
-        function handleForgotPassword() {
-            const emailInput = document.getElementById('auth-email').value.trim();
-            const errBox = document.getElementById('auth-error'), succBox = document.getElementById('auth-success');
-            errBox.classList.add('hidden'); succBox.classList.add('hidden');
-            
-            if (!emailInput) {
-                errBox.innerText = "Masukkan email terlebih dahulu pada kolom email di atas!";
-                errBox.classList.remove('hidden');
-                return;
-            }
 
-            auth.sendPasswordResetEmail(emailInput)
-                .then(() => {
-                    succBox.innerText = "Link reset sandi telah dikirim ke email " + emailInput + ". Silakan cek kotak masuk/spam.";
-                    succBox.classList.remove('hidden');
-                })
-                .catch((err) => {
-                    errBox.innerText = err.message;
-                    errBox.classList.remove('hidden');
-                });
+        function handleForgotPassword() { 
+            const emailInput = document.getElementById('auth-email').value.trim(); 
+            const errBox = document.getElementById('auth-error'), succBox = document.getElementById('auth-success'); 
+            errBox.classList.add('hidden'); 
+            succBox.classList.add('hidden'); 
+            if (!emailInput) { 
+                errBox.innerText = "Masukkan email terlebih dahulu!"; 
+                errBox.classList.remove('hidden'); 
+                return; 
+            } 
+            auth.sendPasswordResetEmail(emailInput).then(() => { 
+                succBox.innerText = "Link reset sandi dikirim. Cek inbox/spam."; 
+                succBox.classList.remove('hidden'); 
+            }).catch((err) => { 
+                errBox.innerText = err.message; 
+                errBox.classList.remove('hidden'); 
+            }); 
         }
-        function togglePasswordVisibility() {
-            const passwordInput = document.getElementById('auth-password');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-            } else {
-                passwordInput.type = 'password';
-            }
+
+        function togglePasswordVisibility() { 
+            const passwordInput = document.getElementById('auth-password'); 
+            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password'; 
         }
+
         function logoutUser() { auth.signOut(); }
-        
+
         function muatDataRealtimeDB() {
             if (!currentUser) return; 
-            const uid = currentUser.uid;
-            rtdb.ref('users/' + uid + '/lamaran').on('value', (snapshot) => { 
+            rtdb.ref('users/' + currentUser.uid + '/lamaran').on('value', (snapshot) => { 
                 dataLamaran = []; 
                 const val = snapshot.val(); 
                 if (val) { 
                     Object.keys(val).forEach(key => { dataLamaran.push({ id: key, ...val[key] }); }); 
-                    
                     dataLamaran.sort((a, b) => { 
                         const dateDiff = new Date(b.tanggal || 0) - new Date(a.tanggal || 0); 
                         return dateDiff !== 0 ? dateDiff : b.id - a.id; 
@@ -413,35 +576,197 @@
                 renderTampilan(); 
             });
         }
-        
-        function simpanKeRealtimeDB(lamaranBaru) { if (!currentUser) return; const idDoc = lamaranBaru.id ? lamaranBaru.id.toString() : Date.now().toString(); rtdb.ref('users/' + currentUser.uid + '/lamaran/' + idDoc).set(lamaranBaru); }
-        function hapusDariRealtimeDB(id) { if (!currentUser) return; rtdb.ref('users/' + currentUser.uid + '/lamaran/' + id.toString()).remove(); }
 
-        // --- 6C. CRUD LOKER & DATA ACTIONS ---
-        function simpanLamaran(event) { event.preventDefault();
-            const idInput = document.getElementById('input-id').value, perusahaan = document.getElementById('input-perusahaan').value, posisi = document.getElementById('input-posisi').value, tanggal = document.getElementById('input-tanggal').value, tanggalFollowUp = document.getElementById('input-followup').value, deadline = document.getElementById('input-deadline').value, link = document.getElementById('input-link').value, kontak = document.getElementById('input-kontak').value, metode = document.getElementById('input-metode').value, status = document.getElementById('input-status').value, keterangan = document.getElementById('input-keterangan').value, gajiMentah = parseInt(document.getElementById('input-gaji-slider').value) || 0, gaji = formatRupiah(gajiMentah), id = idInput ? idInput : Date.now();
-            const existingItem = dataLamaran.find(item => item.id == idInput), isFavorit = existingItem ? !!existingItem.isFavorit : false, dataBaru = { id, perusahaan, posisi, tanggal, tanggalFollowUp, deadline, link, kontak, metode, gaji, gajiMentah, status, keterangan, isFavorit };
+        function muatFlashcards() {
+            if (!currentUser) return;
+            rtdb.ref('users/' + currentUser.uid + '/flashcards').on('value', (snapshot) => {
+                dataFlashcards = []; 
+                const val = snapshot.val();
+                if (val) { 
+                    Object.keys(val).forEach(key => { dataFlashcards.push({ id: key, ...val[key] }); }); 
+                }
+                renderListFlashcard();
+            });
+        }
+
+        function simpanKeRealtimeDB(lamaranBaru) { 
+            if (!currentUser) return; 
+            const idDoc = lamaranBaru.id ? lamaranBaru.id.toString() : Date.now().toString(); 
+            rtdb.ref('users/' + currentUser.uid + '/lamaran/' + idDoc).set(lamaranBaru); 
+        }
+
+        function hapusDariRealtimeDB(id) { 
+            if (!currentUser) return; 
+            rtdb.ref('users/' + currentUser.uid + '/lamaran/' + id.toString()).remove(); 
+        }
+
+        function simpanLamaran(event) { 
+            event.preventDefault();
+            const idInput = document.getElementById('input-id').value, 
+                  perusahaan = document.getElementById('input-perusahaan').value, 
+                  posisi = document.getElementById('input-posisi').value, 
+                  tanggal = document.getElementById('input-tanggal').value, 
+                  tanggalFollowUp = document.getElementById('input-followup').value, 
+                  deadline = document.getElementById('input-deadline').value, 
+                  link = document.getElementById('input-link').value, 
+                  kontak = document.getElementById('input-kontak').value, 
+                  metode = document.getElementById('input-metode').value, 
+                  status = document.getElementById('input-status').value, 
+                  keterangan = document.getElementById('input-keterangan').value, 
+                  gajiMentah = parseInt(document.getElementById('input-gaji-slider').value) || 0, 
+                  gaji = formatRupiah(gajiMentah), 
+                  id = idInput ? idInput : Date.now();
+
+            const existingItem = dataLamaran.find(item => item.id == idInput), isFavorit = existingItem ? !!existingItem.isFavorit : false;
+            let riwayat = existingItem && existingItem.riwayat ? existingItem.riwayat : [];
+
+            const urutanTahap = [
+                "Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", 
+                "Tes Online", "Tes Teknis", "Interview HR", "Interview User", 
+                "Final Interview", "Medical Check Up", "Offering", "Diterima",
+                "Ditolak", "Tidak Ada Kabar"
+            ];
+
+            if (!existingItem) {
+                riwayat.push({ status: status, waktu: new Date(tanggal + 'T08:00:00').toISOString() });
+            } else {
+                if (riwayat.length > 0) {
+                    const jamAsli = new Date(riwayat[0].waktu).toTimeString().split(' ')[0];
+                    riwayat[0].waktu = new Date(tanggal + 'T' + jamAsli).toISOString();
+                } else {
+                    riwayat.push({ status: status, waktu: new Date(tanggal + 'T08:00:00').toISOString() });
+                }
+
+                if (existingItem.status !== status) {
+                    const idxBaru = urutanTahap.indexOf(status);
+                    riwayat = riwayat.filter(r => {
+                        const rIdx = urutanTahap.indexOf(r.status);
+                        return rIdx === -1 || idxBaru === -1 || rIdx <= idxBaru;
+                    });
+
+                    if (!riwayat.some(r => r.status === status)) {
+                        riwayat.push({ status: status, waktu: new Date().toISOString() });
+                    }
+                }
+            }
+
+            const dataBaru = { id, perusahaan, posisi, tanggal, tanggalFollowUp, deadline, link, kontak, metode, gaji, gajiMentah, status, keterangan, isFavorit, riwayat };
             if ((status === 'Diterima' || status === 'Offering') && (!existingItem || existingItem.status !== status)) triggerConfetti();
-            simpanKeRealtimeDB(dataBaru); tutupModal();
+            simpanKeRealtimeDB(dataBaru); 
+            tutupModal();
         }
+
         function hapusLamaran(id) { if(confirm('Hapus data ini?')) hapusDariRealtimeDB(id); }
+
         function ubahStatus(id, statusBaru) {
-            const index = dataLamaran.findIndex(item => item.id == id); if (index !== -1) { const statusLama = dataLamaran[index].status; dataLamaran[index].status = statusBaru; simpanKeRealtimeDB(dataLamaran[index]);
-                if ((statusBaru === 'Diterima' || statusBaru === 'Offering') && statusLama !== statusBaru) { triggerConfetti(); showPersistentBubble(`🎉 Wihh mantap boskuu! Alhamdulillah keterima di <b>${dataLamaran[index].perusahaan}</b>! Traktiran dong!`); } else if ((statusBaru === 'Ditolak' || statusBaru === 'Tidak Ada Kabar') && statusLama !== statusBaru) { showBubble(`💪 Semangat bos! Ditolak di <b>${dataLamaran[index].perusahaan}</b> bukan berarti akhir segalanya!`); } }
+            const index = dataLamaran.findIndex(item => item.id == id); 
+            if (index !== -1) { 
+                const statusLama = dataLamaran[index].status; 
+
+                if (statusLama !== statusBaru) {
+                    dataLamaran[index].status = statusBaru; 
+                    if (!dataLamaran[index].riwayat) dataLamaran[index].riwayat = [];
+
+                    const urutanTahap = [
+                        "Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", 
+                        "Tes Online", "Tes Teknis", "Interview HR", "Interview User", 
+                        "Final Interview", "Medical Check Up", "Offering", "Diterima",
+                        "Ditolak", "Tidak Ada Kabar"
+                    ];
+
+                    const idxBaru = urutanTahap.indexOf(statusBaru);
+
+                    if (idxBaru !== -1) {
+                        dataLamaran[index].riwayat = dataLamaran[index].riwayat.filter(r => {
+                            const rIdx = urutanTahap.indexOf(r.status);
+                            return rIdx === -1 || idxBaru === -1 || rIdx <= idxBaru;
+                        });
+
+                        const adaDiRiwayat = dataLamaran[index].riwayat.some(r => r.status === statusBaru);
+                        if (!adaDiRiwayat) {
+                            dataLamaran[index].riwayat.push({ 
+                                status: statusBaru, 
+                                waktu: new Date().toISOString() 
+                            });
+                        }
+                    } else {
+                        dataLamaran[index].riwayat.push({ 
+                            status: statusBaru, 
+                            waktu: new Date().toISOString() 
+                        });
+                    }
+
+                    simpanKeRealtimeDB(dataLamaran[index]);
+
+                    if ((statusBaru === 'Diterima' || statusBaru === 'Offering')) { 
+                        triggerConfetti(); 
+                        showPersistentBubble(`🎉 Wihh mantap boskuu! Alhamdulillah keterima di <b>${dataLamaran[index].perusahaan}</b>! Traktiran dong!`); 
+                    } else if ((statusBaru === 'Ditolak' || statusBaru === 'Tidak Ada Kabar')) { 
+                        showBubble(`💪 Semangat bos! Ditolak di <b>${dataLamaran[index].perusahaan}</b> bukan berarti akhir segalanya!`); 
+                    } 
+                }
+            }
         }
-        function toggleFavorit(id, event) { if (event) event.stopPropagation(); const index = dataLamaran.findIndex(item => item.id == id); if (index !== -1) { dataLamaran[index].isFavorit = !dataLamaran[index].isFavorit; simpanKeRealtimeDB(dataLamaran[index]); } }
-        
-        // --- 6D. RENDER UI ---
-        function formatRupiah(angka) { if (!angka || angka == 0) return "-"; return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka); }
-        function formatTanggal(tgl) { if(!tgl) return "-"; return new Date(tgl).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }); }
-        function updateGajiSlider(nilai) { const label = document.getElementById('label-nominal-gaji'); if (nilai == 0) label.innerText = "Tidak Dicantumkan"; else if (nilai >= 25000000) label.innerText = "Rp 25.000.000+"; else label.innerText = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(nilai); }
-        function setGajiCepat(nilai) { document.getElementById('input-gaji-slider').value = nilai; updateGajiSlider(nilai); }
+
+        function toggleFavorit(id, event) { 
+            if (event) event.stopPropagation(); 
+            const index = dataLamaran.findIndex(item => item.id == id); 
+            if (index !== -1) { 
+                dataLamaran[index].isFavorit = !dataLamaran[index].isFavorit; 
+                simpanKeRealtimeDB(dataLamaran[index]); 
+            } 
+        }
+
+        function simpanFlashcard(event) {
+            event.preventDefault();
+            if(!currentUser) return;
+            const tanya = document.getElementById('input-fc-tanya').value.trim();
+            const jawab = document.getElementById('input-fc-jawab').value.trim();
+            const id = Date.now().toString();
+            rtdb.ref('users/' + currentUser.uid + '/flashcards/' + id).set({ id, tanya, jawab });
+            document.getElementById('form-flashcard').reset();
+        }
+
+        function hapusFlashcard(id) {
+            if(!currentUser) return;
+            if(confirm('Hapus kartu latihan ini?')) rtdb.ref('users/' + currentUser.uid + '/flashcards/' + id).remove();
+        }
+
+        function formatRupiah(angka) { 
+            if (!angka || angka == 0) return "-"; 
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka); 
+        }
+
+        function formatTanggal(tgl) { 
+            if(!tgl) return "-"; 
+            return new Date(tgl).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }); 
+        }
+
+        function updateGajiSlider(nilai) { 
+            const label = document.getElementById('label-nominal-gaji'); 
+            if (nilai == 0) label.innerText = "Tidak Dicantumkan"; 
+            else if (nilai >= 25000000) label.innerText = "Rp 25.000.000+"; 
+            else label.innerText = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(nilai); 
+        }
+
+        function setGajiCepat(nilai) { 
+            document.getElementById('input-gaji-slider').value = nilai; 
+            updateGajiSlider(nilai); 
+        }
+
         function renderTampilan() {
-            const containerCard = document.getElementById('view-card'), containerTabel = document.getElementById('body-tabel'), keywordInput = document.getElementById('input-pencarian'), keyword = keywordInput ? keywordInput.value.toLowerCase() : '';
-            if(containerCard) containerCard.innerHTML = ''; if(containerTabel) containerTabel.innerHTML = '';
-            
+            const containerCard = document.getElementById('view-card'), 
+                  containerTabel = document.getElementById('body-tabel'), 
+                  containerKanban = document.getElementById('view-kanban'), 
+                  keywordInput = document.getElementById('input-pencarian'), 
+                  keyword = keywordInput ? keywordInput.value.toLowerCase() : '';
+
+            if(containerCard) containerCard.innerHTML = ''; 
+            if(containerTabel) containerTabel.innerHTML = ''; 
+            if(containerKanban) containerKanban.innerHTML = '';
+
             let statTotal = dataLamaran.length, statFavorit = 0, statProses = 0, statInterview = 0, statDiterima = 0, statDitolak = 0, statArsip = 0;
-            
+
             dataLamaran.forEach(l => { 
                 if (l.isFavorit) statFavorit++; 
                 if (["Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Medical Check Up", "Offering", "Rencana Daftar", "Terkirim"].includes(l.status)) statProses++; 
@@ -454,50 +779,140 @@
             const dataFiltered = dataLamaran.filter(lamaran => { 
                 const matchKeyword = (lamaran.perusahaan || '').toLowerCase().includes(keyword) || (lamaran.posisi || '').toLowerCase().includes(keyword); 
                 if (!matchKeyword) return false; 
-                
-                if (currentFilterStatus === 'Semua') {
-                    return !["Ditolak", "Tidak Ada Kabar"].includes(lamaran.status);
-                }
+
+                if (currentFilterStatus === 'Semua') return !["Ditolak", "Tidak Ada Kabar"].includes(lamaran.status);
                 if (currentFilterStatus === 'Favorit') return !!lamaran.isFavorit && !["Ditolak", "Tidak Ada Kabar"].includes(lamaran.status); 
                 if (currentFilterStatus === 'Proses') return ["Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Medical Check Up", "Offering", "Rencana Daftar", "Terkirim"].includes(lamaran.status); 
                 if (currentFilterStatus === 'Interview') return ["Interview HR", "Interview User", "Final Interview"].includes(lamaran.status); 
                 if (currentFilterStatus === 'Diterima') return lamaran.status === 'Diterima'; 
                 if (currentFilterStatus === 'Ditolak') return lamaran.status === 'Ditolak'; 
-                
                 return true; 
             });
 
             if(Notification.permission === "granted") cekNotifikasiFollowUp(dataFiltered);
             const totalFiltered = dataFiltered.length;
-            
-            if (totalFiltered === 0) { 
+            const isLight = currentTheme === 'light';
+
+            if (totalFiltered === 0 && currentMode !== 'kanban') { 
                 const kosong = statTotal === 0 ? 'Belum ada info loker. Tekan tombol + di bawah.' : 'Tidak ada data pada kategori ini.'; 
                 if(containerCard) containerCard.innerHTML = `<p class="text-center text-gray-500 py-10 text-xs">${kosong}</p>`; 
                 if(containerTabel) containerTabel.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500 py-10 text-xs">${kosong}</td></tr>`; 
             }
-            
-            const daftarStatus = ["Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Interview HR", "Interview User", "Final Interview", "Medical Check Up", "Offering", "Diterima", "Ditolak", "Tidak Ada Kabar"], isLight = currentTheme === 'light';
-            
+
+            const daftarStatus = ["Rencana Daftar", "Terkirim", "Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Interview HR", "Interview User", "Final Interview", "Medical Check Up", "Offering", "Diterima", "Ditolak", "Tidak Ada Kabar"];
+
             dataFiltered.forEach(lamaran => {
-                const status = lamaran.status, warnaStatusCard = isLight ? 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200' : 'bg-[#2d2d2d] text-gray-300 border-gray-600 hover:bg-gray-700', menuDropdownBg = isLight ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200';
+                const status = lamaran.status, 
+                      warnaStatusCard = isLight ? 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200' : 'bg-[#2d2d2d] text-gray-300 border-gray-600 hover:bg-gray-700', 
+                      menuDropdownBg = isLight ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200';
+
                 const dropdownStatusHTML = `<div class="relative dropdown-status-container inline-block w-auto" onclick="event.stopPropagation()"><button type="button" onclick="toggleDropdownStatus(event, '${lamaran.id}')" class="text-[11px] border rounded px-2 py-1 font-semibold outline-none flex items-center justify-between gap-1 whitespace-nowrap transition-colors ${warnaStatusCard}"><span>${status}</span> <span class="text-[9px]">▾</span></button><div id="dropdown-status-${lamaran.id}" class="dropdown-status-menu absolute left-0 top-full mt-1 w-44 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 max-h-52 overflow-y-auto">${daftarStatus.map(s => `<button type="button" onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 ${s === status ? 'text-[#ff5ca0] border-l-[3px] border-[#ff5ca0]' : ''}">${s}</button>`).join('')}</div></div>`;
-                let kontakAksiHTML = ''; const kontakVal = lamaran.kontak ? lamaran.kontak.trim() : '';
+
+                let kontakAksiHTML = ''; 
+                const kontakVal = lamaran.kontak ? lamaran.kontak.trim() : '';
                 if (kontakVal.includes('@')) kontakAksiHTML = `<button onclick="kirimEmailKontak('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${kontakVal}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors text-green-400">Kirim Email</button>`;
                 else if (kontakVal !== '') kontakAksiHTML = `<button onclick="kirimWAKontak('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${kontakVal}', 'tanya')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Kirim WA Follow-Up</button><button onclick="kirimWAKontak('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${kontakVal}', 'interview')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Konfirmasi Interview (WA)</button>`;
+
                 const dropdownAksiHTML = `<div class="relative dropdown-aksi-container inline-block" onclick="event.stopPropagation()"><button type="button" onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="w-7 h-7 rounded-lg text-xs font-bold border border-gray-600 bg-transparent text-gray-300 hover:bg-gray-700 flex items-center justify-center transition-colors">⋮</button><div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 top-full mt-1 w-52 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1"><button onclick="bukaModalEdit('${lamaran.id}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Edit Data</button><button onclick="salinSuratLamaran('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Salin Surat Lamaran</button><button onclick="downloadSuratWord('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Download Surat (.doc)</button>${lamaran.tanggalFollowUp ? `<button onclick="bukaGoogleCalendar('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${lamaran.tanggalFollowUp}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Google Calendar</button>` : ''}${kontakAksiHTML ? '<hr class="border-gray-700 my-1">' + kontakAksiHTML : ''}<hr class="border-gray-700 my-1"><button onclick="hapusLamaran('${lamaran.id}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-red-500/20 text-red-400 transition-colors">Hapus Lamaran</button></div></div>`;
-                const linkTextHTML = lamaran.link ? `<a href="${lamaran.link}" target="_blank" onclick="event.stopPropagation()" class="text-[#ff5ca0] hover:underline font-semibold ml-1 inline-flex items-center gap-0.5">[Link ↗]</a>` : '', teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-', bintangi = `<button type="button" onclick="toggleFavorit('${lamaran.id}', event)" class="text-sm text-gray-400 hover:scale-125 transition-transform ${lamaran.isFavorit ? '!text-yellow-400' : ''}" title="Favorit">★</button>`, warnaFollowUpClass = lamaran.tanggalFollowUp ? (isLight ? 'text-gray-700 font-semibold' : 'text-gray-200 font-semibold') : (isLight ? 'text-gray-500' : 'text-gray-400');
-                
+
+                const linkTextHTML = lamaran.link ? `<a href="${lamaran.link}" target="_blank" onclick="event.stopPropagation()" class="text-[#ff5ca0] hover:underline font-semibold ml-1 inline-flex items-center gap-0.5">[Link ↗]</a>` : '', 
+                      teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-', 
+                      bintangi = `<button type="button" onclick="toggleFavorit('${lamaran.id}', event)" class="text-sm text-gray-400 hover:scale-125 transition-transform ${lamaran.isFavorit ? '!text-yellow-400' : ''}" title="Favorit">★</button>`, 
+                      warnaFollowUpClass = lamaran.tanggalFollowUp ? (isLight ? 'text-gray-700 font-semibold' : 'text-gray-200 font-semibold') : (isLight ? 'text-gray-500' : 'text-gray-400');
+
                 const kartu = document.createElement('div'); 
                 kartu.className = isLight ? 'bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-col gap-3 transition-all' : 'bg-[#1e1e1e] p-4 rounded-xl shadow-sm border border-gray-800 flex flex-col gap-3 transition-all'; 
-                kartu.innerHTML = `<div class="flex justify-between items-start gap-2"><div class="flex items-center gap-2">${bintangi}<div><h4 class="text-base font-bold ${isLight ? 'text-gray-900' : 'text-white'}">${lamaran.perusahaan}</h4><p class="text-xs text-[#ff5ca0] font-semibold">${lamaran.posisi}</p></div></div><div class="flex items-center gap-2">${teksGaji !== '-' ? `<span class="text-[11px] font-bold text-[#ff5ca0] bg-[#ff5ca0]/10 border border-[#ff5ca0]/30 px-2 py-0.5 rounded">${teksGaji}</span>` : ''} ${dropdownAksiHTML}</div></div><div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] ${isLight ? 'text-gray-500' : 'text-gray-400'} pt-1 border-t ${isLight ? 'border-gray-100' : 'border-gray-800/40'}"><span>Lamar: ${formatTanggal(lamaran.tanggal)} ${linkTextHTML}</span><span>•</span><span class="${warnaFollowUpClass}">FU: ${lamaran.tanggalFollowUp ? formatTanggal(lamaran.tanggalFollowUp) : '-'}</span><span>•</span><span>Sumber: ${lamaran.metode || 'Email'}</span></div><div class="flex items-center justify-between gap-2 pt-2 border-t ${isLight ? 'border-gray-100' : 'border-gray-800/40'}"><div class="flex items-center gap-2">${dropdownStatusHTML}</div></div>`;
+                kartu.innerHTML = `
+                    <div class="flex justify-between items-start gap-2">
+                        <div class="flex items-center gap-2">
+                            ${bintangi}
+                            <div>
+                                <h4 class="text-base font-bold ${isLight ? 'text-gray-900' : 'text-white'}">${lamaran.perusahaan}</h4>
+                                <p class="text-xs text-[#ff5ca0] font-semibold">${lamaran.posisi}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            ${teksGaji !== '-' ? `<span class="text-[11px] font-bold text-[#ff5ca0] bg-[#ff5ca0]/10 border border-[#ff5ca0]/30 px-2 py-0.5 rounded">${teksGaji}</span>` : ''} 
+                            ${dropdownAksiHTML}
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-[11px] ${isLight ? 'text-gray-500' : 'text-gray-400'} pt-1 border-t ${isLight ? 'border-gray-100' : 'border-gray-800/40'}">
+                        <span>Lamar: ${formatTanggal(lamaran.tanggal)} ${linkTextHTML}</span>
+                        <span>•</span>
+                        <span class="${warnaFollowUpClass}">FU: ${lamaran.tanggalFollowUp ? formatTanggal(lamaran.tanggalFollowUp) : '-'}</span>
+                        <span>•</span>
+                        <span>Sumber: ${lamaran.metode || 'Email'}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-2 pt-2 border-t ${isLight ? 'border-gray-100' : 'border-gray-800/40'}">
+                        <div class="flex items-center gap-2">${dropdownStatusHTML}</div>
+                    </div>`;
                 if(containerCard) containerCard.appendChild(kartu);
 
                 const baris = document.createElement('tr'); 
                 baris.className = `border-b ${isLight ? 'border-gray-200 hover:bg-gray-50' : 'border-gray-800 hover:bg-white/5'} transition-colors`; 
-                baris.innerHTML = `<td class="py-3 px-2 text-center align-middle w-[40px]" onclick="event.stopPropagation()">${bintangi}</td><td class="py-3 px-3 align-middle"><div class="font-bold ${isLight ? 'text-gray-900' : 'text-white'} leading-snug">${lamaran.perusahaan}</div><div class="text-[#ff5ca0] font-semibold text-[11px] mt-0.5 leading-snug">${lamaran.posisi}</div></td><td class="py-3 px-3 align-middle"><span class="text-[12px] ${isLight ? 'text-gray-700' : 'text-gray-300'} flex items-center gap-1.5">${formatTanggal(lamaran.tanggal)} ${linkTextHTML}</span></td><td class="py-3 px-3 align-middle text-right"><span class="text-xs font-medium ${isLight ? 'text-gray-600' : 'text-gray-400'}">${lamaran.status}</span></td>`;
+                baris.innerHTML = `
+                    <td class="py-3 px-2 text-center align-middle w-[40px]" onclick="event.stopPropagation()">${bintangi}</td>
+                    <td class="py-3 px-3 align-middle">
+                        <div class="font-bold ${isLight ? 'text-gray-900' : 'text-white'} leading-snug">${lamaran.perusahaan}</div>
+                        <div class="text-[#ff5ca0] font-semibold text-[11px] mt-0.5 leading-snug">${lamaran.posisi}</div>
+                    </td>
+                    <td class="py-3 px-3 align-middle"><span class="text-[12px] ${isLight ? 'text-gray-700' : 'text-gray-300'} flex items-center gap-1.5">${formatTanggal(lamaran.tanggal)} ${linkTextHTML}</span></td>
+                    <td class="py-3 px-3 align-middle text-right"><span class="text-xs font-medium ${isLight ? 'text-gray-600' : 'text-gray-400'}">${lamaran.status}</span></td>`;
                 if(containerTabel) containerTabel.appendChild(baris);
             }); 
-            const teksInfo = document.getElementById('teks-jumlah-lamaran'); if (teksInfo) teksInfo.innerText = `Menampilkan ${totalFiltered} dari ${totalFiltered} lamaran (${statTotal} Total)`;
+
+            if (currentMode === 'kanban' && containerKanban) {
+                const kanbanCols = [
+                    { id: 'col-terkirim', title: 'Dikirim', dropStatus: 'Terkirim', statuses: ['Rencana Daftar', 'Terkirim'], accent: '#9ca3af' }, 
+                    { id: 'col-tes', title: 'Tahap Tes', dropStatus: 'Screening HR', statuses: ['Screening HR', 'Psikotes', 'Tes Online', 'Tes Teknis'], accent: '#60a5fa' }, 
+                    { id: 'col-interview', title: 'Interview', dropStatus: 'Interview HR', statuses: ['Interview HR', 'Interview User', 'Final Interview'], accent: '#fbbf24' }, 
+                    { id: 'col-akhir', title: 'Tahap Akhir', dropStatus: 'Offering', statuses: ['Medical Check Up', 'Offering', 'Diterima'], accent: '#34d399' }
+                ];
+
+                kanbanCols.forEach(col => {
+                    const colCards = dataFiltered.filter(l => col.statuses.includes(l.status));
+                    const colDiv = document.createElement('div');
+
+                    colDiv.className = `kanban-col min-w-[46%] md:min-w-[280px] w-[46%] md:w-[280px] flex flex-col rounded-xl border shadow-sm transition-colors shrink-0 ${isLight ? 'bg-gray-50/50 border-gray-200' : 'bg-[#181818] border-gray-800'}`;
+
+                    colDiv.setAttribute('ondragover', 'allowDropKanban(event, this)');
+                    colDiv.setAttribute('ondragleave', 'leaveDropKanban(event, this)');
+                    colDiv.setAttribute('ondrop', `onDropKanban(event, '${col.dropStatus}', this)`);
+
+                    let cardsHTML = '';
+                    if (colCards.length === 0) {
+                        cardsHTML = `<div class="border-2 border-dashed ${isLight ? 'border-gray-300 text-gray-400' : 'border-gray-700 text-gray-600'} rounded-xl h-24 flex items-center justify-center text-[10px] font-medium transition-colors">Tarik kartu ke sini</div>`;
+                    } else {
+                        colCards.forEach(lamaran => {
+                            const bgCard = isLight ? 'bg-white border-gray-200 hover:shadow-md' : 'bg-[#222222] border-gray-700 hover:border-gray-500';
+                            cardsHTML += `
+                                <div draggable="true" ondragstart="onDragStartKanban(event, '${lamaran.id}')" ondragend="onDragEndKanban(event)" onclick="bukaModalEdit('${lamaran.id}')" class="${bgCard} p-3.5 rounded-xl shadow-sm border border-l-4 cursor-grab active:cursor-grabbing transition-all mb-3 last:mb-0 transform hover:-translate-y-1" style="border-left-color: ${col.accent}">
+                                    <div class="flex justify-between items-start mb-1.5">
+                                        <div class="text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider" style="color: ${col.accent}; background-color: ${col.accent}15">${lamaran.status}</div>
+                                        ${lamaran.tanggalFollowUp ? `<span class="text-[9px] ${isLight ? 'text-gray-500' : 'text-gray-400'} font-semibold flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>${formatTanggal(lamaran.tanggalFollowUp)}</span>` : ''}
+                                    </div>
+                                    <div class="text-[13px] font-bold ${isLight ? 'text-gray-900' : 'text-white'} leading-tight mb-0.5">${lamaran.perusahaan}</div>
+                                    <div class="text-[11px] text-[#ff5ca0] font-semibold">${lamaran.posisi}</div>
+                                </div>`;
+                        });
+                    }
+
+                    colDiv.innerHTML = `
+                        <div class="p-3 border-b-2 font-bold text-[11px] flex justify-between items-center rounded-t-xl uppercase tracking-wider" style="border-bottom-color: ${col.accent}; background: linear-gradient(to bottom, ${col.accent}15, transparent);">
+                            <span class="${isLight ? 'text-gray-800' : 'text-gray-200'}">${col.title}</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] text-white shadow-sm" style="background-color: ${col.accent}">${colCards.length}</span>
+                        </div>
+                        <div class="p-3 flex-1 overflow-y-auto min-h-[50vh] pb-8">
+                            ${cardsHTML}
+                        </div>
+                    `;
+                    containerKanban.appendChild(colDiv);
+                });
+            }
+
+            const teksInfo = document.getElementById('teks-jumlah-lamaran'); 
+            if (teksInfo) teksInfo.innerText = `Menampilkan ${totalFiltered} dari ${totalFiltered} lamaran (${statTotal} Total)`;
+
             document.getElementById('stat-total').innerText = statTotal - statArsip; 
             document.getElementById('stat-favorit').innerText = statFavorit; 
             document.getElementById('stat-proses').innerText = statProses; 
@@ -506,11 +921,165 @@
             document.getElementById('stat-ditolak').innerText = statDitolak;
         }
 
-        // --- 6E. MODAL & DROPDOWN CONTROLS ---
-        function bukaModalTambah() { document.getElementById('modal-judul').innerText = "Tambah Info Loker"; form.reset(); document.getElementById('input-id').value = ""; document.getElementById('input-tanggal').valueAsDate = new Date(); document.getElementById('input-gaji-slider').value = 0; updateGajiSlider(0); document.getElementById('form-opsional-container').classList.add('hidden'); document.getElementById('btn-toggle-opsional').innerText = "+ Tambah Info Detail"; modal.classList.remove('hidden'); }
-        function bukaModalEdit(id) { document.getElementById('modal-judul').innerText = "Edit Info Loker"; const lamaran = dataLamaran.find(item => item.id == id); if (lamaran) { document.getElementById('input-id').value = lamaran.id; document.getElementById('input-perusahaan').value = lamaran.perusahaan; document.getElementById('input-posisi').value = lamaran.posisi; document.getElementById('input-tanggal').value = lamaran.tanggal || ""; document.getElementById('input-followup').value = lamaran.tanggalFollowUp || ""; document.getElementById('input-deadline').value = lamaran.deadline || ""; document.getElementById('input-link').value = lamaran.link || ""; document.getElementById('input-kontak').value = lamaran.kontak || ""; document.getElementById('input-metode').value = lamaran.metode || "Email"; document.getElementById('input-status').value = lamaran.status; document.getElementById('input-keterangan').value = lamaran.keterangan || ""; let nilaiGajiNum = parseInt(lamaran.gajiMentah) || 0; document.getElementById('input-gaji-slider').value = nilaiGajiNum; updateGajiSlider(nilaiGajiNum); if (lamaran.tanggalFollowUp || lamaran.deadline || lamaran.link || lamaran.kontak || lamaran.gajiMentah > 0 || lamaran.keterangan) { document.getElementById('form-opsional-container').classList.remove('hidden'); document.getElementById('btn-toggle-opsional').innerText = "- Sembunyikan Info Detail"; } modal.classList.remove('hidden'); } }
-        function tutupModal() { modal.classList.add('hidden'); form.reset(); }
-        function setModeTampilan(mode) { currentMode = mode; localStorage.setItem('lokertrack_mode', mode); const isLight = currentTheme === 'light', btnCard = document.getElementById('btn-view-card'), btnTabel = document.getElementById('btn-view-tabel'), viewCard = document.getElementById('view-card'), viewTabel = document.getElementById('view-tabel'); if (isLight) { viewTabel.classList.remove('bg-[#1e1e1e]', 'border-gray-800'); viewTabel.classList.add('bg-white', 'border-gray-200'); } else { viewTabel.classList.remove('bg-white', 'border-gray-200'); viewTabel.classList.add('bg-[#1e1e1e]', 'border-gray-800'); } if(mode === 'card') { btnCard.className = `px-3.5 py-1.5 rounded font-bold text-xs transition-all ${isLight ? 'bg-gray-300 text-gray-900' : 'bg-[#2d2d2d] text-white'}`; btnTabel.className = `px-3.5 py-1.5 rounded font-bold text-xs transition-all ${isLight ? 'text-gray-500 hover:text-gray-800' : 'text-gray-400 hover:text-white'}`; viewCard.classList.remove('hidden'); viewTabel.classList.add('hidden'); } else { btnTabel.className = `px-3.5 py-1.5 rounded font-bold text-xs transition-all ${isLight ? 'bg-gray-300 text-gray-900' : 'bg-[#2d2d2d] text-white'}`; btnCard.className = `px-3.5 py-1.5 rounded font-bold text-xs transition-all ${isLight ? 'text-gray-500 hover:text-gray-800' : 'text-gray-400 hover:text-white'}`; viewTabel.classList.remove('hidden'); viewCard.classList.add('hidden'); } }
+        function renderListFlashcard() {
+            const container = document.getElementById('container-list-flashcard');
+            if(!container) return;
+            container.innerHTML = '';
+            if(dataFlashcards.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 space-y-2"><p class="text-xs text-gray-500">Belum ada kartu pertanyaan interview.</p><p class="text-[10px] text-gray-600">Yuk, simpan kisi-kisi pertanyaan di sini biar gak gugup!</p></div>`;
+                return;
+            }
+
+            const isLight = currentTheme === 'light';
+            dataFlashcards.forEach(fc => {
+                const bgBox = isLight ? 'bg-gray-50 border-gray-200 text-gray-800 hover:border-[#ff5ca0]/40' : 'bg-[#161616] border-gray-800 text-gray-200 hover:border-[#ff5ca0]/40';
+                const answerBg = isLight ? 'bg-white border-gray-200 text-gray-600' : 'bg-[#111111] border-gray-800/80 text-gray-300';
+
+                const el = document.createElement('div');
+                el.className = `${bgBox} rounded-xl p-4 transition-all border cursor-pointer group relative shadow-sm`;
+                el.innerHTML = `
+                    <div class="flex justify-between items-start gap-3" onclick="toggleFlashcard(this)">
+                        <div class="flex items-start gap-2.5">
+                            <span class="text-xs font-bold text-[#ff5ca0] bg-[#ff5ca0]/10 px-2 py-0.5 rounded-md mt-0.5">Q</span>
+                            <p class="text-xs font-bold leading-relaxed">${fc.tanya}</p>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button onclick="hapusFlashcard('${fc.id}'); event.stopPropagation();" class="text-gray-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity p-1" title="Hapus">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                            <span class="text-xs text-gray-500 transform transition-transform duration-200">▼</span>
+                        </div>
+                    </div>
+                    <div class="flashcard-content mt-3 text-[11px] leading-relaxed whitespace-pre-wrap ${answerBg} border rounded-lg p-3">
+                        <span class="font-bold text-[#ff5ca0] block mb-1">Draf Jawaban:</span> ${fc.jawab}
+                    </div>`;
+                container.appendChild(el);
+            });
+        }
+
+        function toggleFlashcard(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('span:last-child');
+            if (content.classList.contains('open')) { 
+                content.classList.remove('open'); 
+                icon.style.transform = 'rotate(0deg)'; 
+            } else { 
+                content.classList.add('open'); 
+                icon.style.transform = 'rotate(180deg)'; 
+            }
+        }
+
+        function setModeTampilan(mode) { 
+            currentMode = mode; 
+            localStorage.setItem('lokertrack_mode', mode); 
+            const isLight = currentTheme === 'light', 
+                  btnCard = document.getElementById('btn-view-card'), 
+                  btnTabel = document.getElementById('btn-view-tabel'), 
+                  btnKanban = document.getElementById('btn-view-kanban'), 
+                  viewCard = document.getElementById('view-card'), 
+                  viewTabel = document.getElementById('view-tabel'), 
+                  viewKanban = document.getElementById('view-kanban'); 
+
+            if (isLight) { 
+                viewTabel.classList.remove('bg-[#1e1e1e]', 'border-gray-800'); 
+                viewTabel.classList.add('bg-white', 'border-gray-200'); 
+            } else { 
+                viewTabel.classList.remove('bg-white', 'border-gray-200'); 
+                viewTabel.classList.add('bg-[#1e1e1e]', 'border-gray-800'); 
+            } 
+
+            const activeClass = `flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-bold text-xs transition-all shadow-sm ${isLight ? 'bg-white text-[#ff5ca0]' : 'bg-[#2d2d2d] text-[#ff5ca0] border border-[#ff5ca0]/30'}`;
+            const inactiveClass = `flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-bold text-xs transition-all border border-transparent ${isLight ? 'text-gray-500 hover:text-gray-800 hover:bg-gray-200/50' : 'text-gray-400 hover:text-white hover:bg-gray-800/50'}`;
+
+            btnCard.className = inactiveClass; 
+            btnTabel.className = inactiveClass; 
+            btnKanban.className = inactiveClass;
+
+            viewCard.classList.add('hidden'); 
+            viewTabel.classList.add('hidden'); 
+            viewKanban.classList.add('hidden');
+
+            if(mode === 'card') { 
+                btnCard.className = activeClass; 
+                viewCard.classList.remove('hidden'); 
+            } else if (mode === 'kanban') { 
+                btnKanban.className = activeClass; 
+                viewKanban.classList.remove('hidden'); 
+            } else { 
+                btnTabel.className = activeClass; 
+                viewTabel.classList.remove('hidden'); 
+            } 
+
+            renderTampilan();
+        }
+
+        function bukaModalTambah() { 
+            document.getElementById('modal-judul').innerText = "Tambah Info Loker"; 
+            form.reset(); 
+            document.getElementById('input-id').value = ""; 
+            document.getElementById('input-tanggal').valueAsDate = new Date(); 
+            document.getElementById('input-gaji-slider').value = 0; 
+            updateGajiSlider(0); 
+            document.getElementById('form-opsional-container').classList.add('hidden'); 
+            document.getElementById('btn-toggle-opsional').innerText = "+ Tambah Info Detail"; 
+            document.getElementById('container-riwayat-status').classList.add('hidden'); 
+            modal.classList.remove('hidden'); 
+        }
+
+        function bukaModalEdit(id) { 
+            document.getElementById('modal-judul').innerText = "Edit Info Loker"; 
+            const lamaran = dataLamaran.find(item => item.id == id); 
+            if (lamaran) { 
+                document.getElementById('input-id').value = lamaran.id; 
+                document.getElementById('input-perusahaan').value = lamaran.perusahaan; 
+                document.getElementById('input-posisi').value = lamaran.posisi; 
+                document.getElementById('input-tanggal').value = lamaran.tanggal || ""; 
+                document.getElementById('input-followup').value = lamaran.tanggalFollowUp || ""; 
+                document.getElementById('input-deadline').value = lamaran.deadline || ""; 
+                document.getElementById('input-link').value = lamaran.link || ""; 
+                document.getElementById('input-kontak').value = lamaran.kontak || ""; 
+                document.getElementById('input-metode').value = lamaran.metode || "Email"; 
+                document.getElementById('input-status').value = lamaran.status; 
+                document.getElementById('input-keterangan').value = lamaran.keterangan || ""; 
+                let nilaiGajiNum = parseInt(lamaran.gajiMentah) || 0; 
+                document.getElementById('input-gaji-slider').value = nilaiGajiNum; 
+                updateGajiSlider(nilaiGajiNum); 
+
+                if (lamaran.tanggalFollowUp || lamaran.deadline || lamaran.link || lamaran.kontak || lamaran.gajiMentah > 0 || lamaran.keterangan) { 
+                    document.getElementById('form-opsional-container').classList.remove('hidden'); 
+                    document.getElementById('btn-toggle-opsional').innerText = "- Sembunyikan Info Detail"; 
+                } else { 
+                    document.getElementById('form-opsional-container').classList.add('hidden'); 
+                    document.getElementById('btn-toggle-opsional').innerText = "+ Tambah Info Detail"; 
+                }
+
+                const cr = document.getElementById('container-riwayat-status');
+                const lr = document.getElementById('list-riwayat');
+                if (lamaran.riwayat && lamaran.riwayat.length > 0) {
+                    cr.classList.remove('hidden');
+                    lr.innerHTML = lamaran.riwayat.map((r, i) => `
+                        <div class="relative">
+                            <div class="absolute w-2 h-2 bg-[#ff5ca0] rounded-full left-[-17px] top-1.5 border-2 border-[#1e1e1e]"></div>
+                            <p class="text-[10px] text-gray-400 mb-0.5">${formatWaktu(r.waktu)}</p>
+                            <p class="text-xs font-bold ${currentTheme==='light' ? 'text-gray-800' : 'text-gray-200'}">${r.status}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    cr.classList.add('hidden');
+                }
+
+                modal.classList.remove('hidden'); 
+            } 
+        }
+
+        function tutupModal() { 
+            modal.classList.add('hidden'); 
+            form.reset(); 
+        }
+
+        function bukaModalFlashcard() { document.getElementById('modal-flashcard').classList.remove('hidden'); }
+        function tutupModalFlashcard() { document.getElementById('modal-flashcard').classList.add('hidden'); }
+
         function setFilterStatus(status) { 
             currentFilterStatus = status; 
             ['Semua', 'Favorit', 'Proses', 'Interview', 'Diterima', 'Ditolak'].forEach(s => { 
@@ -522,67 +1091,432 @@
             }); 
             renderTampilan(); 
         }
-        function toggleFormOpsional() { const container = document.getElementById('form-opsional-container'), btn = document.getElementById('btn-toggle-opsional'); if (container.classList.contains('hidden')) { container.classList.remove('hidden'); btn.innerText = "- Sembunyikan Info Detail"; } else { container.classList.add('hidden'); btn.innerText = "+ Tambah Info Detail"; } }
-        function toggleDropdownPosisi(event) { event.stopPropagation(); const dropdownPosisi = document.getElementById('dropdown-posisi-list'); document.getElementById('dropdown-metode-list').classList.add('hidden'); perbaruiListPosisi(); dropdownPosisi.classList.toggle('hidden'); }
-        function toggleDropdownMetode(event) { event.stopPropagation(); const dropdownMetode = document.getElementById('dropdown-metode-list'); document.getElementById('dropdown-posisi-list').classList.add('hidden'); perbaruiListMetode(); dropdownMetode.classList.toggle('hidden'); }
-        function perbaruiListPosisi() { const dropdownPosisi = document.getElementById('dropdown-posisi-list'); dropdownPosisi.innerHTML = ''; const posisiUnik = [...new Set(dataLamaran.map(item => item.posisi).filter(Boolean))]; if (posisiUnik.length === 0) { dropdownPosisi.innerHTML = `<div class="p-2 text-xs text-gray-500 text-center">Belum ada riwayat</div>`; return; } posisiUnik.forEach(pos => { const item = document.createElement('div'); item.className = 'p-2.5 text-xs hover:bg-black/10 cursor-pointer font-semibold border-b border-gray-500/20 last:border-b-0 menu-item-themed'; item.innerText = pos; item.onclick = function(e) { e.stopPropagation(); document.getElementById('input-posisi').value = pos; dropdownPosisi.classList.add('hidden'); }; dropdownPosisi.appendChild(item); }); }
-        function perbaruiListMetode() { const dropdownMetode = document.getElementById('dropdown-metode-list'); dropdownMetode.innerHTML = ''; const metodeUnik = [...new Set(["LinkedIn", "Instagram", "JobStreet", "Email", "Website Perusahaan", ...dataLamaran.map(item => item.metode).filter(Boolean)])]; metodeUnik.forEach(met => { const item = document.createElement('div'); item.className = 'p-2.5 text-xs hover:bg-black/10 cursor-pointer font-semibold border-b border-gray-500/20 last:border-b-0 menu-item-themed'; item.innerText = met; item.onclick = function(e) { e.stopPropagation(); document.getElementById('input-metode').value = met; dropdownMetode.classList.add('hidden'); }; dropdownMetode.appendChild(item); }); }
-        function toggleMenuTitikTiga(event) { event.stopPropagation(); document.getElementById('dropdown-titiktiga').classList.toggle('hidden'); }
-        function toggleDropdownStatus(event, id) { event.stopPropagation(); document.querySelectorAll('.dropdown-status-menu').forEach(m => { if (m.id !== 'dropdown-status-' + id) m.classList.add('hidden'); }); document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden')); const menu = document.getElementById('dropdown-status-' + id); if (menu) menu.classList.toggle('hidden'); }
-        function pilihStatus(id, statusBaru) { ubahStatus(id, statusBaru); document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden')); }
-        function toggleDropdownAksi(event, id) { event.stopPropagation(); document.querySelectorAll('.dropdown-aksi-menu').forEach(m => { if (m.id !== 'dropdown-aksi-' + id) m.classList.add('hidden'); }); document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden')); const menu = document.getElementById('dropdown-aksi-' + id); if (menu) menu.classList.toggle('hidden'); }
-        window.addEventListener('click', function(e) { if (!e.target.closest('.dropdown-status-container') && !e.target.closest('.dropdown-status-menu')) document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden')); if (!e.target.closest('.dropdown-aksi-container') && !e.target.closest('.dropdown-aksi-menu')) document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden')); const dropdown = document.getElementById('dropdown-titiktiga'), btnTitikTiga = document.getElementById('btn-menu-titiktiga'); if (btnTitikTiga && !btnTitikTiga.contains(e.target) && !dropdown.contains(e.target)) dropdown.classList.add('hidden'); const dropdownPosisi = document.getElementById('dropdown-posisi-list'); if (dropdownPosisi && !e.target.closest('#input-posisi') && !e.target.closest('button[onclick*="toggleDropdownPosisi"]')) dropdownPosisi.classList.add('hidden'); const dropdownMetode = document.getElementById('dropdown-metode-list'); if (dropdownMetode && !e.target.closest('#input-metode') && !e.target.closest('button[onclick*="toggleDropdownMetode"]')) dropdownMetode.classList.add('hidden'); });
 
-        // --- 6F. FITUR LAIN (TEMA, KALENDER, WA/EMAIL, TEMPLATE, NOTIF, CONFETTI) ---
-        function inisialisasiTemaOtomatis() { const savedTheme = localStorage.getItem('lokertrack_theme'); if (savedTheme === 'light' || savedTheme === 'dark') applyTheme(savedTheme); else { const jam = new Date().getHours(); applyTheme((jam >= 6 && jam < 18) ? 'light' : 'dark'); } }
-        function toggleTemaManual() { document.getElementById('dropdown-titiktiga').classList.add('hidden'); const newTheme = currentTheme === 'dark' ? 'light' : 'dark'; localStorage.setItem('lokertrack_theme', newTheme); applyTheme(newTheme); }
+        function toggleFormOpsional() { 
+            const container = document.getElementById('form-opsional-container'), 
+                  btn = document.getElementById('btn-toggle-opsional'); 
+            if (container.classList.contains('hidden')) { 
+                container.classList.remove('hidden'); 
+                btn.innerText = "- Sembunyikan Info Detail"; 
+            } else { 
+                container.classList.add('hidden'); 
+                btn.innerText = "+ Tambah Info Detail"; 
+            } 
+        }
+
+        function toggleDropdownPosisi(event) { 
+            event.stopPropagation(); 
+            const dropdownPosisi = document.getElementById('dropdown-posisi-list'); 
+            document.getElementById('dropdown-metode-list').classList.add('hidden'); 
+            perbaruiListPosisi(); 
+            dropdownPosisi.classList.toggle('hidden'); 
+        }
+
+        function toggleDropdownMetode(event) { 
+            event.stopPropagation(); 
+            const dropdownMetode = document.getElementById('dropdown-metode-list'); 
+            document.getElementById('dropdown-posisi-list').classList.add('hidden'); 
+            perbaruiListMetode(); 
+            dropdownMetode.classList.toggle('hidden'); 
+        }
+
+        function perbaruiListPosisi() { 
+            const dropdownPosisi = document.getElementById('dropdown-posisi-list'); 
+            dropdownPosisi.innerHTML = ''; 
+            const posisiUnik = [...new Set(dataLamaran.map(item => item.posisi).filter(Boolean))]; 
+            if (posisiUnik.length === 0) { 
+                dropdownPosisi.innerHTML = `<div class="p-2 text-xs text-gray-500 text-center">Belum ada riwayat</div>`; 
+                return; 
+            } 
+            posisiUnik.forEach(pos => { 
+                const item = document.createElement('div'); 
+                item.className = 'p-2.5 text-xs hover:bg-black/10 cursor-pointer font-semibold border-b border-gray-500/20 last:border-b-0 menu-item-themed'; 
+                item.innerText = pos; 
+                item.onclick = function(e) { 
+                    e.stopPropagation(); 
+                    document.getElementById('input-posisi').value = pos; 
+                    dropdownPosisi.classList.add('hidden'); 
+                }; 
+                dropdownPosisi.appendChild(item); 
+            }); 
+        }
+
+        function perbaruiListMetode() { 
+            const dropdownMetode = document.getElementById('dropdown-metode-list'); 
+            dropdownMetode.innerHTML = ''; 
+            const metodeUnik = [...new Set(["LinkedIn", "Instagram", "JobStreet", "Email", "Website Perusahaan", ...dataLamaran.map(item => item.metode).filter(Boolean)])]; 
+            metodeUnik.forEach(met => { 
+                const item = document.createElement('div'); 
+                item.className = 'p-2.5 text-xs hover:bg-black/10 cursor-pointer font-semibold border-b border-gray-500/20 last:border-b-0 menu-item-themed'; 
+                item.innerText = met; 
+                item.onclick = function(e) { 
+                    e.stopPropagation(); 
+                    document.getElementById('input-metode').value = met; 
+                    dropdownMetode.classList.add('hidden'); 
+                }; 
+                dropdownMetode.appendChild(item); 
+            }); 
+        }
+
+        function toggleMenuTitikTiga(event) { 
+            event.stopPropagation(); 
+            document.getElementById('dropdown-titiktiga').classList.toggle('hidden'); 
+        }
+
+        function toggleDropdownStatus(event, id) { 
+            event.stopPropagation(); 
+            document.querySelectorAll('.dropdown-status-menu').forEach(m => { 
+                if (m.id !== 'dropdown-status-' + id) m.classList.add('hidden'); 
+            }); 
+            document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden')); 
+            const menu = document.getElementById('dropdown-status-' + id); 
+            if (menu) menu.classList.toggle('hidden'); 
+        }
+
+        function pilihStatus(id, statusBaru) { 
+            ubahStatus(id, statusBaru); 
+            document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden')); 
+        }
+
+        function toggleDropdownAksi(event, id) { 
+            event.stopPropagation(); 
+            document.querySelectorAll('.dropdown-aksi-menu').forEach(m => { 
+                if (m.id !== 'dropdown-aksi-' + id) m.classList.add('hidden'); 
+            }); 
+            document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden')); 
+            const menu = document.getElementById('dropdown-aksi-' + id); 
+            if (menu) menu.classList.toggle('hidden'); 
+        }
+
+        window.addEventListener('click', function(e) { 
+            if (!e.target.closest('.dropdown-status-container') && !e.target.closest('.dropdown-status-menu')) 
+                document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden')); 
+
+            if (!e.target.closest('.dropdown-aksi-container') && !e.target.closest('.dropdown-aksi-menu')) 
+                document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden')); 
+
+            const dropdown = document.getElementById('dropdown-titiktiga'), 
+                  btnTitikTiga = document.getElementById('btn-menu-titiktiga'); 
+            if (btnTitikTiga && !btnTitikTiga.contains(e.target) && !dropdown.contains(e.target)) 
+                dropdown.classList.add('hidden'); 
+
+            const dropdownPosisi = document.getElementById('dropdown-posisi-list'); 
+            if (dropdownPosisi && !e.target.closest('#input-posisi') && !e.target.closest('button[onclick*="toggleDropdownPosisi"]')) 
+                dropdownPosisi.classList.add('hidden'); 
+
+            const dropdownMetode = document.getElementById('dropdown-metode-list'); 
+            if (dropdownMetode && !e.target.closest('#input-metode') && !e.target.closest('button[onclick*="toggleDropdownMetode"]')) 
+                dropdownMetode.classList.add('hidden'); 
+
+            if (!e.target.closest('#fab-menu-container') && !e.target.closest('#fab-main-btn')) {
+                tutupFabMenu();
+            }
+        });
+
+        function inisialisasiTemaOtomatis() { 
+            const savedTheme = localStorage.getItem('lokertrack_theme'); 
+            if (savedTheme === 'light' || savedTheme === 'dark') applyTheme(savedTheme); 
+            else { 
+                const jam = new Date().getHours(); 
+                applyTheme((jam >= 6 && jam < 18) ? 'light' : 'dark'); 
+            } 
+        }
+
+        function toggleTemaManual() { 
+            document.getElementById('dropdown-titiktiga').classList.add('hidden'); 
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark'; 
+            localStorage.setItem('lokertrack_theme', newTheme); 
+            applyTheme(newTheme); 
+        }
+
         function applyTheme(theme) {
-            currentTheme = theme; const isLight = theme === 'light'; document.getElementById('meta-theme-color').setAttribute('content', isLight ? '#ffffff' : '#1a1a1a'); document.getElementById('body-app').className = isLight ? "bg-gray-100 text-gray-900 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden" : "bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden"; document.getElementById('header-app').className = isLight ? "bg-white px-4 py-5 md:px-6 shadow-md border-b border-gray-200 transition-colors duration-300" : "bg-[#1a1a1a] px-4 py-5 md:px-6 shadow-md border-b border-gray-800 transition-colors duration-300"; document.getElementById('header-title').className = isLight ? "text-lg md:text-2xl text-gray-900 font-pixel tracking-wide leading-none" : "text-lg md:text-2xl text-white font-pixel tracking-wide leading-none"; document.getElementById('menu-text-tema').innerText = isLight ? "Mode Gelap" : "Mode Terang";
-            
+            currentTheme = theme; 
+            const isLight = theme === 'light'; 
+            document.getElementById('meta-theme-color').setAttribute('content', isLight ? '#ffffff' : '#1a1a1a'); 
+            document.getElementById('body-app').className = isLight ? "bg-gray-100 text-gray-900 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden" : "bg-[#121212] text-gray-200 min-h-screen relative pb-36 transition-colors duration-300 overflow-x-hidden"; 
+            document.getElementById('header-app').className = isLight ? "bg-white px-4 py-5 md:px-6 shadow-md border-b border-gray-200 transition-colors duration-300" : "bg-[#1a1a1a] px-4 py-5 md:px-6 shadow-md border-b border-gray-800 transition-colors duration-300"; 
+            document.getElementById('header-title').className = isLight ? "text-lg md:text-2xl text-gray-900 font-pixel tracking-wide leading-none" : "text-lg md:text-2xl text-white font-pixel tracking-wide leading-none"; 
+            document.getElementById('menu-text-tema').innerText = isLight ? "Mode Gelap" : "Mode Terang";
+
             const speechBubble = document.getElementById('speech-bubble');
-            if (isLight) {
-                speechBubble.classList.remove('bg-[#1e1e1e]', 'text-gray-200');
-                speechBubble.classList.add('bg-white', 'text-gray-900');
-            } else {
-                speechBubble.classList.remove('bg-white', 'text-gray-900');
-                speechBubble.classList.add('bg-[#1e1e1e]', 'text-gray-200');
+            if (isLight) { 
+                speechBubble.classList.remove('bg-[#1e1e1e]', 'text-gray-200'); 
+                speechBubble.classList.add('bg-white', 'text-gray-900'); 
+            } else { 
+                speechBubble.classList.remove('bg-white', 'text-gray-900'); 
+                speechBubble.classList.add('bg-[#1e1e1e]', 'text-gray-200'); 
             }
 
             document.getElementById('btn-menu-titiktiga').className = isLight ? "w-9 h-9 rounded-xl text-sm font-bold border border-gray-300 bg-gray-50 text-gray-700 shadow-sm hover:bg-gray-100 transition-all flex items-center justify-center shrink-0" : "w-9 h-9 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0";
             document.getElementById('dropdown-titiktiga').className = isLight ? "absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300" : "absolute right-0 mt-2 w-64 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
-            document.querySelectorAll('#modal-box, #modal-panduan-box, #modal-template-box').forEach(el => { el.className = isLight ? "bg-white border border-gray-200 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto" : "bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto"; }); document.getElementById('modal-panduan-box').classList.add('max-w-lg'); document.getElementById('modal-template-box').classList.add('max-w-lg');
-            document.querySelectorAll('.header-text, #label-info-lamaran').forEach(el => { if (isLight) { el.classList.remove('text-white'); el.classList.add('text-gray-900'); } else { el.classList.remove('text-gray-900'); el.classList.add('text-white'); } });
-            document.querySelectorAll('.input-themed, .search-input').forEach(el => { if (isLight) { el.classList.remove('bg-[#121212]', 'text-white', 'border-gray-700'); el.classList.add('bg-gray-50', 'text-gray-900', 'border-gray-300'); } else { el.classList.remove('bg-gray-50', 'text-gray-900', 'border-gray-300'); el.classList.add('bg-[#121212]', 'text-white', 'border-gray-700'); } });
-            document.querySelectorAll('.label-themed').forEach(el => { if (isLight) { el.classList.remove('text-gray-400'); el.classList.add('text-gray-700'); } else { el.classList.remove('text-gray-700'); el.classList.add('text-gray-400'); } });
-            const optContainer = document.getElementById('form-opsional-container'); if (isLight) { optContainer.classList.remove('bg-black/20', 'border-gray-800'); optContainer.classList.add('bg-gray-50', 'border-gray-200'); } else { optContainer.classList.remove('bg-gray-50', 'border-gray-200'); optContainer.classList.add('bg-black/20', 'border-gray-800'); }
-            const sliderContainer = document.getElementById('container-slider-gaji'); if (isLight) { sliderContainer.classList.remove('bg-black/20', 'border-gray-700/60'); sliderContainer.classList.add('bg-white', 'border-gray-300'); } else { sliderContainer.classList.remove('bg-white', 'border-gray-300'); sliderContainer.classList.add('bg-black/20', 'border-gray-700/60'); }
-            const gajiBadge = document.getElementById('label-nominal-gaji'); if (isLight) { gajiBadge.classList.remove('bg-gray-800', 'text-gray-300'); gajiBadge.classList.add('bg-[#ff5ca0]/10', 'text-[#ff5ca0]'); } else { gajiBadge.classList.remove('bg-gray-200', 'text-gray-800'); gajiBadge.classList.add('bg-[#ff5ca0]/10', 'text-[#ff5ca0]'); }
-            document.querySelectorAll('.btn-themed').forEach(el => { if (isLight) { el.classList.remove('bg-[#2d2d2d]', 'bg-gray-800', 'bg-gray-700', 'text-gray-300', 'text-white', 'border-gray-700'); el.classList.add('bg-gray-200', 'text-gray-800', 'border-gray-300', 'hover:bg-gray-300'); } else { el.classList.remove('bg-gray-200', 'text-gray-800', 'border-gray-300', 'hover:bg-gray-300'); el.classList.add('bg-[#2d2d2d]', 'text-gray-300', 'border-gray-700'); } });
-            document.querySelectorAll('.btn-close-modal').forEach(el => { if (isLight) { el.classList.remove('bg-gray-800', 'hover:bg-gray-700', 'text-gray-400'); el.classList.add('bg-gray-100', 'hover:bg-gray-200', 'text-gray-600'); } else { el.classList.remove('bg-gray-100', 'hover:bg-gray-200', 'text-gray-600'); el.classList.add('bg-gray-800', 'hover:bg-gray-700', 'text-gray-400'); } });
-            document.querySelectorAll('.menu-dropdown').forEach(el => { if (isLight) { el.classList.remove('bg-[#1e1e1e]', 'border-gray-700'); el.classList.add('bg-white', 'border-gray-200'); } else { el.classList.remove('bg-white', 'border-gray-200'); el.classList.add('bg-[#1e1e1e]', 'border-gray-700'); } });
-            document.getElementById('view-toggle-bg').className = isLight ? "flex gap-1 bg-gray-100 p-1 rounded-lg border border-gray-200 transition-colors" : "flex gap-1 bg-[#1a1a1a] p-1 rounded-lg border border-gray-800 transition-colors";
-            document.querySelectorAll('.text-themed-modal p').forEach(p => { if(p.classList.contains('text-gray-300') || p.classList.contains('text-gray-700')) { p.classList.remove(isLight ? 'text-gray-300' : 'text-gray-700'); p.classList.add(isLight ? 'text-gray-700' : 'text-gray-300'); } if(p.classList.contains('text-gray-400') || p.classList.contains('text-gray-600')) { p.classList.remove(isLight ? 'text-gray-400' : 'text-gray-600'); p.classList.add(isLight ? 'text-gray-600' : 'text-gray-400'); } });
-            document.querySelectorAll('.btn-tab-inactive').forEach(el => { if(isLight) { el.classList.remove('bg-gray-800', 'text-gray-300'); el.classList.add('bg-gray-200', 'text-gray-700'); } else { el.classList.remove('bg-gray-200', 'text-gray-700'); el.classList.add('bg-gray-800', 'text-gray-300'); } });
-            document.querySelectorAll('.stat-card').forEach(card => { const numberEl = card.querySelector('.stat-number'); if (isLight) { card.classList.remove('bg-[#1e1e1e]', 'border-gray-700'); card.classList.add('bg-white', 'border-gray-200'); if(numberEl) { numberEl.classList.remove('text-white'); numberEl.classList.add('text-gray-900'); } } else { card.classList.remove('bg-white', 'border-gray-200'); card.classList.add('bg-[#1e1e1e]', 'border-gray-700'); if(numberEl) { numberEl.classList.remove('text-gray-900'); numberEl.classList.add('text-white'); } } });
-            setFilterStatus(currentFilterStatus); setModeTampilan(currentMode); renderTampilan();
-        }
-        function bukaGoogleCalendar(perusahaan, posisi, tgl) { if (!tgl) return; const dateObj = new Date(tgl), yyyy = dateObj.getFullYear(), mm = String(dateObj.getMonth() + 1).padStart(2, '0'), dd = String(dateObj.getDate()).padStart(2, '0'); const nextDate = new Date(dateObj); nextDate.setDate(nextDate.getDate() + 1); const nyyyy = nextDate.getFullYear(), nmm = String(nextDate.getMonth() + 1).padStart(2, '0'), ndd = String(nextDate.getDate()).padStart(2, '0'); const dateStr = `${yyyy}${mm}${dd}/${nyyyy}${nmm}${ndd}`, title = encodeURIComponent(`Follow Up: ${perusahaan} - ${posisi}`), details = encodeURIComponent(`Pengingat untuk follow up lamaran kerja di ${perusahaan} untuk posisi ${posisi}.`), url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&dates=${dateStr}`; window.open(url, '_blank'); }
-        function kirimEmailKontak(perusahaan, posisi, kontakEmail) { let isi = templateEmail.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi); if (kontakEmail && kontakEmail.includes('@')) { window.location.href = `mailto:${kontakEmail}?subject=Lamaran Pekerjaan - ${posisi} - [Nama Anda]&body=${encodeURIComponent(isi)}`; } else { navigator.clipboard.writeText(isi).then(() => { alert("Template email berhasil disalin ke clipboard karena kontak bukan format email!"); }); } }
-        function kirimWAKontak(perusahaan, posisi, kontakInfo, jenis) { let pesan = jenis === 'tanya' ? templateTanya : templateInterview; pesan = pesan.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi); let nomor = kontakInfo.replace(/[^0-9]/g, ''); if (nomor.startsWith('0')) nomor = '62' + nomor.slice(1); if (nomor.length >= 10) { window.open(`https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`, '_blank'); } else { navigator.clipboard.writeText(pesan).then(() => { alert("Nomor WA tidak valid/tidak ditemukan, teks template pesan berhasil disalin ke clipboard!"); }); } }
-        function bukaModalPanduan() { document.getElementById('dropdown-titiktiga').classList.add('hidden'); document.getElementById('modal-panduan').classList.remove('hidden'); }
-        function tutupModalPanduan() { document.getElementById('modal-panduan').classList.add('hidden'); }
-        function aktifkanNotifikasi() { document.getElementById('dropdown-titiktiga').classList.add('hidden'); if (!("Notification" in window)) alert("Browser ini tidak mendukung fitur notifikasi desktop."); else if (Notification.permission === "granted") { alert("Notifikasi sudah aktif!"); cekNotifikasiFollowUp(dataLamaran, true); } else if (Notification.permission !== "denied") { Notification.requestPermission().then(permission => { if (permission === "granted") { alert("Notifikasi berhasil diaktifkan!"); cekNotifikasiFollowUp(dataLamaran, true); } }); } else alert("Notifikasi diblokir. Harap izinkan situs ini memunculkan notifikasi dari pengaturan browser."); }
-        function cekNotifikasiFollowUp(data, force = false) { if (!("Notification" in window) || Notification.permission !== "granted") return; if (notifikasiSudahMuncul && !force) return; const d = new Date(); const hariIni = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); let listFollowUp = data.filter(l => l.tanggalFollowUp === hariIni && !["Ditolak", "Diterima"].includes(l.status)); if (listFollowUp.length > 0) { new Notification("Pengingat Apply LOKER", { body: `Hei! Hari ini kamu punya ${listFollowUp.length} lamaran yang harus di-follow up.`, icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png" }); notifikasiSudahMuncul = true; } else if (force) { new Notification("Apply LOKER", { body: "Notifikasi aktif! Kami akan mengingatkanmu jika ada jadwal follow-up hari ini.", icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png" }); } }
-        function triggerConfetti() { const colors = ['#ff5ca0', '#ffd700', '#00ffcc', '#ffffff', '#ff4081', '#3b82f6']; for (let i = 0; i < 60; i++) { const confetti = document.createElement('div'); confetti.className = 'confetti-piece'; confetti.style.left = Math.random() * 100 + 'vw'; confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; confetti.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's'; confetti.style.animationDelay = (Math.random() * 0.5) + 's'; if (Math.random() > 0.5) confetti.style.borderRadius = '50%'; document.body.appendChild(confetti); setTimeout(() => { confetti.remove(); }, 3000); } }
-        function bukaModalTemplateGlobal() { document.getElementById('dropdown-titiktiga').classList.add('hidden'); document.getElementById('text-template-surat').value = templateSurat; document.getElementById('text-template-email').value = templateEmail; document.getElementById('text-template-tanya').value = templateTanya; document.getElementById('text-template-interview').value = templateInterview; gantiTabTemplate('surat'); document.getElementById('modal-template').classList.remove('hidden'); }
-        function tutupModalTemplate() { document.getElementById('modal-template').classList.add('hidden'); }
-        function gantiTabTemplate(tab) { const isLight = currentTheme === 'light'; ['surat', 'email', 'tanya', 'interview'].forEach(t => { const elContent = document.getElementById(`tab-content-${t}`), elBtn = document.getElementById(`tab-btn-${t}`); if(elContent) elContent.classList.add('hidden'); if(elBtn) elBtn.className = `px-3 py-1.5 rounded text-xs font-bold transition-colors btn-tab-inactive ${isLight ? 'bg-gray-200 text-gray-700' : 'bg-gray-800 text-gray-300'}`; }); const activeContent = document.getElementById(`tab-content-${tab}`), activeBtn = document.getElementById(`tab-btn-${tab}`); if(activeContent) activeContent.classList.remove('hidden'); if(activeBtn) { activeBtn.className = "px-3 py-1.5 rounded text-xs font-bold transition-colors bg-[#ff5ca0] text-white"; activeBtn.classList.remove('btn-tab-inactive'); } }
-        function salinIsiTemplateAktif() { let activeTextarea = null; ['surat', 'email', 'tanya', 'interview'].forEach(t => { const elContent = document.getElementById(`tab-content-${t}`); if (elContent && !elContent.classList.contains('hidden')) activeTextarea = elContent.querySelector('textarea'); }); if (activeTextarea) { activeTextarea.select(); navigator.clipboard.writeText(activeTextarea.value).then(() => { alert("Teks berhasil disalin!"); }).catch(() => { alert("Gagal menyalin teks."); }); } }
-        function simpanSemuaTemplate() { templateSurat = document.getElementById('text-template-surat').value.trim(); templateEmail = document.getElementById('text-template-email').value.trim(); templateTanya = document.getElementById('text-template-tanya').value.trim(); templateInterview = document.getElementById('text-template-interview').value.trim(); localStorage.setItem('lokertrack_template_surat', templateSurat); localStorage.setItem('lokertrack_template_email', templateEmail); localStorage.setItem('lokertrack_template_tanya', templateTanya); localStorage.setItem('lokertrack_template_interview', templateInterview); alert("Template berhasil disimpan!"); tutupModalTemplate(); }
-        function downloadSuratWord(perusahaan, posisi) { let teks = templateSurat.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi), teksHTML = teks.replace(/\n/g, '<br>'), preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Surat Lamaran</title></head><body><div style='font-family: Arial, sans-serif; font-size: 12pt;'>", postHtml = "</div></body></html>", html = preHtml + teksHTML + postHtml, blob = new Blob(['\ufeff', html], { type: 'application/msword' }), namaFile = `Surat_Lamaran_${perusahaan.replace(/\s+/g, '_')}_${posisi.replace(/\s+/g, '_')}.doc`, downloadLink = document.createElement("a"); document.body.appendChild(downloadLink); if (navigator.msSaveOrOpenBlob) navigator.msSaveOrOpenBlob(blob, namaFile); else { downloadLink.href = URL.createObjectURL(blob); downloadLink.download = namaFile; downloadLink.click(); } document.body.removeChild(downloadLink); alert(`File Word untuk ${perusahaan} berhasil didownload!`); }
-        function salinSuratLamaran(perusahaan, posisi) { let teks = templateSurat.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi); navigator.clipboard.writeText(teks).then(() => { alert(`Surat lamaran untuk ${perusahaan} berhasil disalin!`); }).catch(err => { alert(`Gagal menyalin teks: ${err}`); }); }
 
-        // --- 6G. LOGIKA PANDA DRAG & CHAT ---
+            document.querySelectorAll('#modal-box, #modal-panduan-box, #modal-template-box, #modal-flashcard-box').forEach(el => { 
+                el.className = isLight ? "bg-white border border-gray-200 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto" : "bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto flex flex-col"; 
+            }); 
+
+            document.getElementById('modal-panduan-box').classList.add('max-w-lg'); 
+            document.getElementById('modal-template-box').classList.add('max-w-lg'); 
+            document.getElementById('modal-flashcard-box').classList.add('max-w-lg');
+
+            document.querySelectorAll('.header-text, #label-info-lamaran').forEach(el => { 
+                if (isLight) { el.classList.remove('text-white'); el.classList.add('text-gray-900'); } 
+                else { el.classList.remove('text-gray-900'); el.classList.add('text-white'); } 
+            });
+
+            document.querySelectorAll('.input-themed, .search-input').forEach(el => { 
+                if (isLight) { el.classList.remove('bg-[#121212]', 'text-white', 'border-gray-700'); el.classList.add('bg-gray-50', 'text-gray-900', 'border-gray-300'); } 
+                else { el.classList.remove('bg-gray-50', 'text-gray-900', 'border-gray-300'); el.classList.add('bg-[#121212]', 'text-white', 'border-gray-700'); } 
+            });
+
+            document.querySelectorAll('.label-themed').forEach(el => { 
+                if (isLight) { el.classList.remove('text-gray-400'); el.classList.add('text-gray-700'); } 
+                else { el.classList.remove('text-gray-700'); el.classList.add('text-gray-400'); } 
+            });
+
+            const optContainer = document.getElementById('form-opsional-container'); 
+            if (isLight) { optContainer.classList.remove('bg-black/20', 'border-gray-800'); optContainer.classList.add('bg-gray-50', 'border-gray-200'); } 
+            else { optContainer.classList.remove('bg-gray-50', 'border-gray-200'); optContainer.classList.add('bg-black/20', 'border-gray-800'); }
+
+            const sliderContainer = document.getElementById('container-slider-gaji'); 
+            if (isLight) { sliderContainer.classList.remove('bg-black/20', 'border-gray-700/60'); sliderContainer.classList.add('bg-white', 'border-gray-300'); } 
+            else { sliderContainer.classList.remove('bg-white', 'border-gray-300'); sliderContainer.classList.add('bg-black/20', 'border-gray-700/60'); }
+
+            const gajiBadge = document.getElementById('label-nominal-gaji'); 
+            if (isLight) { gajiBadge.classList.remove('bg-gray-800', 'text-gray-300'); gajiBadge.classList.add('bg-[#ff5ca0]/10', 'text-[#ff5ca0]'); } 
+            else { gajiBadge.classList.remove('bg-gray-200', 'text-gray-800'); gajiBadge.classList.add('bg-[#ff5ca0]/10', 'text-[#ff5ca0]'); }
+
+            document.querySelectorAll('.btn-themed').forEach(el => { 
+                if (isLight) { el.classList.remove('bg-[#2d2d2d]', 'bg-gray-800', 'bg-gray-700', 'text-gray-300', 'text-white', 'border-gray-700'); el.classList.add('bg-gray-200', 'text-gray-800', 'border-gray-300', 'hover:bg-gray-300'); } 
+                else { el.classList.remove('bg-gray-200', 'text-gray-800', 'border-gray-300', 'hover:bg-gray-300'); el.classList.add('bg-[#2d2d2d]', 'text-gray-300', 'border-gray-700'); } 
+            });
+
+            document.querySelectorAll('.btn-close-modal').forEach(el => { 
+                if (isLight) { el.classList.remove('bg-gray-800', 'hover:bg-gray-700', 'text-gray-400'); el.classList.add('bg-gray-100', 'hover:bg-gray-200', 'text-gray-600'); } 
+                else { el.classList.remove('bg-gray-100', 'hover:bg-gray-200', 'text-gray-600'); el.classList.add('bg-gray-800', 'hover:bg-gray-700', 'text-gray-400'); } 
+            });
+
+            document.querySelectorAll('.menu-dropdown').forEach(el => { 
+                if (isLight) { el.classList.remove('bg-[#1e1e1e]', 'border-gray-700'); el.classList.add('bg-white', 'border-gray-200'); } 
+                else { el.classList.remove('bg-white', 'border-gray-200'); el.classList.add('bg-[#1e1e1e]', 'border-gray-700'); } 
+            });
+
+            document.getElementById('view-toggle-bg').className = isLight ? "flex gap-1 bg-gray-100 p-1.5 rounded-xl border border-gray-200 transition-colors items-center" : "flex gap-1 bg-[#1a1a1a] p-1.5 rounded-xl border border-gray-800 transition-colors items-center";
+
+            document.querySelectorAll('.text-themed-modal p').forEach(p => { 
+                if(p.classList.contains('text-gray-300') || p.classList.contains('text-gray-700')) { 
+                    p.classList.remove(isLight ? 'text-gray-300' : 'text-gray-700'); 
+                    p.classList.add(isLight ? 'text-gray-700' : 'text-gray-300'); 
+                } 
+                if(p.classList.contains('text-gray-400') || p.classList.contains('text-gray-600')) { 
+                    p.classList.remove(isLight ? 'text-gray-400' : 'text-gray-600'); 
+                    p.classList.add(isLight ? 'text-gray-600' : 'text-gray-400'); 
+                } 
+            });
+
+            document.querySelectorAll('.btn-tab-inactive').forEach(el => { 
+                if(isLight) { el.classList.remove('bg-gray-800', 'text-gray-300'); el.classList.add('bg-gray-200', 'text-gray-700'); } 
+                else { el.classList.remove('bg-gray-200', 'text-gray-700'); el.classList.add('bg-gray-800', 'text-gray-300'); } 
+            });
+
+            document.querySelectorAll('.stat-card').forEach(card => { 
+                const numberEl = card.querySelector('.stat-number'); 
+                if (isLight) { 
+                    card.classList.remove('bg-[#1e1e1e]', 'border-gray-700'); 
+                    card.classList.add('bg-white', 'border-gray-200'); 
+                    if(numberEl) { numberEl.classList.remove('text-white'); numberEl.classList.add('text-gray-900'); } 
+                } else { 
+                    card.classList.remove('bg-white', 'border-gray-200'); 
+                    card.classList.add('bg-[#1e1e1e]', 'border-gray-700'); 
+                    if(numberEl) { numberEl.classList.remove('text-gray-900'); numberEl.classList.add('text-white'); } 
+                } 
+            });
+
+            setFilterStatus(currentFilterStatus); 
+            setModeTampilan(currentMode); 
+            renderListFlashcard();
+        }
+
+        function bukaGoogleCalendar(perusahaan, posisi, tgl) { 
+            if (!tgl) return; 
+            const dateObj = new Date(tgl), 
+                  yyyy = dateObj.getFullYear(), 
+                  mm = String(dateObj.getMonth() + 1).padStart(2, '0'), 
+                  dd = String(dateObj.getDate()).padStart(2, '0'); 
+            const nextDate = new Date(dateObj); 
+            nextDate.setDate(nextDate.getDate() + 1); 
+            const nyyyy = nextDate.getFullYear(), 
+                  nmm = String(nextDate.getMonth() + 1).padStart(2, '0'), 
+                  ndd = String(nextDate.getDate()).padStart(2, '0'); 
+            const dateStr = `${yyyy}${mm}${dd}/${nyyyy}${nmm}${ndd}`, 
+                  title = encodeURIComponent(`Follow Up: ${perusahaan} - ${posisi}`), 
+                  details = encodeURIComponent(`Pengingat untuk follow up lamaran kerja di ${perusahaan} untuk posisi ${posisi}.`), 
+                  url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&dates=${dateStr}`; 
+            window.open(url, '_blank'); 
+        }
+
+        function kirimEmailKontak(perusahaan, posisi, kontakEmail) { 
+            let isi = templateEmail.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi); 
+            if (kontakEmail && kontakEmail.includes('@')) { 
+                window.location.href = `mailto:${kontakEmail}?subject=Lamaran Pekerjaan - ${posisi} - [Nama Anda]&body=${encodeURIComponent(isi)}`; 
+            } else { 
+                navigator.clipboard.writeText(isi).then(() => { 
+                    alert("Template email berhasil disalin ke clipboard karena kontak bukan format email!"); 
+                }); 
+            } 
+        }
+
+        function kirimWAKontak(perusahaan, posisi, kontakInfo, jenis) { 
+            let pesan = jenis === 'tanya' ? templateTanya : templateInterview; 
+            pesan = pesan.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi); 
+            let nomor = kontakInfo.replace(/[^0-9]/g, ''); 
+            if (nomor.startsWith('0')) nomor = '62' + nomor.slice(1); 
+            if (nomor.length >= 10) { 
+                window.open(`https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`, '_blank'); 
+            } else { 
+                navigator.clipboard.writeText(pesan).then(() => { 
+                    alert("Nomor WA tidak valid/tidak ditemukan, teks template pesan berhasil disalin ke clipboard!"); 
+                }); 
+            } 
+        }
+
+        function bukaModalPanduan() { 
+            document.getElementById('dropdown-titiktiga').classList.add('hidden'); 
+            document.getElementById('modal-panduan').classList.remove('hidden'); 
+        }
+
+        function tutupModalPanduan() { document.getElementById('modal-panduan').classList.add('hidden'); }
+
+        function aktiftkanNotifikasi() { 
+            document.getElementById('dropdown-titiktiga').classList.add('hidden'); 
+            if (!("Notification" in window)) alert("Browser ini tidak mendukung fitur notifikasi desktop."); 
+            else if (Notification.permission === "granted") { 
+                alert("Notifikasi sudah aktif!"); 
+                cekNotifikasiFollowUp(dataLamaran, true); 
+            } else if (Notification.permission !== "denied") { 
+                Notification.requestPermission().then(permission => { 
+                    if (permission === "granted") { 
+                        alert("Notifikasi berhasil diaktifkan!"); 
+                        cekNotifikasiFollowUp(dataLamaran, true); 
+                    } 
+                }); 
+            } else alert("Notifikasi diblokir. Harap izinkan situs ini memunculkan notifikasi dari pengaturan browser."); 
+        }
+
+        function cekNotifikasiFollowUp(data, force = false) { 
+            if (!("Notification" in window) || Notification.permission !== "granted") return; 
+            if (notifikasiSudahMuncul && !force) return; 
+            const d = new Date(); 
+            const hariIni = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); 
+            let listFollowUp = data.filter(l => l.tanggalFollowUp === hariIni && !["Ditolak", "Diterima"].includes(l.status)); 
+            if (listFollowUp.length > 0) { 
+                new Notification("Pengingat Apply LOKER", { body: `Hei! Hari ini kamu punya ${listFollowUp.length} lamaran yang harus di-follow up.`, icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png" }); 
+                notifikasiSudahMuncul = true; 
+            } else if (force) { 
+                new Notification("Apply LOKER", { body: "Notifikasi aktif! Kami akan mengingatkanmu jika ada jadwal follow-up hari ini.", icon: "https://cdn-icons-png.flaticon.com/512/2950/2950322.png" }); 
+            } 
+        }
+
+        function triggerConfetti() { 
+            const colors = ['#ff5ca0', '#ffd700', '#00ffcc', '#ffffff', '#ff4081', '#3b82f6']; 
+            for (let i = 0; i < 60; i++) { 
+                const confetti = document.createElement('div'); 
+                confetti.className = 'confetti-piece'; 
+                confetti.style.left = Math.random() * 100 + 'vw'; 
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; 
+                confetti.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's'; 
+                confetti.style.animationDelay = (Math.random() * 0.5) + 's'; 
+                if (Math.random() > 0.5) confetti.style.borderRadius = '50%'; 
+                document.body.appendChild(confetti); 
+                setTimeout(() => { confetti.remove(); }, 3000); 
+            } 
+        }
+
+        function bukaModalTemplateGlobal() { 
+            document.getElementById('text-template-surat').value = templateSurat; 
+            document.getElementById('text-template-email').value = templateEmail; 
+            document.getElementById('text-template-tanya').value = templateTanya; 
+            document.getElementById('text-template-interview').value = templateInterview; 
+            gantiTabTemplate('surat'); 
+            document.getElementById('modal-template').classList.remove('hidden'); 
+        }
+
+        function tutupModalTemplate() { document.getElementById('modal-template').classList.add('hidden'); }
+
+        function gantiTabTemplate(tab) { 
+            const isLight = currentTheme === 'light'; 
+            ['surat', 'email', 'tanya', 'interview'].forEach(t => { 
+                const elContent = document.getElementById(`tab-content-${t}`), 
+                      elBtn = document.getElementById(`tab-btn-${t}`); 
+                if(elContent) elContent.classList.add('hidden'); 
+                if(elBtn) elBtn.className = `px-3 py-1.5 rounded text-xs font-bold transition-colors btn-tab-inactive ${isLight ? 'bg-gray-200 text-gray-700' : 'bg-gray-800 text-gray-300'}`; 
+            }); 
+            const activeContent = document.getElementById(`tab-content-${tab}`), 
+                  activeBtn = document.getElementById(`tab-btn-${tab}`); 
+            if(activeContent) activeContent.classList.remove('hidden'); 
+            if(activeBtn) { 
+                activeBtn.className = "px-3 py-1.5 rounded text-xs font-bold transition-colors bg-[#ff5ca0] text-white"; 
+                activeBtn.classList.remove('btn-tab-inactive'); 
+            } 
+        }
+
+        function salinIsiTemplateAktif() { 
+            let activeTextarea = null; 
+            ['surat', 'email', 'tanya', 'interview'].forEach(t => { 
+                const elContent = document.getElementById(`tab-content-${t}`); 
+                if (elContent && !elContent.classList.contains('hidden')) activeTextarea = elContent.querySelector('textarea'); 
+            }); 
+            if (activeTextarea) { 
+                activeTextarea.select(); 
+                navigator.clipboard.writeText(activeTextarea.value).then(() => { 
+                    alert("Teks berhasil disalin!"); 
+                }).catch(() => { 
+                    alert("Gagal menyalin teks."); 
+                }); 
+            } 
+        }
+
+        function simpanSemuaTemplate() { 
+            templateSurat = document.getElementById('text-template-surat').value.trim(); 
+            templateEmail = document.getElementById('text-template-email').value.trim(); 
+            templateTanya = document.getElementById('text-template-tanya').value.trim(); 
+            templateInterview = document.getElementById('text-template-interview').value.trim(); 
+            localStorage.setItem('lokertrack_template_surat', templateSurat); 
+            localStorage.setItem('lokertrack_template_email', templateEmail); 
+            localStorage.setItem('lokertrack_template_tanya', templateTanya); 
+            localStorage.setItem('lokertrack_template_interview', templateInterview); 
+            alert("Template berhasil disimpan!"); 
+            tutupModalTemplate(); 
+        }
+
+        function downloadSuratWord(perusahaan, posisi) { 
+            let teks = templateSurat.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi), 
+                teksHTML = teks.replace(/\n/g, '<br>'), 
+                preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Surat Lamaran</title></head><body><div style='font-family: Arial, sans-serif; font-size: 12pt;'>", 
+                postHtml = "</div></body></html>", 
+                html = preHtml + teksHTML + postHtml, 
+                blob = new Blob(['\ufeff', html], { type: 'application/msword' }), 
+                namaFile = `Surat_Lamaran_${perusahaan.replace(/\s+/g, '_')}_${posisi.replace(/\s+/g, '_')}.doc`, 
+                downloadLink = document.createElement("a"); 
+            document.body.appendChild(downloadLink); 
+            if (navigator.msSaveOrOpenBlob) navigator.msSaveOrOpenBlob(blob, namaFile); 
+            else { 
+                downloadLink.href = URL.createObjectURL(blob); 
+                downloadLink.download = namaFile; 
+                downloadLink.click(); 
+            } 
+            document.body.removeChild(downloadLink); 
+            alert(`File Word untuk ${perusahaan} berhasil didownload!`); 
+        }
+
+        function salinSuratLamaran(perusahaan, posisi) { 
+            let teks = templateSurat.replace(/{perusahaan}/g, perusahaan).replace(/{posisi}/g, posisi); 
+            navigator.clipboard.writeText(teks).then(() => { 
+                alert(`Surat lamaran untuk ${perusahaan} berhasil disalin!`); 
+            }).catch(err => { 
+                alert(`Gagal menyalin teks: ${err}`); 
+            }); 
+        }
+
         function showBubble(teks) { 
             const bubble = document.getElementById('speech-bubble'); 
             document.getElementById('panda-pesan').innerHTML = teks; 
@@ -596,6 +1530,7 @@
                 }, 3500); 
             } 
         }
+
         function showPersistentBubble(teks) { 
             isPandaPersistent = true; 
             const bubble = document.getElementById('speech-bubble'); 
@@ -605,36 +1540,30 @@
         }
 
         function updatePandaMoodAndCheck() { 
-            const d = new Date();
-            const hariIni = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-            
+            const d = new Date(); 
+            const hariIni = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); 
             let pesanPeringatan = []; 
             let idYangDiingatkan = []; 
-
             dataLamaran.forEach(l => { 
                 if (["Ditolak", "Diterima", "Tidak Ada Kabar"].includes(l.status)) return; 
-                
-                let butuhIngat = false;
-                if (l.tanggalFollowUp && l.tanggalFollowUp === hariIni) {
+                let butuhIngat = false; 
+                if (l.tanggalFollowUp && l.tanggalFollowUp === hariIni) { 
                     pesanPeringatan.push(`Janlup Boss Follow-Up ke <b>${l.perusahaan}</b> (${l.posisi}) Hari inii`); 
-                    butuhIngat = true;
-                }
-                if (l.deadline && l.deadline === hariIni) {
+                    butuhIngat = true; 
+                } 
+                if (l.deadline && l.deadline === hariIni) { 
                     pesanPeringatan.push(`Deadline Lamar ke <b>${l.perusahaan}</b> (${l.posisi}) Hari ini banget lho boss!!`); 
-                    butuhIngat = true;
-                }
-
-                if (butuhIngat) {
+                    butuhIngat = true; 
+                } 
+                if (butuhIngat) { 
                     idYangDiingatkan.push(l.id); 
-                }
+                } 
             }); 
-
-            const reminderKey = hariIni + '_' + idYangDiingatkan.sort().join('_');
-
+            const reminderKey = hariIni + '_' + idYangDiingatkan.sort().join('_'); 
             if (idYangDiingatkan.length === 0 || localStorage.getItem('lokertrack_reminder_dismissed') === reminderKey) return; 
-            
             if (pesanPeringatan.length > 0) { 
-                const isLight = currentTheme === 'light', btnStyle = isLight ? 'bg-gray-200 text-gray-800 border-gray-400 hover:bg-gray-300' : 'bg-[#2d2d2d] text-gray-200 border-gray-600 hover:bg-gray-700'; 
+                const isLight = currentTheme === 'light', 
+                      btnStyle = isLight ? 'bg-gray-200 text-gray-800 border-gray-400 hover:bg-gray-300' : 'bg-[#2d2d2d] text-gray-200 border-gray-600 hover:bg-gray-700'; 
                 const htmlPesan = pesanPeringatan.join('<br><br>') + `<br><br><button onclick="dismissReminderHariIni('${reminderKey}')" class="${btnStyle} font-bold px-3 py-1.5 rounded-lg text-[10px] w-full mt-1 border transition-colors uppercase tracking-wider">Cukup</button>`; 
                 showPersistentBubble(htmlPesan); 
             } 
@@ -647,7 +1576,7 @@
             bubble.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto'); 
             bubble.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none'); 
         }
-        
+
         let isDraggingPanda = false, hasMoved = false;
         function handlePandaClick() { 
             if (!hasMoved) { 
@@ -673,13 +1602,12 @@
                 } 
             } 
         }
-        
+
         const pandaContainer = document.getElementById('panda-container');
         let startX = 0, startY = 0, initialX = 0, initialY = 0;
-        
-        function dragPandaStart(e) { 
-            if (e.target.closest('#speech-bubble')) return;
 
+        function dragPandaStart(e) { 
+            if (e.target.closest('#speech-bubble')) return; 
             isDraggingPanda = true; 
             hasMoved = false; 
             pandaContainer.classList.add('is-moving'); 
@@ -701,6 +1629,7 @@
                 window.addEventListener('mouseup', dragPandaEnd); 
             } 
         }
+
         function dragPandaMove(e) { 
             if (!isDraggingPanda) return; 
             if (e.type.includes('touch')) e.preventDefault(); 
@@ -712,6 +1641,7 @@
             pandaContainer.style.top = (initialY + dy) + 'px'; 
             pandaContainer.style.left = (initialX + dx) + 'px'; 
         }
+
         function dragPandaEnd() { 
             isDraggingPanda = false; 
             pandaContainer.classList.remove('is-moving'); 
@@ -720,18 +1650,16 @@
             window.removeEventListener('touchmove', dragPandaMove); 
             window.removeEventListener('touchend', dragPandaEnd); 
         }
-        
-        if (pandaContainer) {
+
+        if (pandaContainer) { 
             pandaContainer.addEventListener('mousedown', dragPandaStart); 
-            pandaContainer.addEventListener('touchstart', dragPandaStart, {passive: false});
+            pandaContainer.addEventListener('touchstart', dragPandaStart, {passive: false}); 
         }
 
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker terdaftar!', reg))
-                    .catch(err => console.log('Gagal daftar Service Worker:', err));
-            });
+        if ('serviceWorker' in navigator) { 
+            window.addEventListener('load', () => { 
+                navigator.serviceWorker.register('./sw.js').then(reg => console.log('Service Worker terdaftar!', reg)).catch(err => console.log('Gagal daftar Service Worker:', err)); 
+            }); 
         }
     </script>
 </body>
