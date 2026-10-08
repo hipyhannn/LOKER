@@ -769,7 +769,7 @@
                 if (["Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Medical Check Up", "Offering", "Rencana Daftar", "Terkirim"].includes(l.status)) statProses++; 
                 if (["Interview HR", "Interview User", "Final Interview"].includes(l.status)) statInterview++; 
                 if (l.status === 'Diterima') statDiterima++; 
-                if (l.status === 'Ditolak') statDitolak++;
+                if (["Ditolak", "Tidak Ada Kabar"].includes(l.status)) statDitolak++;
                 if (["Ditolak", "Tidak Ada Kabar"].includes(l.status)) statArsip++; 
             });
 
@@ -782,7 +782,7 @@
                 if (currentFilterStatus === 'Proses') return ["Screening HR", "Psikotes", "Tes Online", "Tes Teknis", "Medical Check Up", "Offering", "Rencana Daftar", "Terkirim"].includes(lamaran.status); 
                 if (currentFilterStatus === 'Interview') return ["Interview HR", "Interview User", "Final Interview"].includes(lamaran.status); 
                 if (currentFilterStatus === 'Diterima') return lamaran.status === 'Diterima'; 
-                if (currentFilterStatus === 'Ditolak') return lamaran.status === 'Ditolak'; 
+                if (currentFilterStatus === 'Ditolak') return ["Ditolak", "Tidak Ada Kabar"].includes(lamaran.status); 
                 return true; 
             });
 
@@ -806,7 +806,7 @@
 
                 let kontakAksiHTML = ''; 
                 const kontakVal = lamaran.kontak ? lamaran.kontak.trim() : '';
-                if (kontakVal.includes('@')) kontakAksiHTML = `<button onclick="kirimEmailKontak('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${kontakVal}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors text-green-400">Kirim Email</button>`;
+                if (kontakVal.includes('@')) kontakAksiHTML = `<button onclick="kirimEmailKontak('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${kontakVal}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Kirim Email</button>`;
                 else if (kontakVal !== '') kontakAksiHTML = `<button onclick="kirimWAKontak('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${kontakVal}', 'tanya')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Kirim WA Follow-Up</button><button onclick="kirimWAKontak('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${kontakVal}', 'interview')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Konfirmasi Interview (WA)</button>`;
 
                 const dropdownAksiHTML = `<div class="relative dropdown-aksi-container inline-block" onclick="event.stopPropagation()"><button type="button" onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="w-7 h-7 rounded-lg text-xs font-bold border border-gray-600 bg-transparent text-gray-300 hover:bg-gray-700 flex items-center justify-center transition-colors">⋮</button><div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 top-full mt-1 w-52 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1"><button onclick="bukaModalEdit('${lamaran.id}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Edit Data</button><button onclick="salinSuratLamaran('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Salin Surat Lamaran</button><button onclick="salinTeksEmail('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Salin Teks Email</button><button onclick="downloadSuratWord('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Download Surat (.doc)</button>${lamaran.tanggalFollowUp ? `<button onclick="bukaGoogleCalendar('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${lamaran.tanggalFollowUp}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Google Calendar</button>` : ''}${kontakAksiHTML ? '<hr class="border-gray-700 my-1">' + kontakAksiHTML : ''}<hr class="border-gray-700 my-1"><button onclick="hapusLamaran('${lamaran.id}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-red-500/20 text-red-400 transition-colors">Hapus Lamaran</button></div></div>`;
