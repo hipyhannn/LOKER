@@ -1738,6 +1738,33 @@
                 navigator.serviceWorker.register('./sw.js').then(reg => console.log('Service Worker terdaftar!', reg)).catch(err => console.log('Gagal daftar Service Worker:', err)); 
             }); 
         }
+        // ===== AUTO-ISI FORM DARI BOOKMARKLET =====
+(function(){
+  const p = new URLSearchParams(location.search);
+  if (p.get('add') !== '1') return;
+  const data = {
+    company: p.get('company') || '',
+    position: p.get('position') || '',
+    link: p.get('link') || '',
+    platform: p.get('platform') || ''
+  };
+  history.replaceState(null, '', location.pathname);
+  const unsub = auth.onAuthStateChanged(user => {
+    if (!user) return;
+    unsub();
+    setTimeout(() => {
+      bukaModalTambah();
+      const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+      set('input-perusahaan', data.company);
+      set('input-posisi', data.position);
+      set('input-link', data.link);
+      set('input-metode', data.platform);
+      set('input-status', 'Terkirim');
+      set('input-tanggal', new Date().toLocaleDateString('en-CA'));
+      document.getElementById('form-opsional-container').classList.remove('hidden');
+    }, 400);
+  });
+})();
     </script>
 </body>
 </html>
