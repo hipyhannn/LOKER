@@ -49,13 +49,13 @@
         .kanban-col { transition: background-color 0.2s ease, border-color 0.2s ease; }
         .kanban-col.drag-over { background-color: rgba(255, 92, 160, 0.08) !important; border-color: #ff5ca0 !important; }
 
-        .fab-menu-item {
+        .fab--item {
             transform: translateY(20px) scale(0.8);
             opacity: 0;
             pointer-events: none;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .fab-menu-item.show {
+        .fab--item.show {
             transform: translateY(0) scale(1);
             opacity: 1;
             pointer-events: auto;
@@ -118,7 +118,7 @@
                     </div>
                     <div class="flex items-center gap-3">
                         <div class="relative">
-                            <button onclick="toggleMenuTitikTiga(event)" id="btn-menu-titiktiga" class="w-9 h-9 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0">⋮</button>
+                            <button onclick="toggleMenuTitikTiga(event)" id="btn--titiktiga" class="w-9 h-9 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0">⋮</button>
                             <div id="dropdown-titiktiga" class="absolute right-0 mt-2 w-64 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300">
                                 <div class="px-4 py-2.5 border-b border-gray-700/60 bg-black/20">
                                     <p class="text-[10px] text-gray-400 font-medium">Login sebagai:</p>
@@ -134,7 +134,7 @@
                                 <button onclick="aktiftkanNotifikasi()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit">
                                     <span>Aktifkan Notif Follow-Up</span>
                                 </button>
-                                <hr id="menu-divider" class="border-gray-700 my-1">
+                                <hr id="-divider" class="border-gray-700 my-1">
                                 <button onclick="toggleTemaManual()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit">
                                 <hr class="border-gray-700 my-1">
                                 <button onclick="logoutUser()" class="w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-red-500/20 text-red-400 transition-colors flex items-center gap-2">
@@ -251,7 +251,7 @@
             <div class="text-themed-modal space-y-3">
                 <div>
                     <p class="font-bold text-[#ff5ca0] mb-0.5">1. Sinkronisasi Tema Otomatis</p>
-                    <p>Aplikasi otomatis mendeteksi mode gelap/terang dari pengaturan perangkatmu secara real-time. Kamu juga bisa mengaturnya manual melalui menu titik tiga di kanan atas.</p>
+                    <p>Aplikasi otomatis mendeteksi mode gelap/terang dari pengaturan perangkatmu secara real-time. Kamu juga bisa mengaturnya manual melalui  titik tiga di kanan atas.</p>
                 </div>
                 <div>
                     <p class="font-bold text-[#ff5ca0] mb-0.5">2. Notifikasi & Pengingat Follow-Up</p>
@@ -311,7 +311,7 @@
                         <input type="text" id="input-posisi" autocomplete="off" required placeholder="Contoh: Frontend Developer..." class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
                         <button type="button" onclick="toggleDropdownPosisi(event)" class="btn-themed bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0">▼</button>
                     </div>
-                    <div id="dropdown-posisi-list" class="menu-dropdown absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
+                    <div id="dropdown-posisi-list" class="-dropdown absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                     <div>
@@ -368,7 +368,7 @@
                             <input type="text" id="input-metode" autocomplete="off" placeholder="Pilih / ketik manual..." class="input-themed w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
                             <button type="button" onclick="toggleDropdownMetode(event)" class="btn-themed bg-[#2d2d2d] border border-gray-700 hover:bg-gray-700 text-gray-300 px-3 rounded-lg text-xs font-bold shrink-0">▼</button>
                         </div>
-                        <div id="dropdown-metode-list" class="menu-dropdown absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
+                        <div id="dropdown-metode-list" class="-dropdown absolute left-0 right-0 mt-1 bg-[#1e1e1e] border border-gray-700 rounded-lg shadow-2xl hidden z-50 max-h-40 overflow-y-auto"></div>
                     </div>
                     <div class="p-3 rounded-xl border border-gray-700/60 bg-black/20" id="container-slider-gaji">
                         <div class="flex justify-between items-center mb-1">
@@ -415,14 +415,14 @@
 
     <!-- Menu Melayang Tombol Plus -->
     <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2.5">
-        <div id="fab-menu-container" class="flex flex-col items-end gap-2 mb-1">
-            <button onclick="bukaModalFlashcard(); tutupFabMenu();" class="fab-menu-item flex items-center gap-2.5 bg-[#1e1e1e] hover:bg-[#2d2d2d] border border-gray-700 text-white px-3.5 py-2 rounded-full shadow-lg text-xs font-semibold">
+        <div id="fab--container" class="flex flex-col items-end gap-2 mb-1">
+            <button onclick="bukaModalFlashcard(); tutupFabMenu();" class="fab--item flex items-center gap-2.5 bg-[#1e1e1e] hover:bg-[#2d2d2d] border border-gray-700 text-white px-3.5 py-2 rounded-full shadow-lg text-xs font-semibold">
                 <span>Latihan Interview</span>
             </button>
-            <button onclick="bukaModalTemplateGlobal(); tutupFabMenu();" class="fab-menu-item flex items-center gap-2.5 bg-[#1e1e1e] hover:bg-[#2d2d2d] border border-gray-700 text-white px-3.5 py-2 rounded-full shadow-lg text-xs font-semibold">
+            <button onclick="bukaModalTemplateGlobal(); tutupFabMenu();" class="fab--item flex items-center gap-2.5 bg-[#1e1e1e] hover:bg-[#2d2d2d] border border-gray-700 text-white px-3.5 py-2 rounded-full shadow-lg text-xs font-semibold">
                 <span>Atur Template</span>
             </button>
-            <button onclick="bukaModalTambah(); tutupFabMenu();" class="fab-menu-item flex items-center gap-2.5 bg-[#ff5ca0] hover:bg-[#ff4081] text-white px-3.5 py-2 rounded-full shadow-lg text-xs font-semibold">
+            <button onclick="bukaModalTambah(); tutupFabMenu();" class="fab--item flex items-center gap-2.5 bg-[#ff5ca0] hover:bg-[#ff4081] text-white px-3.5 py-2 rounded-full shadow-lg text-xs font-semibold">
                 <span>➕ Tambah Loker</span>
             </button>
         </div>
@@ -443,7 +443,7 @@
         const defaultTemplateSurat = `Kepada Yth. Tim Rekrutmen / HRD {perusahaan},\nDi Tempat\n\nDengan hormat,\n\nMelalui pesan ini, saya bermaksud untuk menyampaikan ketertarikan saya untuk melamar posisi {posisi} di {perusahaan}.\n\nBerikut saya lampirkan berkas pendukung serta portofolio untuk menjadi bahan pertimbangan Bapak/Ibu. Besar harapan saya untuk diberikan kesempatan mengikuti tahap seleksi selanjutnya.\n\nAtas waktu dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n{nama}`;
         const defaultTemplateEmail = `Yth. HRD / Tim Rekrutmen {perusahaan},\n\nDengan hormat,\n\nPerkenalkan, saya {nama}. Melalui email ini, saya bermaksud mengajukan diri untuk melamar posisi {posisi} di {perusahaan}.\n\nBersama pesan ini, saya telah melampirkan berkas lamaran beserta Curriculum Vitae (CV) terbaru untuk dapat ditinjau oleh Bapak/Ibu.\n\nDemikian permohonan ini saya sampaikan. Terima kasih atas perhatian dan waktu yang diberikan.\n\nHormat saya,\n{nama}`;
         const defaultTemplateTanya = `Yth. HRD / Tim Rekrutmen {perusahaan},\n\nSelamat pagi/siang. Mohon maaf mengganggu waktunya sebentar. Saya ingin menanyakan perkembangan atau status dari lamaran saya untuk posisi {posisi} yang telah saya kirimkan sebelumnya.\n\nBesar harapan saya untuk mendapatkan informasi lebih lanjut. Atas perhatian dan kesempatan yang diberikan, saya ucapkan terima kasih.\n\nHormat saya,\n{nama}`;
-        const defaultTemplateInterview = `Yth. HRD / Tim Rekrutmen {perusahaan},\n\nTerima kasih banyak atas undangan serta kesempatan interview untuk posisi {posisi}. Melalui pesan ini, saya bermaksud mengonfirmasi bahwa saya akan hadir memenuhi undangan tersebut sesuai dengan jadwal yang telah ditentukan.\n\nSekali lagi terima kasih atas kesempatan yang diberikan.\n\nHormat saya,\n{nama}`;
+        const defaultTemplateInterview = `Yth. HRD / Tim Rekrutmen {perusahaan},\n\nTerima kasih banyak atas undangan serta kesempatan interview untuk posisi {posisi}. Melalui pesan ini, saya bermaksud mengonfirmasi bahwa saya akan hadir mehi undangan tersebut sesuai dengan jadwal yang telah ditentukan.\n\nSekali lagi terima kasih atas kesempatan yang diberikan.\n\nHormat saya,\n{nama}`;
 
         let templateSurat = localStorage.getItem('lokertrack_template_surat') || defaultTemplateSurat;
         let templateEmail = localStorage.getItem('lokertrack_template_email') || defaultTemplateEmail;
@@ -456,7 +456,7 @@
         setModeTampilan(currentMode);
 
         function toggleFabMenu() {
-            const items = document.querySelectorAll('.fab-menu-item');
+            const items = document.querySelectorAll('.fab--item');
             const mainBtn = document.getElementById('fab-main-btn');
 
             mainBtn.classList.toggle('rotate');
@@ -468,7 +468,7 @@
         }
 
         function tutupFabMenu() {
-            const items = document.querySelectorAll('.fab-menu-item');
+            const items = document.querySelectorAll('.fab--item');
             const mainBtn = document.getElementById('fab-main-btn');
 
             mainBtn.classList.remove('rotate');
@@ -810,16 +810,16 @@
             dataFiltered.forEach(lamaran => {
                 const status = lamaran.status, 
                       warnaStatusCard = isLight ? 'bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200' : 'bg-[#2d2d2d] text-gray-300 border-gray-600 hover:bg-gray-700', 
-                      menuDropdownBg = isLight ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200';
+                      DropdownBg = isLight ? 'bg-white border-gray-200 text-gray-800' : 'bg-[#1e1e1e] border-gray-700 text-gray-200';
 
-                const dropdownStatusHTML = `<div class="relative dropdown-status-container inline-block w-auto" onclick="event.stopPropagation()"><button type="button" onclick="toggleDropdownStatus(event, '${lamaran.id}')" class="text-[11px] border rounded px-2 py-1 font-semibold outline-none flex items-center justify-between gap-1 whitespace-nowrap transition-colors ${warnaStatusCard}"><span>${status}</span> <span class="text-[9px]">▾</span></button><div id="dropdown-status-${lamaran.id}" class="dropdown-status-menu absolute left-0 top-full mt-1 w-44 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 max-h-52 overflow-y-auto">${daftarStatus.map(s => `<button type="button" onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 ${s === status ? 'text-[#ff5ca0] border-l-[3px] border-[#ff5ca0]' : ''}">${s}</button>`).join('')}</div></div>`;
+                const dropdownStatusHTML = `<div class="relative dropdown-status-container inline-block w-auto" onclick="event.stopPropagation()"><button type="button" onclick="toggleDropdownStatus(event, '${lamaran.id}')" class="text-[11px] border rounded px-2 py-1 font-semibold outline-none flex items-center justify-between gap-1 whitespace-nowrap transition-colors ${warnaStatusCard}"><span>${status}</span> <span class="text-[9px]">▾</span></button><div id="dropdown-status-${lamaran.id}" class="dropdown-status- absolute left-0 top-full mt-1 w-44 ${DropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 max-h-52 overflow-y-auto">${daftarStatus.map(s => `<button type="button" onclick="pilihStatus('${lamaran.id}', '${s}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 ${s === status ? 'text-[#ff5ca0] border-l-[3px] border-[#ff5ca0]' : ''}">${s}</button>`).join('')}</div></div>`;
 
                 let kontakAksiHTML = ''; 
                 const kontakVal = lamaran.kontak ? lamaran.kontak.trim() : '';
                 if (kontakVal.includes('@')) kontakAksiHTML = `<button onclick="kirimEmailKontak('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${kontakVal}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors text-green-400">Kirim Email</button>`;
                 else if (kontakVal !== '') kontakAksiHTML = `<button onclick="kirimWAKontak('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${kontakVal}', 'tanya')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Kirim WA Follow-Up</button><button onclick="kirimWAKontak('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${kontakVal}', 'interview')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Konfirmasi Interview (WA)</button>`;
 
-                const dropdownAksiHTML = `<div class="relative dropdown-aksi-container inline-block" onclick="event.stopPropagation()"><button type="button" onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="w-7 h-7 rounded-lg text-xs font-bold border border-gray-600 bg-transparent text-gray-300 hover:bg-gray-700 flex items-center justify-center transition-colors">⋮</button><div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi-menu absolute right-0 top-full mt-1 w-52 ${menuDropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1"><button onclick="bukaModalEdit('${lamaran.id}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Edit Data</button><button onclick="salinSuratLamaran('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Salin Surat Lamaran</button><button onclick="salinTeksEmail('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Salin Teks Email</button><button onclick="downloadSuratWord('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Download Surat (.doc)</button>${lamaran.tanggalFollowUp ? `<button onclick="bukaGoogleCalendar('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${lamaran.tanggalFollowUp}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Google Calendar</button>` : ''}${kontakAksiHTML ? '<hr class="border-gray-700 my-1">' + kontakAksiHTML : ''}<hr class="border-gray-700 my-1"><button onclick="hapusLamaran('${lamaran.id}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-red-500/20 text-red-400 transition-colors">Hapus Lamaran</button></div></div>`;
+                const dropdownAksiHTML = `<div class="relative dropdown-aksi-container inline-block" onclick="event.stopPropagation()"><button type="button" onclick="toggleDropdownAksi(event, '${lamaran.id}')" class="w-7 h-7 rounded-lg text-xs font-bold border border-gray-600 bg-transparent text-gray-300 hover:bg-gray-700 flex items-center justify-center transition-colors">⋮</button><div id="dropdown-aksi-${lamaran.id}" class="dropdown-aksi- absolute right-0 top-full mt-1 w-52 ${DropdownBg} border rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1"><button onclick="bukaModalEdit('${lamaran.id}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Edit Data</button><button onclick="salinSuratLamaran('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Salin Surat Lamaran</button><button onclick="salinTeksEmail('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Salin Teks Email</button><button onclick="downloadSuratWord('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Download Surat (.doc)</button>${lamaran.tanggalFollowUp ? `<button onclick="bukaGoogleCalendar('${lamaran.perusahaan.replace(/'/g, "\\'")}', '${lamaran.posisi.replace(/'/g, "\\'")}', '${lamaran.tanggalFollowUp}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-black/10 transition-colors">Google Calendar</button>` : ''}${kontakAksiHTML ? '<hr class="border-gray-700 my-1">' + kontakAksiHTML : ''}<hr class="border-gray-700 my-1"><button onclick="hapusLamaran('${lamaran.id}')" class="w-full text-left px-3 py-2 text-xs font-semibold hover:bg-red-500/20 text-red-400 transition-colors">Hapus Lamaran</button></div></div>`;
 
                 const linkTextHTML = lamaran.link ? `<a href="${lamaran.link}" target="_blank" onclick="event.stopPropagation()" class="text-[#ff5ca0] hover:underline font-semibold ml-1 inline-flex items-center gap-0.5">[Link ↗]</a>` : '', 
                       teksGaji = lamaran.gaji && lamaran.gaji !== "-" ? lamaran.gaji : '-', 
@@ -1136,7 +1136,7 @@
             } 
             posisiUnik.forEach(pos => { 
                 const item = document.createElement('div'); 
-                item.className = 'p-2.5 text-xs hover:bg-black/10 cursor-pointer font-semibold border-b border-gray-500/20 last:border-b-0 menu-item-themed'; 
+                item.className = 'p-2.5 text-xs hover:bg-black/10 cursor-pointer font-semibold border-b border-gray-500/20 last:border-b-0 -item-themed'; 
                 item.innerText = pos; 
                 item.onclick = function(e) { 
                     e.stopPropagation(); 
@@ -1153,7 +1153,7 @@
             const metodeUnik = [...new Set(["LinkedIn", "Instagram", "JobStreet", "Email", "Website Perusahaan", ...dataLamaran.map(item => item.metode).filter(Boolean)])]; 
             metodeUnik.forEach(met => { 
                 const item = document.createElement('div'); 
-                item.className = 'p-2.5 text-xs hover:bg-black/10 cursor-pointer font-semibold border-b border-gray-500/20 last:border-b-0 menu-item-themed'; 
+                item.className = 'p-2.5 text-xs hover:bg-black/10 cursor-pointer font-semibold border-b border-gray-500/20 last:border-b-0 -item-themed'; 
                 item.innerText = met; 
                 item.onclick = function(e) { 
                     e.stopPropagation(); 
@@ -1171,38 +1171,38 @@
 
         function toggleDropdownStatus(event, id) { 
             event.stopPropagation(); 
-            document.querySelectorAll('.dropdown-status-menu').forEach(m => { 
+            document.querySelectorAll('.dropdown-status-').forEach(m => { 
                 if (m.id !== 'dropdown-status-' + id) m.classList.add('hidden'); 
             }); 
-            document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden')); 
-            const menu = document.getElementById('dropdown-status-' + id); 
-            if (menu) menu.classList.toggle('hidden'); 
+            document.querySelectorAll('.dropdown-aksi-').forEach(m => m.classList.add('hidden')); 
+            const  = document.getElementById('dropdown-status-' + id); 
+            if () .classList.toggle('hidden'); 
         }
 
         function pilihStatus(id, statusBaru) { 
             ubahStatus(id, statusBaru); 
-            document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden')); 
+            document.querySelectorAll('.dropdown-status-').forEach(m => m.classList.add('hidden')); 
         }
 
         function toggleDropdownAksi(event, id) { 
             event.stopPropagation(); 
-            document.querySelectorAll('.dropdown-aksi-menu').forEach(m => { 
+            document.querySelectorAll('.dropdown-aksi-').forEach(m => { 
                 if (m.id !== 'dropdown-aksi-' + id) m.classList.add('hidden'); 
             }); 
-            document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden')); 
-            const menu = document.getElementById('dropdown-aksi-' + id); 
-            if (menu) menu.classList.toggle('hidden'); 
+            document.querySelectorAll('.dropdown-status-').forEach(m => m.classList.add('hidden')); 
+            const  = document.getElementById('dropdown-aksi-' + id); 
+            if () .classList.toggle('hidden'); 
         }
 
         window.addEventListener('click', function(e) { 
-            if (!e.target.closest('.dropdown-status-container') && !e.target.closest('.dropdown-status-menu')) 
-                document.querySelectorAll('.dropdown-status-menu').forEach(m => m.classList.add('hidden')); 
+            if (!e.target.closest('.dropdown-status-container') && !e.target.closest('.dropdown-status-')) 
+                document.querySelectorAll('.dropdown-status-').forEach(m => m.classList.add('hidden')); 
 
-            if (!e.target.closest('.dropdown-aksi-container') && !e.target.closest('.dropdown-aksi-menu')) 
-                document.querySelectorAll('.dropdown-aksi-menu').forEach(m => m.classList.add('hidden')); 
+            if (!e.target.closest('.dropdown-aksi-container') && !e.target.closest('.dropdown-aksi-')) 
+                document.querySelectorAll('.dropdown-aksi-').forEach(m => m.classList.add('hidden')); 
 
             const dropdown = document.getElementById('dropdown-titiktiga'), 
-                  btnTitikTiga = document.getElementById('btn-menu-titiktiga'); 
+                  btnTitikTiga = document.getElementById('btn--titiktiga'); 
             if (btnTitikTiga && !btnTitikTiga.contains(e.target) && !dropdown.contains(e.target)) 
                 dropdown.classList.add('hidden'); 
 
@@ -1214,7 +1214,7 @@
             if (dropdownMetode && !e.target.closest('#input-metode') && !e.target.closest('button[onclick*="toggleDropdownMetode"]')) 
                 dropdownMetode.classList.add('hidden'); 
 
-            if (!e.target.closest('#fab-menu-container') && !e.target.closest('#fab-main-btn')) {
+            if (!e.target.closest('#fab--container') && !e.target.closest('#fab-main-btn')) {
                 tutupFabMenu();
             }
         });
@@ -1227,7 +1227,7 @@
             
             if (savedTheme === 'light' || savedTheme === 'dark') {
                 applyTheme(savedTheme);
-                document.getElementById('menu-text-tema').innerText = savedTheme === 'dark' ? "Mode Terang (Manual)" : "Mode Gelap (Manual)";
+                document.getElementById('-text-tema').innerText = savedTheme === 'dark' ? "Mode Terang (Manual)" : "Mode Gelap (Manual)";
             } else {
                 deteksiTemaSistem();
             }
@@ -1244,7 +1244,7 @@
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             applyTheme(prefersDark ? 'dark' : 'light');
             localStorage.setItem('lokertrack_theme', 'system');
-            document.getElementById('menu-text-tema').innerText = "Mode Sistem (Otomatis)";
+            document.getElementById('-text-tema').innerText = "Mode Sistem (Otomatis)";
         }
 
         function toggleTemaManual() {
@@ -1261,7 +1261,7 @@
             
             localStorage.setItem('lokertrack_theme', nextTheme);
             applyTheme(nextTheme);
-            document.getElementById('menu-text-tema').innerText = nextTheme === 'dark' ? "Mode Terang (Manual)" : "Mode Gelap (Manual)";
+            document.getElementById('-text-tema').innerText = nextTheme === 'dark' ? "Mode Terang (Manual)" : "Mode Gelap (Manual)";
         }
 
         function applyTheme(theme) {
@@ -1281,7 +1281,7 @@
                 speechBubble.classList.add('bg-[#1e1e1e]', 'text-gray-200'); 
             }
 
-            document.getElementById('btn-menu-titiktiga').className = isLight ? "w-9 h-9 rounded-xl text-sm font-bold border border-gray-300 bg-gray-50 text-gray-700 shadow-sm hover:bg-gray-100 transition-all flex items-center justify-center shrink-0" : "w-9 h-9 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0";
+            document.getElementById('btn--titiktiga').className = isLight ? "w-9 h-9 rounded-xl text-sm font-bold border border-gray-300 bg-gray-50 text-gray-700 shadow-sm hover:bg-gray-100 transition-all flex items-center justify-center shrink-0" : "w-9 h-9 rounded-xl text-sm font-bold border border-gray-700 bg-[#2d2d2d] text-gray-300 shadow-sm hover:scale-105 transition-all flex items-center justify-center shrink-0";
             document.getElementById('dropdown-titiktiga').className = isLight ? "absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300" : "absolute right-0 mt-2 w-64 bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl hidden z-50 overflow-hidden py-1 transition-colors duration-300";
 
             document.querySelectorAll('#modal-box, #modal-panduan-box, #modal-template-box, #modal-flashcard-box').forEach(el => { 
@@ -1329,7 +1329,7 @@
                 else { el.classList.remove('bg-gray-100', 'hover:bg-gray-200', 'text-gray-600'); el.classList.add('bg-gray-800', 'hover:bg-gray-700', 'text-gray-400'); } 
             });
 
-            document.querySelectorAll('.menu-dropdown').forEach(el => { 
+            document.querySelectorAll('.-dropdown').forEach(el => { 
                 if (isLight) { el.classList.remove('bg-[#1e1e1e]', 'border-gray-700'); el.classList.add('bg-white', 'border-gray-200'); } 
                 else { el.classList.remove('bg-white', 'border-gray-200'); el.classList.add('bg-[#1e1e1e]', 'border-gray-700'); } 
             });
@@ -1843,10 +1843,10 @@ function bukaModalSkin() {
   m.classList.remove('hidden');
 }
 
-// Tambah item menu di titik tiga
+// Tambah item  di titik tiga
 (function () {
   const dd = document.getElementById('dropdown-titiktiga');
-  const divider = document.getElementById('menu-divider');
+  const divider = document.getElementById('-divider');
   if (!dd || !divider) return;
   const b = document.createElement('button');
   b.className = 'w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit';
@@ -1888,7 +1888,7 @@ terapkanSkin();
 
 // ===== SAKLAR TEMA (MATAHARI / BULAN) + PILIHAN OTOMATIS/MANUAL DI MENU =====
 (function () {
-  const host = document.getElementById('btn-menu-titiktiga')?.parentElement?.parentElement;
+  const host = document.getElementById('btn--titiktiga')?.parentElement?.parentElement;
   if (!host || document.getElementById('tema-switch')) return;
 
   const st = document.createElement('style');
@@ -1924,7 +1924,7 @@ terapkanSkin();
   host.insertBefore(sw, host.firstChild);
 
   // Menu ⋮: ganti item "Mode Sistem" jadi pilihan Otomatis | Manual
-  const itemLama = document.getElementById('menu-text-tema')?.closest('button');
+  const itemLama = document.getElementById('-text-tema')?.closest('button');
   let seg = null;
   if (itemLama) {
     seg = document.createElement('div');
@@ -1977,7 +1977,7 @@ terapkanSkin();
   // Pakai fungsi tema bawaan aplikasi sampai mencapai mode yang dituju
   function setModeTema(target) {
     document.documentElement.classList.add('tema-trans'); // aktifkan transisi warna halus
-    // Tampilan saklar langsung berubah (tidak menunggu)
+    // Tampilan saklar langsung berubah (tidak nggu)
     sw.dataset.mode = (target === 'light' || target === 'dark') ? target : (sistemGelap() ? 'dark' : 'light');
     sw.dataset.auto = target === 'system' ? '1' : '0';
     tandaiSeg(target === 'system');
