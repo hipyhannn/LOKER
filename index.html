@@ -1888,6 +1888,121 @@ auth.onAuthStateChanged(u => {
 
 terapkanSkin();
 
+// ===== SAKLAR TEMA (MATAHARI / BULAN) + PILIHAN OTOMATIS/MANUAL DI MENU =====
+(function () {
+  const host = document.getElementById('btn-menu-titiktiga')?.parentElement?.parentElement;
+  if (!host || document.getElementById('tema-switch')) return;
+
+  const st = document.createElement('style');
+  st.textContent = `
+  #tema-switch{position:relative;width:58px;height:30px;border-radius:999px;border:1px solid #4b5563;background:#2d2d2d;cursor:pointer;flex-shrink:0;padding:0;overflow:hidden;transition:background .5s ease,border-color .5s ease;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  #tema-switch[data-mode="light"]{background:#dbeafe;border-color:#93c5fd}
+  #tema-switch .ts-knob{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fbbf24;box-shadow:0 1px 4px rgba(0,0,0,.45);transition:transform .5s cubic-bezier(.34,1.45,.64,1),background .5s ease,width .15s ease;will-change:transform}
+  #tema-switch[data-mode="dark"] .ts-knob{transform:translateX(28px);background:#e5e7eb}
+  #tema-switch .ts-icon{position:absolute;top:4px;left:4px;width:14px;height:14px;transition:opacity .3s ease,transform .5s cubic-bezier(.34,1.45,.64,1)}
+  #tema-switch .ts-sun{opacity:1;transform:rotate(0) scale(1)}
+  #tema-switch .ts-moon{opacity:0;transform:rotate(-90deg) scale(.5)}
+  #tema-switch[data-mode="dark"] .ts-sun{opacity:0;transform:rotate(90deg) scale(.5)}
+  #tema-switch[data-mode="dark"] .ts-moon{opacity:1;transform:rotate(0) scale(1)}
+  #tema-switch .ts-auto{position:absolute;top:50%;transform:translateY(-50%);font-size:7px;font-weight:800;letter-spacing:.5px;color:#6b7280;opacity:0;transition:opacity .3s;pointer-events:none}
+  #tema-switch[data-auto="1"] .ts-auto{opacity:1}
+  #tema-switch[data-mode="light"] .ts-auto{right:6px}
+  #tema-switch[data-mode="dark"] .ts-auto{left:6px;color:#9ca3af}
+  #tema-switch:active .ts-knob{width:27px}
+  #tema-switch[data-mode="dark"]:active .ts-knob{transform:translateX(23px)}
+  html.tema-trans *:not(#tema-switch):not(#tema-switch *){transition:background-color .45s ease,color .45s ease,border-color .45s ease,fill .45s ease,stroke .45s ease !important}`;
+  document.head.appendChild(st);
+
+  const sw = document.createElement('button');
+  sw.id = 'tema-switch';
+  sw.type = 'button';
+  sw.setAttribute('aria-label', 'Ganti tema terang/gelap');
+  sw.innerHTML = `
+    <span class="ts-auto">AUTO</span>
+    <span class="ts-knob">
+      <svg class="ts-icon ts-sun" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="4.2" fill="#f59e0b"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+      <svg class="ts-icon ts-moon" viewBox="0 0 24 24" fill="#374151"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>
+    </span>`;
+  host.insertBefore(sw, host.firstChild);
+
+  // Menu ⋮: ganti item "Mode Sistem" jadi pilihan Otomatis | Manual
+  const itemLama = document.getElementById('menu-text-tema')?.closest('button');
+  let seg = null;
+  if (itemLama) {
+    seg = document.createElement('div');
+    seg.id = 'tema-seg';
+    seg.className = 'px-4 py-2.5';
+    seg.innerHTML = `
+      <p class="text-[10px] text-gray-400 font-medium mb-1.5">Mode tema</p>
+      <div class="flex gap-1 p-1 rounded-lg border border-gray-700/60 bg-black/20">
+        <button type="button" data-seg="auto" class="flex-1 py-1.5 rounded-md text-[11px] font-bold" style="transition:background-color .3s,color .3s">Otomatis</button>
+      </div>`;
+    itemLama.style.display = 'none';
+    itemLama.parentElement.insertBefore(seg, itemLama);
+    seg.addEventListener('click', e => {
+      e.stopPropagation();
+      const b = e.target.closest('[data-seg]');
+      if (!b) return;
+      if (b.dataset.seg === 'auto') setModeTema('system');
+      else if (modeTersimpan() === 'system') setModeTema(temaTampil()); // kunci di tampilan sekarang
+    });
+  }
+
+  const modeTersimpan = () => localStorage.getItem('lokertrack_theme') || 'system';
+  const sistemGelap = () => matchMedia('(prefers-color-scheme: dark)').matches;
+
+  function temaTampil() {
+    const c = getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g);
+    if (!c || (c.length === 4 && Number(c[3]) === 0)) return sistemGelap() ? 'dark' : 'light';
+    return (0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]) > 140 ? 'light' : 'dark';
+  }
+
+  function tandaiSeg(auto) {
+    if (!seg) return;
+    seg.querySelectorAll('[data-seg]').forEach(b => {
+      const aktif = (b.dataset.seg === 'auto') === auto;
+      b.style.backgroundColor = aktif ? '#ff5ca0' : 'transparent';
+      b.style.color = aktif ? '#fff' : '#9ca3af';
+    });
+  }
+
+  function sinkron() {
+    const auto = modeTersimpan() === 'system';
+    sw.dataset.mode = temaTampil();
+    sw.dataset.auto = auto ? '1' : '0';
+    sw.title = auto ? 'Tema otomatis (ikut sistem). Klik untuk ganti ke manual.' : 'Tema manual. Klik untuk ganti terang/gelap.';
+    tandaiSeg(auto);
+  }
+  let tmr, tmrTrans;
+  const sinkronNanti = () => { clearTimeout(tmr); tmr = setTimeout(sinkron, 560); };
+
+  // Pakai fungsi tema bawaan aplikasi sampai mencapai mode yang dituju
+  function setModeTema(target) {
+    document.documentElement.classList.add('tema-trans'); // aktifkan transisi warna halus
+    // Tampilan saklar langsung berubah (tidak menunggu)
+    sw.dataset.mode = (target === 'light' || target === 'dark') ? target : (sistemGelap() ? 'dark' : 'light');
+    sw.dataset.auto = target === 'system' ? '1' : '0';
+    tandaiSeg(target === 'system');
+    for (let i = 0; i < 4; i++) {
+      const sekarang = (typeof currentTheme !== 'undefined') ? currentTheme : modeTersimpan();
+      if (sekarang === target || modeTersimpan() === target) break;
+      toggleTemaManual();
+    }
+    clearTimeout(tmrTrans);
+    tmrTrans = setTimeout(() => document.documentElement.classList.remove('tema-trans'), 650);
+    sinkronNanti();
+  }
+
+  sw.addEventListener('click', () => setModeTema(temaTampil() === 'dark' ? 'light' : 'dark'));
+
+  // Ikut berubah kalau tema berubah dari sumber lain (pengaturan sistem, dll)
+  const mo = new MutationObserver(sinkronNanti);
+  mo.observe(document.body, { attributes: true, attributeFilter: ['class', 'style'] });
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', sinkronNanti);
+  sinkron();
+  setTimeout(sinkron, 800);
+})();
     </script>
 </body>
 </html>
