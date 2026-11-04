@@ -1765,6 +1765,129 @@
     }, 400);
   });
 })();
+// ===== SKIN MASKOT (GANTI KARAKTER) - ANIMASI =====
+const SKIN_DEFAULT = 'https://lh3.googleusercontent.com/d/1bjSzoxhktQ0bHf-fHu2uE0jVn_EM_QJK';
+const poke = id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`;
+const DAFTAR_SKIN = [
+  { nama: 'Pikachu', url: poke(25) },
+  { nama: 'Eevee', url: poke(133) },
+  { nama: 'Bulbasaur', url: poke(1) },
+  { nama: 'Charmander', url: poke(4) },
+  { nama: 'Squirtle', url: poke(7) },
+  { nama: 'Snorlax', url: poke(143) },
+  { nama: 'Psyduck', url: poke(54) },
+  { nama: 'Jigglypuff', url: poke(39) },
+  { nama: 'Mew', url: poke(151) },
+  { nama: 'Gengar', url: poke(94) },
+  { nama: 'Togepi', url: poke(175) },
+  { nama: 'Piplup', url: poke(393) }
+];
+
+// Pilihan lama (artwork statis) otomatis dipindah ke versi animasi
+function migrasiSkin(u) {
+  if (!u || u.indexOf('/other/official-artwork/') === -1) return u || '';
+  return u.replace('/other/official-artwork/', '/versions/generation-v/black-white/animated/').replace(/\.png$/, '.gif');
+}
+let skinAktif = migrasiSkin(localStorage.getItem('lokertrack_skin') || '');
+
+function terapkanSkin() {
+  const main = document.querySelector('#panda-avatar img');
+  if (!main) return;
+  main.src = skinAktif || SKIN_DEFAULT;
+  main.style.imageRendering = /PokeAPI\/sprites/.test(skinAktif) ? 'pixelated' : '';
+}
+
+function setSkin(url) {
+  skinAktif = url;
+  localStorage.setItem('lokertrack_skin', url);
+  terapkanSkin();
+  if (currentUser) rtdb.ref('users/' + currentUser.uid + '/profile/skin').set(url);
+  tutupModalSkin();
+}
+function pilihSkin(i) { setSkin(DAFTAR_SKIN[i].url); }
+function pakaiSkinCustom() {
+  const v = document.getElementById('input-skin-url').value.trim();
+  if (!/^https?:\/\//i.test(v)) { alert('Masukkan link gambar yang diawali https://'); return; }
+  setSkin(v);
+}
+
+function tutupModalSkin() {
+  const m = document.getElementById('modal-skin');
+  if (m) m.classList.add('hidden');
+}
+function bukaModalSkin() {
+  document.getElementById('dropdown-titiktiga').classList.add('hidden');
+  let m = document.getElementById('modal-skin');
+  if (!m) {
+    m = document.createElement('div');
+    m.id = 'modal-skin';
+    m.className = 'fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center p-4 z-50 backdrop-blur-sm';
+    m.onclick = e => { if (e.target === m) tutupModalSkin(); };
+    document.body.appendChild(m);
+  }
+  const grid = DAFTAR_SKIN.map((s, i) => {
+    const aktif = s.url === skinAktif;
+    return `<button type="button" onclick="pilihSkin(${i})" class="flex flex-col items-center gap-1 p-2 rounded-xl border transition-colors ${aktif ? 'border-[#ff5ca0] bg-[#ff5ca0]/10' : 'border-gray-700 hover:border-[#ff5ca0]/60'}">
+      <img src="${s.url || SKIN_DEFAULT}" loading="lazy" class="w-16 h-16 object-contain" style="image-rendering:pixelated" draggable="false">
+      <span class="text-[10px] font-semibold text-gray-300">${s.nama}</span></button>`;
+  }).join('');
+  m.innerHTML = `<div class="bg-[#1e1e1e] border border-gray-700 rounded-xl shadow-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto">
+    <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-3">
+      <h2 class="text-sm font-bold text-white">Ganti Karakter</h2>
+      <button onclick="tutupModalSkin()" class="bg-gray-800 hover:bg-gray-700 rounded text-gray-400 px-3 py-1 font-bold">&times;</button>
+    </div>
+    <div class="grid grid-cols-3 gap-2 mb-4">${grid}</div>
+    <p class="text-[11px] font-bold text-gray-400 mb-1">ATAU PAKAI LINK GAMBAR SENDIRI</p>
+    <div class="flex gap-2">
+      <input type="url" id="input-skin-url" placeholder="https://..." class="w-full bg-[#121212] border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-[#ff5ca0]">
+      <button type="button" onclick="pakaiSkinCustom()" class="bg-[#ff5ca0] hover:bg-[#ff4081] text-white font-bold px-3 rounded-lg text-xs shrink-0">Pakai</button>
+    </div></div>`;
+  m.classList.remove('hidden');
+}
+
+// Tambah item menu di titik tiga
+(function () {
+  const dd = document.getElementById('dropdown-titiktiga');
+  const divider = document.getElementById('menu-divider');
+  if (!dd || !divider) return;
+  const b = document.createElement('button');
+  b.className = 'w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-black/10 transition-colors flex items-center gap-2 text-inherit';
+  b.innerHTML = '<span>Ganti Karakter</span>';
+  b.onclick = bukaModalSkin;
+  dd.insertBefore(b, divider);
+})();
+
+// Jaga supaya skin tidak tertimpa kode lain, dan fallback kalau gambar gagal dimuat
+(function () {
+  const main = document.querySelector('#panda-avatar img');
+  if (!main) return;
+  new MutationObserver(() => {
+    if (skinAktif && main.getAttribute('src') !== skinAktif) main.src = skinAktif;
+  }).observe(main, { attributes: true, attributeFilter: ['src'] });
+  main.onerror = () => {
+    if (main.getAttribute('src') !== SKIN_DEFAULT) {
+      skinAktif = '';
+      main.style.imageRendering = '';
+      main.src = SKIN_DEFAULT;
+    }
+  };
+})();
+
+// Sinkron pilihan skin dari Firebase setelah login
+auth.onAuthStateChanged(u => {
+  if (!u) return;
+  rtdb.ref('users/' + u.uid + '/profile/skin').on('value', s => {
+    const v = s.val();
+    if (v !== null) {
+      skinAktif = migrasiSkin(v);
+      localStorage.setItem('lokertrack_skin', skinAktif);
+      terapkanSkin();
+    }
+  });
+});
+
+terapkanSkin();
+
     </script>
 </body>
 </html>
